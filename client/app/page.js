@@ -1,14 +1,19 @@
 'use client'
 
-import styles from './page.module.css'
-import MessageFetcher from '../components/MessageFetcher'
+import Navbar from './components/layouts/Navbar'
+import Breadcrumb from './components/Miscellaneous/BreadCrumb'
+import LostAndFound from './components/Miscellaneous/ReportLost'
+import FeaturedStrays from './components/cards/FeaturedStrays'
+import Footer from './components/layouts/Footer'
 
 export default function Home() {
     return (
-        <div className={styles.page}>
-            <main className={styles.main}>
-                <MessageFetcher />
-            </main>
+        <div>
+            <Navbar />
+            <Breadcrumb />
+            <LostAndFound />
+            <FeaturedStrays />
+            <Footer />
         </div>
     )
 }
