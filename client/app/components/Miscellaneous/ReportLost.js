@@ -17,6 +17,7 @@ const ReportLost = () => {
     const [isOtherBreed, setIsOtherBreed] = useState(false) // Manage 'Other' breed input
     const [commonBreeds, setCommonBreeds] = useState([]) // Manage breed options based on species
     const [userLocation, setUserLocation] = useState(null) // User's current location
+    const [locationAsked, setLocationAsked] = useState(false) // Track if location has been asked
 
     const speciesOptions = [
         {
@@ -56,29 +57,31 @@ const ReportLost = () => {
     ]
 
     useEffect(() => {
-        // Get user's current location
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords
-                    setUserLocation({ lat: latitude, lng: longitude })
-                    setFormData((prevData) => ({
-                        ...prevData,
-                        coordinates: { lat: latitude, lng: longitude }, // Set the map center to user's location
-                        location: `Lat: ${latitude}, Lng: ${longitude}`, // Set default location input
-                    }))
-                },
-                (error) => {
-                    console.error('Error getting location: ', error)
-                    alert(
-                        'Unable to retrieve your location. Please enter it manually.'
-                    )
-                }
-            )
-        } else {
-            alert('Geolocation is not supported by this browser.')
+        // Ask for location once when the component mounts
+        if (navigator.geolocation && !locationAsked) {
+            const askForLocation = window.confirm('Would you like to share your location?');
+            if (askForLocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords
+                        setUserLocation({ lat: latitude, lng: longitude })
+                        setFormData((prevData) => ({
+                            ...prevData,
+                            coordinates: { lat: latitude, lng: longitude }, // Set the map center to user's location
+                            location: `Lat: ${latitude}, Lng: ${longitude}`, // Set default location input
+                        }))
+                    },
+                    (error) => {
+                        console.error('Error getting location: ', error)
+                        alert(
+                            'Unable to retrieve your location. Please enter it manually.'
+                        )
+                    }
+                )
+            }
+            setLocationAsked(true); // Mark that the user has been asked
         }
-    }, [])
+    }, []) // Run the effect only on component mount
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -109,7 +112,40 @@ const ReportLost = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('Form Data Submitted:', formData)
+
+        // Format the coordinates as GeoJSON
+        const formattedData = {
+            ...formData,
+            coordinates: {
+                type: 'Point',
+                coordinates: [
+                    formData.coordinates.lng,
+                    formData.coordinates.lat,
+                ], // [lng, lat] for GeoJSON
+            },
+        }
+
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formattedData), // Send the formatted data
+                }
+            )
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`)
+            }
+
+            const result = await response.json()
+            console.log('Form submitted successfully:', result)
+        } catch (error) {
+            console.error('Error submitting form:', error.message)
+        }
     }
 
     const handleMapClick = (event) => {
@@ -292,28 +328,21 @@ const ReportLost = () => {
                             </div>
 
                             <div className="mb-3">
-                                <label
-                                    htmlFor="imageUrl"
-                                    className="form-label"
-                                >
+                                <label htmlFor="imageUrl" className="form-label">
                                     Image URL
                                 </label>
                                 <input
-                                    type="text"
+                                    type="url"
                                     className="form-control"
                                     id="imageUrl"
                                     name="imageUrl"
                                     value={formData.imageUrl}
                                     onChange={handleChange}
-                                    placeholder="Enter image URL"
                                 />
                             </div>
 
-                            <button
-                                type="submit"
-                                className="btn btn-purple w-100"
-                            >
-                                Report Lost
+                            <button type="submit" className="btn btn-primary">
+                                Submit
                             </button>
                         </form>
                     </div>
