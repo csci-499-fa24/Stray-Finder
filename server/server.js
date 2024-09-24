@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require('cors')
 const app = express();
 const message = require('./routes/message')
+const animal = require('./routes/animals')
 
 /**
  * Connection to the database
@@ -15,9 +16,9 @@ app.use(cors())
 
 /**
  * Section for APIs
- * Currently just message
  */
 app.use('/api/message/', message)
+app.use('/api/animal/', animal)
 
 const port = process.env.PORT || 8080;
 // Load DB then start server
