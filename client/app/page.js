@@ -2,7 +2,7 @@
 
 import Navbar from './components/layouts/Navbar'
 import Breadcrumb from './components/Miscellaneous/BreadCrumb'
-import LostAndFound from './components/Miscellaneous/ReportLost'
+import ReportLost from './components/Miscellaneous/ReportLost'
 import FeaturedStrays from './components/cards/FeaturedStrays'
 import Footer from './components/layouts/Footer'
 
@@ -11,7 +11,7 @@ export default function Home() {
         <div>
             <Navbar />
             <Breadcrumb />
-            <LostAndFound />
+            <ReportLost />
             <FeaturedStrays />
             <Footer />
         </div>
