@@ -39,17 +39,18 @@ const createAnimal = async (req, res) => {
         // Log the raw coordinates to see their structure
         console.log('Raw coordinates:', coordinates)
 
-        // Ensure coordinates are in the correct format
+        // Check if coordinates are in the expected format
         if (
             coordinates &&
-            coordinates.lng !== undefined &&
-            coordinates.lat !== undefined
+            coordinates.type === 'Point' &&
+            Array.isArray(coordinates.coordinates) &&
+            coordinates.coordinates.length === 2
         ) {
             const formattedAnimal = {
                 ...rest,
                 coordinates: {
                     type: 'Point',
-                    coordinates: [coordinates.lng, coordinates.lat], // [lng, lat] order for GeoJSON
+                    coordinates: coordinates.coordinates, // Use the coordinates from the request
                 },
             }
 
