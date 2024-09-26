@@ -10,7 +10,16 @@ const getAnimals = async (req, res) => {
         const animals = await Animal.find()
         res.status(200).json({ animals })
     } catch (error) {
-        console.error('Error fetching animals:', error.message)
+        // Log comprehensive error details
+        console.error('Error fetching animals:', {
+            message: error.message,
+            stack: error.stack,
+            request: {
+                headers: req.headers,
+                body: req.body,
+                query: req.query,
+            },
+        })
         res.status(500).json({
             message: 'Failed to fetch animals',
             error: error.message,
@@ -36,10 +45,19 @@ const createAnimal = async (req, res) => {
             },
         }
 
-        const animal = await LostPet.create(formattedAnimal)
+        const animal = await Animal.create(formattedAnimal)
         res.status(201).json({ animal })
     } catch (error) {
-        console.error('Error creating animal:', error.message)
+        // Log comprehensive error details
+        console.error('Error creating animal:', {
+            message: error.message,
+            stack: error.stack,
+            request: {
+                headers: req.headers,
+                body: req.body,
+                query: req.query,
+            },
+        })
         res.status(500).json({
             message: 'Failed to create animal',
             error: error.message,
