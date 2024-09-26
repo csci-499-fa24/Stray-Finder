@@ -36,28 +36,30 @@ const createAnimal = async (req, res) => {
     try {
         const { coordinates, ...rest } = req.body
 
-        // Format the coordinates to match the GeoJSON format
-        const formattedAnimal = {
-            ...rest,
-            coordinates: {
-                type: 'Point',
-                coordinates: [coordinates.lng, coordinates.lat], // [lng, lat] order for GeoJSON
-            },
-        }
+        // Log the raw coordinates to see their structure
+        console.log('Raw coordinates:', coordinates)
 
-        const animal = await Animal.create(formattedAnimal)
-        res.status(201).json({ animal })
+        // Ensure coordinates are in the correct format
+        if (
+            coordinates &&
+            coordinates.lng !== undefined &&
+            coordinates.lat !== undefined
+        ) {
+            const formattedAnimal = {
+                ...rest,
+                coordinates: {
+                    type: 'Point',
+                    coordinates: [coordinates.lng, coordinates.lat], // [lng, lat] order for GeoJSON
+                },
+            }
+
+            const animal = await Animal.create(formattedAnimal)
+            res.status(201).json({ animal })
+        } else {
+            throw new Error('Coordinates are missing or incorrectly formatted')
+        }
     } catch (error) {
-        // Log comprehensive error details
-        console.error('Error creating animal:', {
-            message: error.message,
-            stack: error.stack,
-            request: {
-                headers: req.headers,
-                body: req.body,
-                query: req.query,
-            },
-        })
+        console.error('Error creating animal:', error.message)
         res.status(500).json({
             message: 'Failed to create animal',
             error: error.message,
