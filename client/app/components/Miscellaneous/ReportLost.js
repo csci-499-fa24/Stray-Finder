@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
+import { useRouter } from 'next/navigation' // Updated import for Next.js 13+
 
 const ReportLost = () => {
+    const router = useRouter() // Initialize router for navigation
     const [formData, setFormData] = useState({
         name: '',
         species: '',
@@ -18,6 +20,8 @@ const ReportLost = () => {
     const [commonBreeds, setCommonBreeds] = useState([]) // Manage breed options based on species
     const [userLocation, setUserLocation] = useState(null) // User's current location
     const [locationAsked, setLocationAsked] = useState(false) // Track if location has been asked
+    const [loading, setLoading] = useState(false) // Loading state for form submission
+    const [error, setError] = useState('') // Error state for submission
 
     const speciesOptions = [
         {
@@ -59,7 +63,9 @@ const ReportLost = () => {
     useEffect(() => {
         // Ask for location once when the component mounts
         if (navigator.geolocation && !locationAsked) {
-            const askForLocation = window.confirm('Would you like to share your location?');
+            const askForLocation = window.confirm(
+                'Would you like to share your location?'
+            )
             if (askForLocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -67,8 +73,8 @@ const ReportLost = () => {
                         setUserLocation({ lat: latitude, lng: longitude })
                         setFormData((prevData) => ({
                             ...prevData,
-                            coordinates: { lat: latitude, lng: longitude }, // Set the map center to user's location
-                            location: `Lat: ${latitude}, Lng: ${longitude}`, // Set default location input
+                            coordinates: { lat: latitude, lng: longitude },
+                            location: `Lat: ${latitude}, Lng: ${longitude}`,
                         }))
                     },
                     (error) => {
@@ -79,7 +85,7 @@ const ReportLost = () => {
                     }
                 )
             }
-            setLocationAsked(true); // Mark that the user has been asked
+            setLocationAsked(true) // Mark that the user has been asked
         }
     }, []) // Run the effect only on component mount
 
@@ -112,6 +118,8 @@ const ReportLost = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setLoading(true) // Start loading state
+        setError('') // Reset error state
 
         // Format the coordinates as GeoJSON
         const formattedData = {
@@ -143,8 +151,12 @@ const ReportLost = () => {
 
             const result = await response.json()
             console.log('Form submitted successfully:', result)
+            router.push('/') // Navigate back to the home page after submission
         } catch (error) {
+            setError(error.message) // Set error message
             console.error('Error submitting form:', error.message)
+        } finally {
+            setLoading(false) // End loading state
         }
     }
 
@@ -166,6 +178,10 @@ const ReportLost = () => {
                 <div className="col-md-8">
                     <div className="border border-purple rounded p-4">
                         <h2 className="text-center">Report a Lost Pet</h2>
+                        {error && (
+                            <div className="alert alert-danger">{error}</div>
+                        )}{' '}
+                        {/* Display error message */}
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="name" className="form-label">
@@ -328,7 +344,10 @@ const ReportLost = () => {
                             </div>
 
                             <div className="mb-3">
-                                <label htmlFor="imageUrl" className="form-label">
+                                <label
+                                    htmlFor="imageUrl"
+                                    className="form-label"
+                                >
                                     Image URL
                                 </label>
                                 <input
@@ -341,8 +360,12 @@ const ReportLost = () => {
                                 />
                             </div>
 
-                            <button type="submit" className="btn btn-primary">
-                                Submit
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                disabled={loading}
+                            >
+                                {loading ? 'Submitting...' : 'Submit'}
                             </button>
                         </form>
                     </div>
