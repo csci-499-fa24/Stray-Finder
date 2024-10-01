@@ -35,6 +35,7 @@ const createAnimal = async (req, res) => {
     try {
         const { coordinates, ...rest } = req.body
 
+        // Log the raw coordinates to see their structure
         console.log('Raw coordinates:', coordinates)
 
         if (
