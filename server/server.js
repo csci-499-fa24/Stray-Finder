@@ -3,6 +3,7 @@ const cors = require('cors')
 const app = express()
 const message = require('./routes/message')
 const animal = require('./routes/animals')
+const user = require('./routes/users')
 
 /**
  * Connection to the database
@@ -23,12 +24,13 @@ app.use(
  */
 app.use('/api/message/', message)
 app.use('/api/animal/', animal)
+app.use('/api/user/', user);
 
 const port = process.env.PORT || 8080
 // Load DB then start server
 const start = async () => {
     try {
-        await connectDB(process.env.MONGO_URI)
+        await connectDB(process.env.MONGO_URL)
         app.listen(port, console.log(`Server started on port ${port}`))
     } catch (error) {
         console.log(error)
