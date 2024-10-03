@@ -1,4 +1,4 @@
-const Animal = require('../models/animals')
+const Animal = require('../models/lostpet')
 
 /**
  * @post   : Retrieves list of animal data

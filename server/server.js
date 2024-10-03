@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const message = require('./routes/message')
-const animal = require('./routes/animals')
+const lostpet = require('./routes/lostpet')
 const user = require('./routes/users')
 
 /**
@@ -23,7 +23,7 @@ app.use(
  * Section for APIs
  */
 app.use('/api/message/', message)
-app.use('/api/animal/', animal)
+app.use('/api/lostpet/', lostpet)
 app.use('/api/user/', user);
 
 const port = process.env.PORT || 8080

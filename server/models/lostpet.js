@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const AnimalSchema = new mongoose.Schema({
+const LostPetSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -43,6 +43,6 @@ const AnimalSchema = new mongoose.Schema({
     },
 })
 
-AnimalSchema.index({ coordinates: '2dsphere' })
+LostPetSchema.index({ coordinates: '2dsphere' })
 
-module.exports = mongoose.model('LostPet', AnimalSchema)
+module.exports = mongoose.model('LostPet', LostPetSchema)
