@@ -3,7 +3,8 @@ const cors = require('cors')
 const app = express()
 const message = require('./routes/message')
 const lostpet = require('./routes/lostpet')
-const user = require('./routes/users')
+const stray = require('./routes/stray');
+const user = require('./routes/user')
 
 /**
  * Connection to the database
@@ -25,6 +26,7 @@ app.use(
 app.use('/api/message/', message)
 app.use('/api/lostpet/', lostpet)
 app.use('/api/user/', user);
+app.use('/api/stray/', stray);
 
 const port = process.env.PORT || 8080
 // Load DB then start server

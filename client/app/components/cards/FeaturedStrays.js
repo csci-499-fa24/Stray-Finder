@@ -10,7 +10,7 @@ const FeaturedStrays = () => {
         const fetchAnimals = async () => {
             try {
                 const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal`
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/lostpet`
                 )
                 const data = await response.json()
 
