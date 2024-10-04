@@ -22,7 +22,8 @@ const authenticate = async (req, res, next) => {
             return res.status(404).json({ message: 'User not found' })
         }
 
-        req.userId = decodedToken.userId;
+        // Attach the user object to req.user
+        req.user = user
         next()
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
