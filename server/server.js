@@ -1,7 +1,6 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const message = require('./routes/message')
 const animal = require('./routes/animals')
 const auth = require('./routes/auth')
 const user = require('./routes/user')
@@ -28,7 +27,6 @@ app.use((err, req, res, next) => {
 })
 ///////////////////////////////////////////////////////////////////////////
 
-
 /**
  * Section for authentication routes
  */
@@ -36,11 +34,9 @@ app.use('/auth', auth)
 app.use('/user', user)
 ///////////////////////////////////////////////////////////////////////////
 
-
 /**
  * Section for APIs
  */
-app.use('/api/message/', message)
 app.use('/api/animal/', animal)
 ///////////////////////////////////////////////////////////////////////////
 
