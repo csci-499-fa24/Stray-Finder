@@ -3,7 +3,8 @@ const cors = require('cors')
 const app = express()
 const message = require('./routes/message')
 const animal = require('./routes/animals')
-const user = require('./routes/users')
+const auth = require('./routes/auth')
+const user = require('./routes/user')
 
 /**
  * Connection to the database
@@ -11,6 +12,9 @@ const user = require('./routes/users')
 const connectDB = require('./db/connect')
 require('dotenv').config()
 
+/**
+ * Section for middleware
+ */
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(
@@ -18,13 +22,27 @@ app.use(
         origin: process.env.NEXT_PUBLIC_CLIENT_URL,
     })
 )
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).json({ message: 'Something went wrong!' })
+})
+///////////////////////////////////////////////////////////////////////////
+
+
+/**
+ * Section for authentication routes
+ */
+app.use('/auth', auth)
+app.use('/user', user)
+///////////////////////////////////////////////////////////////////////////
+
 
 /**
  * Section for APIs
  */
 app.use('/api/message/', message)
 app.use('/api/animal/', animal)
-app.use('/api/user/', user);
+///////////////////////////////////////////////////////////////////////////
 
 const port = process.env.PORT || 8080
 // Load DB then start server
