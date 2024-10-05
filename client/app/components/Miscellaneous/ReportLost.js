@@ -135,7 +135,7 @@ const ReportLost = () => {
 
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/lostpet`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/spottedstray`,
                 {
                     method: 'POST',
                     headers: {

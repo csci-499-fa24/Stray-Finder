@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
-const StraySchema = new mongoose.Schema({
+const SpottedStraySchema = new mongoose.Schema({
     name: {
         type: String,
-        default: 'Unknown',
+        required: true,
     },
     species: {
         type: String,
@@ -43,6 +43,6 @@ const StraySchema = new mongoose.Schema({
     },
 })
 
-StraySchema.index({ coordinates: '2dsphere' })
+SpottedStraySchema.index({ coordinates: '2dsphere' })
 
-module.exports = mongoose.model('Stray', StraySchema)
+module.exports = mongoose.model('SpottedStrays', SpottedStraySchema)
