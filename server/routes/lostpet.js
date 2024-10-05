@@ -1,23 +1,24 @@
 const express = require('express')
 const router = express.Router()
 const {
-    getAnimals,
-    createAnimal,
-    getAnimalById,
-    updateAnimal,
-    deleteAnimal,
+    getLostPet,
+    createLostPet,
+    getLostPetById,
+    updateLostPet,
+    deleteLostPet,
+
 } = require('../controllers/lostpet')
 
-// Define routes for animals
+// Define routes for stray
 router
     .route('/')
-    .get(getAnimals) // Retrieve all animals
-    .post(createAnimal) // Create a new animal
+    .get(getLostPet) // Retrieve all stray
+    .post(createLostPet) // Create a new stray
 
 router
     .route('/:id')
-    .get(getAnimalById) // Retrieve an animal by ID
-    .put(updateAnimal) // Update an animal by ID
-    .delete(deleteAnimal) // Delete an animal by ID
+    .get(getLostPetById) // Retrieve an stray by ID
+    .put(updateLostPet) // Update an stray by ID
+    .delete(deleteLostPet) // Delete an stray by ID
 
 module.exports = router

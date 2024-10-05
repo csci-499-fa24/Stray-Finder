@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const LostPetSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        default: 'Unknown',
     },
     species: {
         type: String,

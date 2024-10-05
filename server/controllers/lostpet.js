@@ -1,16 +1,16 @@
-const Animal = require('../models/lostpet')
+const Stray = require('../models/lostpet');
 
 /**
- * @post   : Retrieves list of animal data
- * @route  : GET /api/animal
+ * @post   : Retrieves list of stray data
+ * @route  : GET /api/stray
  * @access : public
  */
-const getAnimals = async (req, res) => {
+const getLostPet = async (req, res) => {
     try {
-        const animals = await Animal.find()
-        res.status(200).json({ animals })
+        const stray = await Stray.find()
+        res.status(200).json({ stray })
     } catch (error) {
-        console.error('Error fetching animals:', {
+        console.error('Error fetching strays:', {
             message: error.message,
             stack: error.stack,
             request: {
@@ -20,18 +20,18 @@ const getAnimals = async (req, res) => {
             },
         })
         res.status(500).json({
-            message: 'Failed to fetch animals',
+            message: 'Failed to fetch strays',
             error: error.message,
         })
     }
 }
 
 /**
- * @post    : Creates animal data instance
- * @route   : POST /api/animal
+ * @post    : Creates stray data instance
+ * @route   : POST /api/stray
  * @access  : public (at the moment)
  */
-const createAnimal = async (req, res) => {
+const createLostPet = async (req, res) => {
     try {
         const { coordinates, ...rest } = req.body
 
@@ -44,7 +44,7 @@ const createAnimal = async (req, res) => {
             Array.isArray(coordinates.coordinates) &&
             coordinates.coordinates.length === 2
         ) {
-            const formattedAnimal = {
+            const formattedStray = {
                 ...rest,
                 coordinates: {
                     type: 'Point',
@@ -52,8 +52,8 @@ const createAnimal = async (req, res) => {
                 },
             }
 
-            const animal = await Animal.create(formattedAnimal)
-            res.status(201).json({ animal })
+            const stray = await Stray.create(formattedStray)
+            res.status(201).json({ stray })
         } else {
             throw new Error('Coordinates are missing or incorrectly formatted')
         }
@@ -67,35 +67,35 @@ const createAnimal = async (req, res) => {
 }
 
 /**
- * @get     : Retrieves a specific animal by ID
- * @route   : GET /api/animal/:id
+ * @get     : Retrieves a specific stray by ID
+ * @route   : GET /api/stray/:id
  * @access  : public
  */
-const getAnimalById = async (req, res) => {
+const getLostPetById = async (req, res) => {
     try {
         const { id } = req.params
-        const animal = await Animal.findById(id)
+        const stray = await Stray.findById(id)
 
-        if (!animal) {
-            return res.status(404).json({ message: 'Animal not found' })
+        if (!stray) {
+            return res.status(404).json({ message: 'Stray not found' })
         }
 
-        res.status(200).json({ animal })
+        res.status(200).json({ stray })
     } catch (error) {
-        console.error('Error fetching animal by ID:', error.message)
+        console.error('Error fetching stray by ID:', error.message)
         res.status(500).json({
-            message: 'Failed to fetch animal',
+            message: 'Failed to fetch stray',
             error: error.message,
         })
     }
 }
 
 /**
- * @put     : Updates an animal by ID
- * @route   : PUT /api/animal/:id
+ * @put     : Updates an stray by ID
+ * @route   : PUT /api/stray/:id
  * @access  : public
  */
-const updateAnimal = async (req, res) => {
+const updateLostPet = async (req, res) => {
     try {
         const { id } = req.params
         const { coordinates, ...rest } = req.body
@@ -115,15 +115,15 @@ const updateAnimal = async (req, res) => {
             }
         }
 
-        const updatedAnimal = await Animal.findByIdAndUpdate(id, rest, {
+        const updatedStray = await Stray.findByIdAndUpdate(id, rest, {
             new: true,
         })
 
-        if (!updatedAnimal) {
-            return res.status(404).json({ message: 'Animal not found' })
+        if (!updatedStray) {
+            return res.status(404).json({ message: 'Stray not found' })
         }
 
-        res.status(200).json({ animal: updatedAnimal })
+        res.status(200).json({ stray: updatedStray })
     } catch (error) {
         console.error('Error updating animal:', error.message)
         res.status(500).json({
@@ -134,36 +134,36 @@ const updateAnimal = async (req, res) => {
 }
 
 /**
- * @delete  : Deletes an animal by ID
- * @route   : DELETE /api/animal/:id
+ * @delete  : Deletes an stray by ID
+ * @route   : DELETE /api/stray/:id
  * @access  : public
  */
-const deleteAnimal = async (req, res) => {
+const deleteLostPet = async (req, res) => {
     try {
         const { id } = req.params
-        const deletedAnimal = await Animal.findByIdAndDelete(id)
+        const deletedStray = await Stray.findByIdAndDelete(id)
 
-        if (!deletedAnimal) {
-            return res.status(404).json({ message: 'Animal not found' })
+        if (!deletedStray) {
+            return res.status(404).json({ message: 'Stray not found' })
         }
 
         res.status(200).json({
-            message: 'Animal deleted successfully',
-            animal: deletedAnimal,
+            message: 'Stray deleted successfully',
+            stray: deletedStray,
         })
     } catch (error) {
-        console.error('Error deleting animal:', error.message)
+        console.error('Error deleting stray:', error.message)
         res.status(500).json({
-            message: 'Failed to delete animal',
+            message: 'Failed to delete stray',
             error: error.message,
         })
     }
 }
 
 module.exports = {
-    getAnimals,
-    createAnimal,
-    getAnimalById,
-    updateAnimal,
-    deleteAnimal,
+    getLostPet,
+    createLostPet,
+    getLostPetById,
+    updateLostPet,
+    deleteLostPet,
 }
