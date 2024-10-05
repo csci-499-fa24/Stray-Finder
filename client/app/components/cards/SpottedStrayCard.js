@@ -1,26 +1,6 @@
-import { useState } from 'react'
 import Link from 'next/link'
-import ReportLost from '../Miscellaneous/ReportLost' // Adjust the path if necessary
 
 const SpottedStrayCard = () => {
-    const [showReportLost, setShowReportLost] = useState(false)
-
-    const handleReportLostClick = () => {
-        setShowReportLost(true) // Show ReportLost component
-    }
-
-    const handleGoBackClick = () => {
-        setShowReportLost(false) // Go back to the SpottedStrayCard
-    }
-
-    if (showReportLost) {
-        return (
-            <div>
-                <ReportLost onGoBack={handleGoBackClick} />
-            </div>
-        )
-    }
-
     return (
         <div className="d-flex justify-content-center mt-5">
             <div
@@ -51,12 +31,10 @@ const SpottedStrayCard = () => {
                         We'll keep you updated if any strays have been located
                         nearby that match your pet's features.
                     </p>
-                    <button
-                        onClick={handleReportLostClick}
-                        className="btn btn-primary"
+                    <Link href="/reportlost" className="btn btn-primary"
                     >
                         Report a Lost Pet
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

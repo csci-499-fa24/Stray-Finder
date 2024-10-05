@@ -73,6 +73,8 @@
 
 body {
     background-color: var(--purple-19);
+    overflow-y: scroll; /* added a scroll wheel to every page to prevent shift of navbar in presence of a scroll wheel */
+    padding-right: 15px; /* shifted page to the right to center more because of the wheel */
 }
 
 /* For report lost */
@@ -96,5 +98,3 @@ body {
     height: 200px; /* Set height for your mini map */
     width: 100%; /* Full width */
 }
-
-

@@ -18,7 +18,7 @@ const Navbar = () => {
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <Link className="navbar-brand" href="#">
+                <Link className="navbar-brand" href="/">
                     The Stray Registry
                 </Link>
                 <div
@@ -30,7 +30,7 @@ const Navbar = () => {
                             <Link
                                 className="nav-link active"
                                 aria-current="page"
-                                href="#"
+                                href="/"
                             >
                                 Home
                             </Link>
@@ -39,7 +39,7 @@ const Navbar = () => {
                             <Link
                                 className="nav-link active"
                                 aria-current="page"
-                                href="#"
+                                href="/about"
                             >
                                 About
                             </Link>
@@ -48,7 +48,7 @@ const Navbar = () => {
                             <Link
                                 className="nav-link active"
                                 aria-current="page"
-                                href="#"
+                                href="/contact"
                             >
                                 Contact
                             </Link>

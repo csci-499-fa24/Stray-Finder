@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
 import { useRouter } from 'next/navigation' // Updated import for Next.js 13+
@@ -359,14 +360,18 @@ const ReportLost = () => {
                                     onChange={handleChange}
                                 />
                             </div>
-
-                            <button
-                                type="submit"
-                                className="btn btn-primary"
-                                disabled={loading}
-                            >
-                                {loading ? 'Submitting...' : 'Submit'}
-                            </button>
+                            <div className="d-flex">
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Submitting...' : 'Submit'}
+                                </button>
+                                <Link href="/" className="btn btn-secondary ms-auto">
+                                    Cancel
+                                </Link>
+                            </div>
                         </form>
                     </div>
                 </div>
