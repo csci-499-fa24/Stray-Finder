@@ -1,4 +1,4 @@
-const StrayCard = ({ name, image, breed, gender, state, description }) => (
+const StrayCard = ({ id, name, image, breed, gender, state, description }) => (
     <div className="col">
         <div className="card m-3 p-0">
             <img src={image} className="card-img-top" alt={name} />

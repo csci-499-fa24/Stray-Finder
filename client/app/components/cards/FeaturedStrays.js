@@ -67,6 +67,7 @@ const FeaturedStrays = () => {
                     animals.map((animal) => (
                         <StrayCard
                             key={animal._id}
+                            id={animal._id}
                             name={animal.name}
                             image={animal.imageUrl}
                             breed={animal.breed}
