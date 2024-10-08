@@ -70,6 +70,7 @@ const FeaturedStrays = () => {
                             id={animal._id}
                             name={animal.name}
                             image={animal.imageUrl}
+                            species={animal.species}
                             breed={animal.breed}
                             gender={animal.gender}
                             state="Unknown" // Update this if you have a proper state for animals
