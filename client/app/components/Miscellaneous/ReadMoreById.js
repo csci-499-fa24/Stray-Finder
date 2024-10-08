@@ -1,5 +1,5 @@
 "use client";
-
+import Link from 'next/link'
 import { GoogleMap, Marker, LoadScriptNext } from '@react-google-maps/api';
 import { useEffect, useState } from 'react';
 
@@ -42,7 +42,9 @@ const ReadMoreById = ({ id }) => {
         <div className="col">
             <div className="card m-3 p-0">
                 <h1 className="card-title">{stray.animal.name}</h1>
-                <img src={stray.animal.imageUrl} className="card-img-top" alt={stray.animal.name} />
+                <div className="mx-3 border p-2" >
+                    <img src={stray.animal.imageUrl} className="card-img-top" alt={stray.animal.name} />
+                </div>
                 <div className="card-body">
                     <p className="card-text">{stray.animal.description}</p>
                 </div>
@@ -64,25 +66,32 @@ const ReadMoreById = ({ id }) => {
                     Longitude: {stray.animal.coordinates.coordinates[0]}</li>
 
                 </ul>
-                {/* Render Google Map */}
-                <LoadScriptNext googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
-                    <GoogleMap
-                        mapContainerStyle={{
-                            height: '1000px',
-                            width: '100%',
-                        }}
-                        center={mapCenter}
-                        zoom={17}
-                    >
-                        {/* Marker based on stray's coordinates */}
-                        <Marker position={mapCenter} 
-                        // icon={{
-                        //     url: `${stray.animal.image}`, // URL to your custom marker image
-                        //     scaledSize: new window.google.maps.Size(40, 40) // Custom size (optional)
-                        // }}
-                        />
-                    </GoogleMap>
-                </LoadScriptNext>
+                <div className = "mx-3 mt-2">
+                    {/* Render Google Map */}
+                    <LoadScriptNext googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
+                        <GoogleMap
+                            mapContainerStyle={{
+                                height: '1000px',
+                                width: '100%',
+                            }}
+                            center={mapCenter}
+                            zoom={17}
+                        >
+                            {/* Marker based on stray's coordinates */}
+                            <Marker position={mapCenter} 
+                            // icon={{
+                            //     url: `${stray.animal.image}`, // URL to your custom marker image
+                            //     scaledSize: new window.google.maps.Size(40, 40) // Custom size (optional)
+                            // }}
+                            />
+                        </GoogleMap>
+                    </LoadScriptNext>
+                </div>
+                <div className="d-flex mb-2 mt-3">
+                    <Link href="/" className="btn btn-secondary ms-auto">
+                        Go Back
+                    </Link>
+                </div>
             </div>
         </div>
     );  
