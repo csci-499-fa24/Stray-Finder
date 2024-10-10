@@ -2,7 +2,7 @@ const request = require('supertest')
 const express = require('express')
 const cors = require('cors')
 const animalsRouter = require('../routes/animal')
-const Animal = require('../models/animal') // This will be mocked
+const Animal = require('../models/animal')
 const app = express()
 require('dotenv').config()
 
@@ -43,7 +43,6 @@ describe('GET /api/animal', () => {
                     coordinates: [-74.006, 40.7128],
                 },
             },
-            // ... add other mock animals
         ]
 
         // Mock the return value of the find method
@@ -53,7 +52,7 @@ describe('GET /api/animal', () => {
 
         expect(response.status).toBe(200)
         expect(response.body.animals.length).toBe(mockAnimals.length)
-        expect(response.body.animals).toEqual(mockAnimals) // Optional: Check response body
+        expect(response.body.animals).toEqual(mockAnimals)
     })
 
     it('should return an empty array if no animals exist', async () => {
