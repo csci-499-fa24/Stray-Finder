@@ -9,16 +9,21 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            
-            - uses: actions/setup-node@v3  # This action sets up the Node.js environment
+
+            - name: Set Up Node 
+              uses: actions/setup-node@v3  # This action sets up the Node.js environment
               with:
                 node-version: '20'
-            - run: npm install  
+
+            - name: Install dependency
+              run: npm install  
               working-directory: ./server
 
-            - run: npm test
+            - name: Run Test
+              run: npm test
               working-directory: ./server
 
-            - uses: ArtiomTr/jest-coverage-report-action@v2.3.1 
+            - name: Coverage Rrport
+              uses: ArtiomTr/jest-coverage-report-action@v2.3.1 
               with:
                 working-directory: ./server
