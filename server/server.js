@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const animal = require('./routes/animals')
+const animal = require('./routes/animal')
 const auth = require('./routes/auth')
 const user = require('./routes/user')
 

@@ -6,7 +6,7 @@ const {
     getAnimalById,
     updateAnimal,
     deleteAnimal,
-} = require('../controllers/animals')
+} = require('../controllers/animal')
 // const { authenticate } = require('../middleware/auth')
 
 router.route('/').get(getAnimals).post(createAnimal) // add authentication middleware later
