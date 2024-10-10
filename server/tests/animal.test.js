@@ -3,9 +3,14 @@ const express = require('express')
 const cors = require('cors')
 const animalsRouter = require('../routes/animal')
 const Animal = require('../models/animal')
-const app = express()
+const mongoose = require('mongoose')
+const { MongoMemoryServer } = require('mongodb-memory-server')
 require('dotenv').config()
 
+const app = express()
+let mongoServer
+
+// Middleware setup
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(
@@ -20,6 +25,23 @@ jest.mock('../models/animal')
 
 describe('GET /api/animal', () => {
     jest.setTimeout(10000) // Set timeout to 10 seconds
+
+    beforeAll(async () => {
+        // Start MongoDB Memory Server
+        mongoServer = await MongoMemoryServer.create()
+        const mongoUri = mongoServer.getUri()
+        // Connect to the in-memory database
+        await mongoose.connect(mongoUri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+    })
+
+    afterAll(async () => {
+        // Clean up and close the database connection
+        await mongoose.disconnect()
+        await mongoServer.stop()
+    })
 
     beforeEach(() => {
         // Clear all instances and calls to the mocked Animal model
