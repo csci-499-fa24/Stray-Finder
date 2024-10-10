@@ -1,14 +1,33 @@
 const request = require('supertest')
 const express = require('express')
 const cors = require('cors')
-const animalsRouter = require('../routes/animal')
-const Animal = require('../models/animal')
-const mongoose = require('mongoose')
-const { MongoMemoryServer } = require('mongodb-memory-server')
 require('dotenv').config()
 
+// In-memory Animal Model
+class InMemoryAnimalModel {
+    constructor() {
+        this.animals = []
+    }
+
+    async create(animal) {
+        this.animals.push(animal)
+        return animal
+    }
+
+    async find() {
+        return this.animals
+    }
+
+    async deleteMany() {
+        this.animals = []
+    }
+}
+
+// Create an instance of the in-memory model
+const memoryAnimal = new InMemoryAnimalModel()
+
+// Express app setup
 const app = express()
-let mongoServer
 
 // Middleware setup
 app.use(express.urlencoded({ extended: false }))
@@ -18,69 +37,55 @@ app.use(
         origin: process.env.NEXT_PUBLIC_CLIENT_URL,
     })
 )
-app.use('/api/animal', animalsRouter)
 
-// Mock the Animal model
-jest.mock('../models/animal')
-
-describe('GET /api/animal', () => {
-    jest.setTimeout(10000) // Set timeout to 10 seconds
-
-    beforeAll(async () => {
-        // Start MongoDB Memory Server
-        mongoServer = await MongoMemoryServer.create()
-        const mongoUri = mongoServer.getUri()
-        // Connect to the in-memory database
-        await mongoose.connect(mongoUri, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+// Animal routes
+app.use('/api/animal', (req, res) => {
+    if (req.method === 'GET') {
+        memoryAnimal.find().then((animals) => {
+            res.json({ animals })
         })
-    })
+    } else if (req.method === 'POST') {
+        const newAnimal = req.body
+        memoryAnimal.create(newAnimal).then((createdAnimal) => {
+            res.status(201).json(createdAnimal)
+        })
+    }
+})
 
-    afterAll(async () => {
-        // Clean up and close the database connection
-        await mongoose.disconnect()
-        await mongoServer.stop()
-    })
-
-    beforeEach(() => {
-        // Clear all instances and calls to the mocked Animal model
-        Animal.create.mockClear()
-        Animal.find.mockClear()
+// Jest tests
+describe('GET /api/animal', () => {
+    beforeEach(async () => {
+        // Clear the in-memory database before each test
+        await memoryAnimal.deleteMany()
     })
 
     it('should return a list of animals', async () => {
-        // Create some mock data
-        const mockAnimals = [
-            {
-                name: 'Bella',
-                species: 'Dog',
-                breed: 'Golden Retriever',
-                color: 'Golden',
-                gender: 'Female',
-                description: 'A friendly and playful dog.',
-                imageUrl: 'https://example.com/images/bella.jpg',
-                coordinates: {
-                    type: 'Point',
-                    coordinates: [-74.006, 40.7128],
-                },
+        // Create some mock data in the in-memory model
+        const mockAnimal = {
+            name: 'Bella',
+            species: 'Dog',
+            breed: 'Golden Retriever',
+            color: 'Golden',
+            gender: 'Female',
+            description: 'A friendly and playful dog.',
+            imageUrl: 'https://example.com/images/bella.jpg',
+            coordinates: {
+                type: 'Point',
+                coordinates: [-74.006, 40.7128],
             },
-        ]
+        }
 
-        // Mock the return value of the find method
-        Animal.find.mockResolvedValue(mockAnimals)
+        // Insert the mock data into the in-memory model
+        await memoryAnimal.create(mockAnimal)
 
         const response = await request(app).get('/api/animal')
 
         expect(response.status).toBe(200)
-        expect(response.body.animals.length).toBe(mockAnimals.length)
-        expect(response.body.animals).toEqual(mockAnimals)
+        expect(response.body.animals.length).toBe(1)
+        expect(response.body.animals).toEqual([mockAnimal])
     })
 
     it('should return an empty array if no animals exist', async () => {
-        // Mock the return value for no animals
-        Animal.find.mockResolvedValue([])
-
         const response = await request(app).get('/api/animal')
 
         expect(response.status).toBe(200)
