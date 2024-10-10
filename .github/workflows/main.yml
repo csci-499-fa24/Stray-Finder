@@ -4,6 +4,12 @@ on:
     branches:
       - master
       - main
+
+permissions:
+  checks: write
+  contents: read
+
+
 jobs:
   coverage:
     runs-on: ubuntu-latest
