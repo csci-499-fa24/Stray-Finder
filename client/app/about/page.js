@@ -14,7 +14,7 @@ const About = () => {
                 <p>If you've lost a pet or found a stray, feel free to use our platform to submit a report. Together, we can help bring pets back home.</p>
                 <h2>Our Vision </h2>
                 <p>We believe that every pet deserves to be home. Our goal is to assist communities in creating a network where lost pets are spotted, reported, and reunited with their families. </p>
-                <h2>Our Team: </h2> 
+                <h2>Our Team </h2> 
                 <p> Raed, Rodney, Andy, Alejandro, Nicholas and Divine! Also known as RRAAND!
                 </p>
                 <img src="/saddog.png" alt="About Us" className={styles.aboutImage} />
