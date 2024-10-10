@@ -1,0 +1,29 @@
+name: 'coverage'
+on:
+    pull_request:
+        branches:
+            - master
+            - main
+jobs:
+    coverage:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Set Up Node 
+              uses: actions/setup-node@v3  # This action sets up the Node.js environment
+              with:
+                node-version: '20'
+
+            - name: Install dependency
+              run: npm install  
+              working-directory: ./server
+
+            - name: Run Test
+              run: npm test
+              working-directory: ./server
+
+            - name: Coverage Rrport
+              uses: ArtiomTr/jest-coverage-report-action@v2.3.1 
+              with:
+                working-directory: ./server
