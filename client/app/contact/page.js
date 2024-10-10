@@ -1,18 +1,23 @@
+'use client'
+
 import Navbar from '../components/layouts/Navbar'
 import Footer from '../components/layouts/Footer'
+import styles from './contact.module.css'; // Import your CSS module
 
-const ContactPage = () => {
+const Contact = () => {
     return (
-      <div>
-        <Navbar />
-        <h1>How to Contact The Stray Team</h1>
-        <p>
-            You can contact us at our email:&nbsp;
-            <a href="mailto:strayfinder24@gmail.com">strayfinder24@gmail.com</a>.
-        </p>
-        <Footer />
-      </div>
-    );
-  }
-  
-  export default ContactPage;
+        <div>
+            <Navbar />
+            <div className={styles.aboutContent}>
+                <h1>Contact</h1>
+                <p>Contact us! </p>
+                <p>Our email is strayfinder24@gmail.com </p>
+                <img src="/contact.png" alt="About Us" className={styles.aboutImage} />
+                {/* Add more content here */}
+            </div>
+            <Footer />
+        </div>
+    )
+}
+
+export default Contact
