@@ -51,12 +51,9 @@ const SpottedStrayCard = () => {
                         We'll keep you updated if any strays have been located
                         nearby that match your pet's features.
                     </p>
-                    <button
-                        onClick={handleReportLostClick}
-                        className="btn btn-primary"
-                    >
+                    <Link href= "/reportlost" className="btn btn-primary">
                         Report a Lost Pet
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>
