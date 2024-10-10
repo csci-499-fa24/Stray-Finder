@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
+import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api'
 import { useRouter } from 'next/navigation' // Updated import for Next.js 13+
 
 const ReportLost = () => {
@@ -311,7 +311,7 @@ const ReportLost = () => {
 
                             <div className="mb-3">
                                 {/* Google Map Component */}
-                                <LoadScript googleMapsApiKey={apiKey}>
+                                <LoadScriptNext googleMapsApiKey={apiKey}>
                                     <GoogleMap
                                         onClick={handleMapClick}
                                         mapContainerStyle={{
@@ -340,7 +340,7 @@ const ReportLost = () => {
                                             />
                                         )}
                                     </GoogleMap>
-                                </LoadScript>
+                                </LoadScriptNext>
                             </div>
 
                             <div className="mb-3">
