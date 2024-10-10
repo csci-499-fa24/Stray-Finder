@@ -19,3 +19,7 @@ jobs:
 
             - run: npm test
               working-directory: ./server
+
+            - uses: ArtiomTr/jest-coverage-report-action@v2.3.1 
+              with:
+                working-directory: ./server
