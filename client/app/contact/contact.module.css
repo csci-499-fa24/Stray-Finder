@@ -1,0 +1,10 @@
+.aboutContent {
+    padding: 20px;
+    text-align: center;
+}
+
+.aboutImage {
+    max-width: 50%;
+    height: auto;
+    margin-top: 20px;
+}
