@@ -1,8 +1,14 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+<<<<<<< HEAD
 const animal = require('./routes/animals')
 const auth = require('./routes/auth')
+=======
+const message = require('./routes/message')
+const spottedstray = require('./routes/spottedstray')
+const lostpet = require('./routes/lostpet');
+>>>>>>> navbar_function_with_spottedstray
 const user = require('./routes/user')
 
 /**
@@ -37,8 +43,15 @@ app.use('/user', user)
 /**
  * Section for APIs
  */
+<<<<<<< HEAD
 app.use('/api/animal/', animal)
 ///////////////////////////////////////////////////////////////////////////
+=======
+app.use('/api/message/', message)
+app.use('/api/spottedstray/', spottedstray)
+app.use('/api/user/', user);
+app.use('/api/lostpet/', lostpet);
+>>>>>>> navbar_function_with_spottedstray
 
 const port = process.env.PORT || 8080
 // Load DB then start server
