@@ -1,4 +1,6 @@
-const StrayCard = ({ name, image, breed, gender, state, description }) => (
+import Link from 'next/link'
+
+const StrayCard = ({ id, name, image, species, breed, gender, state, description }) => (
     <div className="col">
         <div className="card m-3 p-0">
             <img src={image} className="card-img-top" alt={name} />
@@ -7,17 +9,14 @@ const StrayCard = ({ name, image, breed, gender, state, description }) => (
                 <p className="card-text">{description}</p>
             </div>
             <ul className="list-group list-group-flush">
-                <li className="list-group-item">Breed: {breed}</li>
+                <li className="list-group-item">Species: {species}</li>
                 <li className="list-group-item">Gender: {gender}</li>
                 <li className="list-group-item">State: {state}</li>
             </ul>
             <div className="card-body">
-                <a href="#" className="card-link">
+                <Link href={`/animal/${id}`} className="card-link">
                     Read More
-                </a>
-                <a href="#" className="card-link">
-                    Request location
-                </a>
+                </Link>
             </div>
         </div>
     </div>
