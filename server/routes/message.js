@@ -6,7 +6,7 @@ const {
 } = require('../controllers/message');
 const router = express.Router();
 
-router.post('/', auth, sendMessage);
+router.post('/:recipientId', auth, sendMessage);
 router.get('/:otherUserId', auth, getMessages);
 
 module.exports = router;

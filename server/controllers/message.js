@@ -2,7 +2,9 @@ const Message = require('../models/message');
 const User = require('../models/user');
 
 const sendMessage = async (req, res) => {
-    const { recipientId, content } = req.body;
+    const { content } = req.body;
+    const recipientId = req.params.recipientId;
+    
     if (!recipientId || !content) {
         return res.status(400).json({ message: 'Receiver and content are required' });
     }
@@ -15,7 +17,7 @@ const sendMessage = async (req, res) => {
         });
         await message.save();
         return res.status(201).json(message);
-        
+
     } catch (error) {
         return res.status(500).json({ message: 'failed to send message ', error: error.message });
     }
@@ -23,6 +25,7 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
     const { otherUserId } = req.params;
+
     try {
         const messages = await Message.find({
             $or: [
