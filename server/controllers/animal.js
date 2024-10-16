@@ -4,10 +4,33 @@ const Animal = require('../models/animal')
  * @post   : Retrieves list of animal data
  * @route  : GET /api/animal
  * @access : public
+ * @description : 
+    to use filter go to server/api/aniamls?key=value&key=value,value
+    question mark to filter
+    keys are name, species, gender
+    value are Dog, Bulldog, Female
+    if there are spaces in a value use '+' sign as seperator, 
+    if there are an array of values like in coords, use ',' as seperator
+
+ * @example /api/animal?species=Dog&color=Yellow&breed=I+don%27t+know&coordinate=-59.530569,-64.140945
+    returns Jake data
  */
+
 const getAnimals = async (req, res) => {
     try {
-        const animals = await Animal.find()
+        const {name, species, breed, color, gender, coordinates, dateReported} = req.query; // query these keys of animal json
+        let query = {}; // empty query, if passed into .find() it will find all animals
+
+        const fields = { name, species, breed, color, gender, coordinates, dateReported }; // values of all the keys
+
+        Object.keys(fields).forEach(key => { // for each element in field, run
+            if (fields[key]) {
+                query[key] = fields[key].trim(); // query the key to be the value of what is in the field and remove trailing spaces
+            }
+        });
+
+        const animals = await Animal.find(query);
+
         res.status(200).json({ animals })
     } catch (error) {
         console.error('Error fetching animals:', {
