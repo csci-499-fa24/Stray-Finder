@@ -56,9 +56,13 @@ const login = async (req, res, next) => {
 
             res.cookie('token', token, {
                 httpOnly: true,
-                sameSite: 'None',
-                maxAge: 60 * 60 * 1000,
+                secure: process.env.NODE_ENV === 'production', // Secure flag for production
+                sameSite:
+                    process.env.NODE_ENV === 'production' ? 'None' : 'Strict', // 'None' for production, 'Strict' for localhost
+                maxAge: 60 * 60 * 1000, // 1 hour
             })
+
+
 
             res.status(200).json({ message: `Welcome ${user.username}` })
         } catch (error) {

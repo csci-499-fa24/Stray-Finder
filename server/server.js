@@ -15,8 +15,6 @@ require('dotenv').config()
 /**
  * Section for middleware
  */
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
 app.use(cookieParser())
 app.use(
     cors({
@@ -24,6 +22,8 @@ app.use(
         credentials: true,
     })
 )
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 app.use((err, req, res, next) => {
     console.error(err.stack)
     res.status(500).json({ message: 'Something went wrong!' })
