@@ -1,8 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 //const http = require('http');
+const cookieParser = require('cookie-parser')
 const app = express()
-const animal = require('./routes/animals')
+const animal = require('./routes/animal')
 const auth = require('./routes/auth')
 const user = require('./routes/user')
 const message = require('./routes/message');
@@ -18,9 +19,11 @@ require('dotenv').config()
  */
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+app.use(cookieParser())
 app.use(
     cors({
         origin: process.env.NEXT_PUBLIC_CLIENT_URL,
+        credentials: true,
     })
 )
 app.use((err, req, res, next) => {
