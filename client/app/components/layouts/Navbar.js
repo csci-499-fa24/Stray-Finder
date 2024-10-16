@@ -20,7 +20,7 @@ const Navbar = () => {
                 
                 {/* Navbar Brand */}
                 <Link className="navbar-brand" href="/">
-                    The Stray Registry
+                    Stray Finder
                 </Link>
                 
                 <div

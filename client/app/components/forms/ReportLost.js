@@ -1,7 +1,7 @@
-import Link from 'next/link';
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api'
-import { useRouter } from 'next/navigation' // Updated import for Next.js 13+
+import { useRouter } from 'next/navigation'
 
 const ReportLost = () => {
     const router = useRouter() // Initialize router for navigation
@@ -143,8 +143,17 @@ const ReportLost = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(formattedData), // Send the formatted data
+                    credentials: 'include', // Ensure cookies are included in the request
                 }
             )
+
+            if (response.status === 401 || response.status === 403) {
+                // User is not authorized, redirect to login with the original path as a query parameter
+                router.push(
+                    `/login?redirect=${encodeURIComponent(router.asPath)}`
+                )
+                return
+            }
 
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`)
@@ -368,7 +377,10 @@ const ReportLost = () => {
                                 >
                                     {loading ? 'Submitting...' : 'Submit'}
                                 </button>
-                                <Link href="/" className="btn btn-secondary ms-auto">
+                                <Link
+                                    href="/"
+                                    className="btn btn-secondary ms-auto"
+                                >
                                     Cancel
                                 </Link>
                             </div>
