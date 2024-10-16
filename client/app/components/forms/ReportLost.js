@@ -135,20 +135,33 @@ const ReportLost = () => {
         }
 
         try {
+            // Log cookies before sending the request
+            console.log('Current Cookies before request:', document.cookie)
+
+            // Set up request options
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formattedData),
+                credentials: 'include', // Include cookies in the request
+            }
+
+            console.log('Request Options:', requestOptions) // Log request options
+
+            // Make the request
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formattedData), // Send the formatted data
-                    credentials: 'include', // Ensure cookies are included in the request
-                }
+                requestOptions
             )
 
+            // Log response details
+            console.log('Response Status:', response.status)
+            console.log('Response Headers:', response.headers)
+
             if (response.status === 401 || response.status === 403) {
-                // User is not authorized, redirect to login with the original path as a query parameter
+                console.error('Unauthorized: Redirecting to login')
                 router.push(
                     `/login?redirect=${encodeURIComponent(router.asPath)}`
                 )
@@ -164,7 +177,7 @@ const ReportLost = () => {
             router.push('/') // Navigate back to the home page after submission
         } catch (error) {
             setError(error.message) // Set error message
-            console.error('Error submitting form:', error.message)
+            console.error('Error submitting form:', error)
         } finally {
             setLoading(false) // End loading state
         }
