@@ -80,7 +80,15 @@ body {
 /* For report lost */
 
 .border-purple {
-    border: 2px solid #6f42c1; /* Adjust this color to match your purple */
+    border: 1px solid #6e42c150;
+}
+
+.main-prp {
+    color: var(--purple-7);
+}
+
+.bg-main-prp {
+    color: var(--purple-7);
 }
 
 .btn-purple {
