@@ -1,11 +1,13 @@
 const express = require('express')
 const cors = require('cors')
+//const http = require('http');
 const cookieParser = require('cookie-parser')
 const app = express()
 const animal = require('./routes/animal')
 const auth = require('./routes/auth')
 const user = require('./routes/user')
-
+const message = require('./routes/message');
+//const setupSocket = require('./socket/socket');
 /**
  * Connection to the database
  */
@@ -41,7 +43,13 @@ app.use('/user', user)
  * Section for APIs
  */
 app.use('/api/animal/', animal)
+app.use('/api/message/', message);
 ///////////////////////////////////////////////////////////////////////////
+
+// // Create HTTP server with app
+// const server = http.createServer(app);
+// // Initialize Socket.IO with the HTTP server
+// setupSocket(server);
 
 const port = process.env.PORT || 8080
 // Load DB then start server
