@@ -7,14 +7,14 @@ const {
     updateAnimal,
     deleteAnimal,
 } = require('../controllers/animal')
-// const { authenticate } = require('../middleware/auth')
+const authenticate = require('../middleware/auth')
 
-router.route('/').get(getAnimals).post(createAnimal) // add authentication middleware later
+router.route('/').get(getAnimals).post(authenticate, createAnimal)
 
 router
     .route('/:id')
     .get(getAnimalById)
-    .put(updateAnimal) // add authentication middleware later
-    .delete(deleteAnimal) // add authentication middleware later
+    .put(authenticate, updateAnimal)
+    .delete(authenticate, deleteAnimal)
 
-module.exports = router;
+module.exports = router

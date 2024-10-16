@@ -11,7 +11,7 @@ export default function Home() {
     return (
         <div>
             <Navbar />
-            <Breadcrumb /> {/* Ensure this is used within the page */}
+            <Breadcrumb />
             <SpottedStrayCard />
             <FeaturedStrays />
             <Footer />
