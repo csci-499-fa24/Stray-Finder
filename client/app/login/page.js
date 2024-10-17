@@ -1,8 +1,8 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
-import LoginForm from '../components/forms/LoginForm'
-import RegisterForm from '../components/forms/RegisterForm'
+import LoginForm from './components/LoginForm'
+import RegisterForm from './components/RegisterForm'
 import Footer from '../components/layouts/Footer'
 
 const Login = () => {
