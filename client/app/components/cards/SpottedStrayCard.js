@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import ReportLost from '../forms/ReportLost' // Adjust the path if necessary
+import ReportLost from '../../reportlost/components/ReportLost' // Adjust the path if necessary
 
 const SpottedStrayCard = () => {
     const [showReportLost, setShowReportLost] = useState(false)
