@@ -106,3 +106,19 @@ body {
     height: 200px; /* Set height for your mini map */
     width: 100%; /* Full width */
 }
+
+/* Ensure the image container is a square */
+.img-container {
+    width: 100%; /* Take the full width of the card */
+    padding-top: 100%; /* Makes the height equal to the width, keeping it a square */
+    position: relative; /* Necessary for absolutely positioning the image */
+}
+
+.img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the square without distorting */
+}
