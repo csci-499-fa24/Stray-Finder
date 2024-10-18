@@ -1,8 +1,8 @@
 'use client'
 
 import ReportLost from './components/ReportLost'
-import Navbar from '../components/layouts/Navbar'
-import Footer from '../components/layouts/Footer'
+import Navbar from "@/app/components/layouts/Navbar";
+import Footer from "@/app/components/layouts/Footer";
 
 const ReportLostPage = () => {
     return (

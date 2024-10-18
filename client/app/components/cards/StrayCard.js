@@ -14,7 +14,7 @@ const StrayCard = ({ id, name, image, species, breed, gender, state, description
                 <li className="list-group-item">State: {state}</li>
             </ul>
             <div className="card-body">
-                <Link href={`/animal/${id}`} className="card-link">
+                <Link href={`/pages/animal/${id}`} className="card-link">
                     Read More
                 </Link>
             </div>

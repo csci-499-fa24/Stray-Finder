@@ -38,14 +38,14 @@ const Navbar = () => {
                         
                         {/* About Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/about">
+                            <Link className="nav-link active" aria-current="page" href="/pages/about">
                                 About
                             </Link>
                         </li>
                         
                         {/* Contact Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/contact">
+                            <Link className="nav-link active" aria-current="page" href="/pages/contact">
                                 Contact
                             </Link>
                         </li>
@@ -100,7 +100,7 @@ const Navbar = () => {
 
                 {/* Login Link */}
                 <div className="p-3 ml-auto">
-                    <Link href="/login">Login</Link>
+                    <Link href="/pages/login">Login</Link>
                 </div>
             </div>
         </nav>

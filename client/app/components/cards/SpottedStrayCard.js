@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import ReportLost from '../../reportlost/components/ReportLost' // Adjust the path if necessary
+import ReportLost from '../../pages/reportlost/components/ReportLost' // Adjust the path if necessary
 
 const SpottedStrayCard = () => {
     const [showReportLost, setShowReportLost] = useState(false)
@@ -40,7 +40,7 @@ const SpottedStrayCard = () => {
                         better), an approximate location, as well as an image or
                         a video if applicable.
                     </p>
-                    <Link href="/login" className="btn btn-primary">
+                    <Link href="/pages/login" className="btn btn-primary">
                         Login
                     </Link>
                 </div>
@@ -51,7 +51,7 @@ const SpottedStrayCard = () => {
                         We'll keep you updated if any strays have been located
                         nearby that match your pet's features.
                     </p>
-                    <Link href="/reportlost" className="btn btn-primary">
+                    <Link href="/pages/reportlost" className="btn btn-primary">
                         Report a Lost Pet
                     </Link>
                 </div>
