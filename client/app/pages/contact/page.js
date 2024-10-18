@@ -1,5 +1,5 @@
-import Navbar from '../components/layouts/Navbar'
-import Footer from '../components/layouts/Footer'
+import Navbar from "@/app/components/layouts/Navbar";
+import Footer from "@/app/components/layouts/Footer";
 import styles from './contact.module.css'; // Import your CSS module
 
 
