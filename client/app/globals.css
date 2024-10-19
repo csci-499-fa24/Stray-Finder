@@ -2,7 +2,7 @@
 
 :root {
     /* Define a range of shades of purple */
-    --purple-1: hsl(270, 50%, 10%);
+    --purple-1: hsl(190, 49%, 10%);
     --purple-2: hsl(270, 50%, 15%);
     --purple-3: hsl(270, 50%, 20%);
     --purple-4: hsl(270, 50%, 25%);
@@ -25,7 +25,7 @@
 }
 
 * {
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+    font-family:  sans-serif;
 }
 
 .custom-navbar .navbar-brand,
@@ -49,11 +49,27 @@
     background-color: var(--purple-10);
 }
 
+.highlight-brand {
+    background: linear-gradient(90deg,  #6392c7, #ae5388);  /* Background color */
+    color: rgb(225, 199, 199);               /* Text color */
+    padding: 1px 4px;         /* Add padding */
+    border-radius: 15px;         /* Round the corners */
+    font-size: 1.8rem;
+}
+
+.highlight-brand:hover {
+    background: linear-gradient(90deg, #ae5388, #6392c7); /* Reverse gradient on hover */
+}
+
+
+
 .navbar-brand {
     line-height: 70px;
     padding: 10px;
     font-size: 24px;
+    color:hsl(270, 50%, 100%)
 }
+
 
 .navbar-toggler-icon {
     color: white;

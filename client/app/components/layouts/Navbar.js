@@ -19,7 +19,7 @@ const Navbar = () => {
                 </button>
                 
                 {/* Navbar Brand */}
-                <Link className="navbar-brand" href="/">
+                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/">
                     Stray Finder
                 </Link>
                 
