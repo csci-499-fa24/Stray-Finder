@@ -7,6 +7,7 @@ const animal = require('./routes/animal')
 const auth = require('./routes/auth')
 const user = require('./routes/user')
 const message = require('./routes/message');
+const report = require('./routes/report'); // Added
 //const setupSocket = require('./socket/socket');
 /**
  * Connection to the database
@@ -44,6 +45,7 @@ app.use('/user', user)
  */
 app.use('/api/animal/', animal)
 app.use('/api/message/', message);
+app.use('/api/report/', report); //Added
 ///////////////////////////////////////////////////////////////////////////
 
 // // Create HTTP server with app

@@ -122,3 +122,35 @@ body {
     height: 100%;
     object-fit: cover; /* Ensures the image covers the square without distorting */
 }
+
+/* Styles for Advanced Search Link */
+.advanced-search-link {
+    color: blue; /* Default link color */
+    text-decoration: underline; /* Underline to resemble a traditional link */
+    cursor: pointer; /* Pointer cursor to indicate it's clickable */
+}
+
+.advanced-search-link:hover {
+    color: darkblue; /* Darker blue on hover for a nice effect */
+}
+
+.advanced-search-container {
+    min-height: 80vh; /* Set a height to center vertically */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.advanced-search-form {
+    width: 100%;
+    max-width: 500px; /* Limit the width of the form */
+    background-color: #f8f9fa; /* Light background for the form */
+    border-radius: 8px;
+}
+
+.advanced-search-form h3 {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #333;
+}
+
