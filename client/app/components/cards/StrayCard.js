@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { useState } from 'react'
-import './cards.css'
 
 const StrayCard = ({ id, name, image, species, breed, gender, state, description }) => {
    // State to manage if the modal is open
