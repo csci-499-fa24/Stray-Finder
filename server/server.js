@@ -4,6 +4,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const app = express()
 const animal = require('./routes/animal')
+const user = require('./routes/user')
 const auth = require('./routes/auth')
 const message = require('./routes/message');
 const report = require('./routes/report'); // Added
@@ -43,7 +44,8 @@ app.use('/auth', auth)
  */
 app.use('/api/animal/', animal)
 app.use('/api/message/', message);
-app.use('/api/report/', report); //Added
+app.use('/api/report/', report);
+app.use('/api/user/', user)
 ///////////////////////////////////////////////////////////////////////////
 
 // // Create HTTP server with app
