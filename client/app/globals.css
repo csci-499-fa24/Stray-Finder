@@ -28,12 +28,22 @@
     font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 
-.custom-navbar .navbar-brand,
-.custom-navbar .navbar-nav,
-.custom-navbar .nav-link.active,
+.custom-navbar .navbar-brand{
+    color: var(--purple-7);
+}
+
+.custom-navbar .navbar-nav{
+    color: var(--purple-7);
+}
+
+.custom-navbar .nav-link.active{
+    color: var(--purple-7);
+}
+
 .custom-navbar .nav-link.dropdown-toggle {
     color: var(--purple-7);
 }
+
 
 .custom-navbar .search-button {
     color: var(--purple-7);
@@ -209,4 +219,107 @@ body {
     background-color: #28a745;
     color: white;
     cursor: pointer;
+}
+
+
+
+
+
+
+-------
+
+
+
+
+
+
+
+.background-purple-10 {
+    background-color: var(--purple-10);
+}
+
+.highlight-brand {
+    background: linear-gradient(45deg,  #6392c7, #d870ad);  /* Background color */
+    color: rgb(225, 199, 199);               /* Text color */
+    padding: 4px 4px;         /* Add padding */
+    border-radius: 15px;         /* Round the corners */
+    font-size: 1.8rem;
+}
+
+.highlight-brand:hover {
+    background: linear-gradient(27deg, #d870ad, #6392c7); /* Reverse gradient on hover */
+    
+}
+
+
+
+.navbar-brand {
+    line-height: 70px;
+    padding: 0.05px 5px;
+    font-size: 24px;
+    color:hsl(270, 50%, 100%)
+}
+
+
+
+
+.navbar-toggler-icon {
+    color: white;
+}
+
+.custom-navbar .navbar-nav .nav-link {
+    font-weight: bold;
+}
+
+.spotted-stray .card-header {
+    background-color: var(--purple-10);
+}
+
+.footer span {
+    color: var(--purple-7);
+}
+
+body {
+    background-color: var(--purple-19);
+    overflow-y: scroll; /* added a scroll wheel to every page to prevent shift of navbar in presence of a scroll wheel */
+    padding-right: 15px; /* shifted page to the right to center more because of the wheel */
+}
+
+/* For report lost */
+
+.border-purple {
+    border: 1px solid #6e42c150;
+}
+
+.main-prp {
+    color: var(--purple-7);
+}
+
+.bg-main-prp {
+    color: var(--purple-7);
+}
+
+.btn-purple {
+    background-color: #6f42c1; /* Adjust this color to match your purple */
+    border: none;
+    color: white;
+}
+
+.btn-purple:hover {
+    background-color: #5a31a1; /* Darker shade for hover effect */
+}
+
+/* Leaflet CSS */
+.leaflet-container {
+    height: 200px; /* Set height for your mini map */
+    width: 100%; /* Full width */
+}
+
+.navbar-nav {
+    background: linear-gradient(45deg,  #b24ed0, #767fd8);  /* Background color */
+    color: rgb(225, 199, 199);               /* Text color */
+    padding: 4px 4px;         /* Add padding */
+    border-radius: 20px;         /* Round the corners */
+    font-size: 1.2rem;letter-spacing: 2px;                     /* Increase spacing between the words */
+    border-width: 2px dashed white;                /* Add small white dashes within the border */
 }
