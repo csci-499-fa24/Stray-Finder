@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ReportLost from '../../reportlost/components/ReportLost'
-import useAuth from '@/app/hooks/useAuth' // Assuming your useAuth hook is in utils
+import useAuth from '@/app/hooks/useAuth'
 
 const SpottedStrayCard = () => {
     const { isAuthenticated } = useAuth() // Get authentication status
     const [showReportLost, setShowReportLost] = useState(false)
-    const router = useRouter() // For programmatic navigation
+    const router = useRouter()
 
     const handleReportLostClick = () => {
         setShowReportLost(true) // Show ReportLost component
@@ -17,7 +17,6 @@ const SpottedStrayCard = () => {
         setShowReportLost(false) // Go back to the SpottedStrayCard
     }
 
-    // If user clicks on a protected route without being authenticated, redirect to login
     const handleProtectedRouteClick = () => {
         if (!isAuthenticated) {
             router.push('/login') // Redirect to login page if not authenticated
@@ -61,10 +60,10 @@ const SpottedStrayCard = () => {
                         </Link>
                     ) : (
                         <button
-                            onClick={handleProtectedRouteClick}
+                            onClick={handleReportLostClick}
                             className="btn btn-primary"
                         >
-                            Go to Protected Route
+                            Report a Stray
                         </button>
                     )}
                 </div>
@@ -78,12 +77,19 @@ const SpottedStrayCard = () => {
                         nearby that match your pet's features.
                     </p>
 
-                    <button
-                        onClick={handleProtectedRouteClick}
-                        className="btn btn-primary"
-                    >
-                        Report a Lost Pet
-                    </button>
+                    {/* Render 'Report a Lost Pet' button for authenticated users */}
+                    {isAuthenticated ? (
+                        <button
+                            onClick={handleReportLostClick}
+                            className="btn btn-primary"
+                        >
+                            Report a Lost Pet
+                        </button>
+                    ) : (
+                        <Link href="/login" className="btn btn-primary">
+                            Login
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>
