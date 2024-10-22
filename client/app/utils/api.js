@@ -1,9 +1,13 @@
 export const checkAuthStatus = async () => {
     try {
-        const response = await fetch('/api/auth', {
-            method: 'GET',
-            credentials: 'include',
-        })
+        console.log('TAPPED HERE')
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/auth`,
+            {
+                method: 'GET',
+                credentials: 'include',
+            }
+        )
 
         if (response.ok) {
             const data = await response.json()
@@ -68,13 +72,13 @@ export const loginUser = async (username, password) => {
     }
 }
 
-export const logoutUser = async () => {
-    try {
-        await fetch('/api/auth/logout', {
-            method: 'POST',
-            credentials: 'include',
-        })
-    } catch (error) {
-        console.error('Error logging out:', error)
-    }
-}
+// export const logoutUser = async () => {
+//     try {
+//         await fetch('/api/auth/logout', {
+//             method: 'POST',
+//             credentials: 'include',
+//         })
+//     } catch (error) {
+//         console.error('Error logging out:', error)
+//     }
+// }
