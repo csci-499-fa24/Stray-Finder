@@ -1,7 +1,7 @@
 'use client'
 
-import Navbar from '../../components/layouts/Navbar'
-import Footer from '../../components/layouts/Footer'
+import Navbar from '../components/layouts/Navbar'
+import Footer from '../components/layouts/Footer'
 import styles from './about.module.css'; // Import your CSS module
 
 const About = () => {

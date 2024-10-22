@@ -3,21 +3,24 @@ import { checkAuthStatus } from '@/app/utils/api'
 
 const useAuth = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [user, setUser] = useState(null)
 
     useEffect(() => {
         const verifyAuth = async () => {
             try {
-                const authenticated = await checkAuthStatus()
+                const { authenticated, user } = await checkAuthStatus()
                 setIsAuthenticated(authenticated)
+                setUser(user)
             } catch (error) {
                 setIsAuthenticated(false)
+                setUser(null)
             }
         }
 
         verifyAuth()
     }, [])
 
-    return { isAuthenticated }
+    return { isAuthenticated, user }
 }
 
 export default useAuth

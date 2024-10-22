@@ -1,6 +1,6 @@
 'use client';  // Add this at the very top
 
-import AdvancedSearch from '../../components/Miscellaneous/AdvancedSearch';
+import AdvancedSearch from '../components/Miscellaneous/AdvancedSearch';
 import { useState } from 'react';
 
 const AdvancedSearchPage = () => {

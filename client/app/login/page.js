@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
-import Footer from '../../components/layouts/Footer'
+import Footer from '../components/layouts/Footer'
 
 const Login = () => {
     const [activeTab, setActiveTab] = useState('login')

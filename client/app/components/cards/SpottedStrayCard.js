@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import ReportLost from '../../pages/reportlost/components/ReportLost'
+import ReportLost from '../../reportlost/components/ReportLost'
 import useAuth from '@/app/hooks/useAuth'
 
 const SpottedStrayCard = () => {
