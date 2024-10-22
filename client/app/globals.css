@@ -2,7 +2,7 @@
 
 :root {
     /* Define a range of shades of purple */
-    --purple-1: hsl(190, 49%, 10%);
+    --purple-1: hsl(190, 62%, 47%);
     --purple-2: hsl(270, 50%, 15%);
     --purple-3: hsl(270, 50%, 20%);
     --purple-4: hsl(270, 50%, 25%);
@@ -28,12 +28,23 @@
     font-family:  sans-serif;
 }
 
-.custom-navbar .navbar-brand,
-.custom-navbar .navbar-nav,
-.custom-navbar .nav-link.active,
+.custom-navbar .navbar-brand{
+    color: var(--purple-7);
+}
+
+.custom-navbar .navbar-nav{
+    color: var(--purple-7);
+}
+
+.custom-navbar .nav-link.active{
+    color: var(--purple-7);
+}
+
 .custom-navbar .nav-link.dropdown-toggle {
     color: var(--purple-7);
 }
+
+
 
 .custom-navbar .search-button {
     color: var(--purple-7);
@@ -50,25 +61,28 @@
 }
 
 .highlight-brand {
-    background: linear-gradient(90deg,  #6392c7, #ae5388);  /* Background color */
+    background: linear-gradient(45deg,  #6392c7, #d870ad);  /* Background color */
     color: rgb(225, 199, 199);               /* Text color */
-    padding: 1px 4px;         /* Add padding */
+    padding: 4px 4px;         /* Add padding */
     border-radius: 15px;         /* Round the corners */
     font-size: 1.8rem;
 }
 
 .highlight-brand:hover {
-    background: linear-gradient(90deg, #ae5388, #6392c7); /* Reverse gradient on hover */
+    background: linear-gradient(27deg, #d870ad, #6392c7); /* Reverse gradient on hover */
+    
 }
 
 
 
 .navbar-brand {
     line-height: 70px;
-    padding: 10px;
+    padding: 0.05px 5px;
     font-size: 24px;
     color:hsl(270, 50%, 100%)
 }
+
+
 
 
 .navbar-toggler-icon {
@@ -122,3 +136,13 @@ body {
     height: 200px; /* Set height for your mini map */
     width: 100%; /* Full width */
 }
+
+.navbar-nav {
+    background: linear-gradient(45deg,  #b24ed0, #767fd8);  /* Background color */
+    color: rgb(225, 199, 199);               /* Text color */
+    padding: 4px 4px;         /* Add padding */
+    border-radius: 25px;         /* Round the corners */
+    font-size: 1.2rem;letter-spacing: 2px;                     /* Increase spacing between the words */
+    border-width: 2px dashed white;                /* Add small white dashes within the border */
+}
+

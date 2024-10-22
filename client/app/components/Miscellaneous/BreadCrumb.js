@@ -7,7 +7,7 @@ const Breadcrumb = () => (
                 <Link href="/">Home</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-                Library
+                <Link href="/">Library</Link>
             </li>
         </ol>
     </nav>
