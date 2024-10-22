@@ -3,13 +3,16 @@ const Report = require('../models/report')
 // Create a new report
 const createReport = async (req, res) => {
     try {
-        const { animalId, description } = req.body
+        const { animalId, description, reason } = req.body
         const report = new Report({
             userId: req.user._id,
             animalId,
             description,
+            reason,
         })
+
         await report.save()
+
         res.status(201).json(report)
     } catch (error) {
         res.status(500).json({ message: 'Error creating report', error: error.message })

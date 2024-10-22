@@ -15,6 +15,11 @@ const ReportSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    reason: {
+        type: String,
+        enum: ['Spam', 'Offensive Content', 'Inaccurate Information'],
+        required: true,
+    },
     status: {
         type: String,
         enum: ['Open', 'Resolved', 'Closed'],
