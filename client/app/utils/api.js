@@ -1,6 +1,5 @@
 export const checkAuthStatus = async () => {
     try {
-        console.log('TAPPED HERE')
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/auth`,
             {
@@ -10,13 +9,27 @@ export const checkAuthStatus = async () => {
         )
 
         if (response.ok) {
-            const data = await response.json()
-            return data.authenticated
+            const authData = await response.json()
+            if (authData.authenticated) {
+                // Fetch user details from /api/user
+                const userResponse = await fetch(
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user`,
+                    {
+                        method: 'GET',
+                        credentials: 'include',
+                    }
+                )
+
+                if (userResponse.ok) {
+                    const userData = await userResponse.json()
+                    return { authenticated: true, user: userData } // Return the user data along with authenticated status
+                }
+            }
         }
-        return false
+        return { authenticated: false, user: null } // Return false if not authenticated
     } catch (error) {
         console.error('Error checking authentication:', error)
-        return false
+        return { authenticated: false, user: null }
     }
 }
 

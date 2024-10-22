@@ -1,8 +1,10 @@
 'use client'
-
 import Link from 'next/link'
+import useAuth from '@/app/hooks/useAuth'
 
 const Navbar = () => {
+    const { isAuthenticated, user } = useAuth()
+
     return (
         <nav className="navbar navbar-expand-lg justify-content-center custom-navbar">
             <div className="container-fluid d-flex">
@@ -30,21 +32,33 @@ const Navbar = () => {
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
                         {/* Home Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/">
+                            <Link
+                                className="nav-link active"
+                                aria-current="page"
+                                href="/"
+                            >
                                 Home
                             </Link>
                         </li>
 
                         {/* About Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/about">
+                            <Link
+                                className="nav-link active"
+                                aria-current="page"
+                                href="/about"
+                            >
                                 About
                             </Link>
                         </li>
 
                         {/* Contact Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/contact">
+                            <Link
+                                className="nav-link active"
+                                aria-current="page"
+                                href="/contact"
+                            >
                                 Contact
                             </Link>
                         </li>
@@ -62,58 +76,46 @@ const Navbar = () => {
                             </Link>
                             <ul className="dropdown-menu">
                                 <li>
-                                    <Link className="dropdown-item" href="/report-lost">
+                                    <Link
+                                        className="dropdown-item"
+                                        href="/report-lost"
+                                    >
                                         Report Lost
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link className="dropdown-item" href="/report-found">
+                                    <Link
+                                        className="dropdown-item"
+                                        href="/report-found"
+                                    >
                                         Report Found
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link className="dropdown-item" href="/report-stray">
+                                    <Link
+                                        className="dropdown-item"
+                                        href="/report-stray"
+                                    >
                                         Report Stray
                                     </Link>
                                 </li>
                             </ul>
                         </li>
                     </ul>
-
-                    {/* Wrap Search Form and Advanced Search in a new container */}
-                    <div className="d-flex flex-column align-items-center">
-                        {/* Search Form */}
-                        <form className="d-flex" role="search">
-                            <input
-                                className="form-control me-2"
-                                type="search"
-                                placeholder="e.g. name, breed"
-                                aria-label="Search"
-                            />
-                            <button
-                                className="btn btn-outline-success search-button"
-                                type="submit"
-                            >
-                                Search
-                            </button>
-                        </form>
-
-                        {/* Advanced Search link below the search box, centered */}
-                        <div className="mt-2 text-center">
-                            <Link href="/advanced-search" className="advanced-search-link">
-                                Advanced Search
-                            </Link>
-                        </div>
-                    </div>
                 </div>
 
-                {/* Login Link */}
+                {/* Conditional Login/Welcome User */}
                 <div className="p-3 ml-auto">
-                    <Link href="/login">Login</Link>
+                    {isAuthenticated && user ? (
+                        <h6>{`Welcome, ${user.username}`}</h6>
+                    ) : (
+                        <Link href="/login">Login</Link>
+                    )}
+                    {/* Profile icon coming some time later */}
                 </div>
             </div>
         </nav>
     )
 }
 
-export default Navbar;
+export default Navbar
