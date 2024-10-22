@@ -1,22 +1,32 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loginUser } from '@/app/utils/api'
-import Link from 'next/link'
 
 const LoginForm = () => {
     const router = useRouter()
     const redirect = router.query?.redirect || '/'
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [errorMessage, setErrorMessage] = useState('') // State for error message
 
     const handleLogin = async (e) => {
         e.preventDefault()
+        setErrorMessage('') // Reset error message on new attempt
 
         try {
             await loginUser(username, password)
             router.push(redirect)
         } catch (error) {
-            console.error('Login failed', error)
+            // Ensure the server message is captured correctly
+            if (
+                error.response &&
+                error.response.data &&
+                error.response.data.message
+            ) {
+                setErrorMessage(error.response.data.message) // Show actual error message from the server
+            } else {
+                setErrorMessage('Login failed') // Default message
+            }
         }
     }
 
@@ -28,36 +38,8 @@ const LoginForm = () => {
             aria-labelledby="tab-login"
         >
             <form onSubmit={handleLogin}>
-                <div className="text-center mb-3">
-                    <p>Sign in with:</p>
-                    <button
-                        type="button"
-                        className="btn btn-link btn-floating mx-1"
-                    >
-                        <i className="fab fa-facebook-f"></i>
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-link btn-floating mx-1"
-                    >
-                        <i className="fab fa-google"></i>
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-link btn-floating mx-1"
-                    >
-                        <i className="fab fa-twitter"></i>
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-link btn-floating mx-1"
-                    >
-                        <i className="fab fa-github"></i>
-                    </button>
-                </div>
-
-                <p className="text-center">or:</p>
-
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}{' '}
+                {/* Display error in red */}
                 <div className="form-outline mb-4">
                     <input
                         type="text"
@@ -68,7 +50,6 @@ const LoginForm = () => {
                         placeholder="Username"
                     />
                 </div>
-
                 <div className="form-outline mb-4">
                     <input
                         type="password"
@@ -79,43 +60,12 @@ const LoginForm = () => {
                         placeholder="Password"
                     />
                 </div>
-
-                <div className="row mb-4">
-                    <div className="col-md-6 d-flex justify-content-center">
-                        <div className="form-check">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id="loginCheck"
-                            />
-                            <label
-                                className="form-check-label"
-                                htmlFor="loginCheck"
-                            >
-                                {' '}
-                                Remember me{' '}
-                            </label>
-                        </div>
-                    </div>
-
-                    <div className="col-md-6 d-flex justify-content-center">
-                        <a href="#">Forgot password?</a>
-                    </div>
-                </div>
-
                 <button
                     type="submit"
                     className="btn-purple btn btn-primary btn-block mb-4"
                 >
                     Sign in
                 </button>
-
-                <div className="text-center">
-                    <p>
-                        Not a member? <a href="#">Register</a>
-                    </p>
-                </div>
             </form>
         </div>
     )

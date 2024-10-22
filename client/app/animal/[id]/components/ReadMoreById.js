@@ -39,10 +39,10 @@ const ReadMoreById = ({ id }) => {
         )
     }
     return (
-        <div className="col">
+        <div className="col p-5">
             <div className="card m-3 p-0">
-                <h1 className="card-title">{animals.animal.name}</h1>
-                <div className="mx-3 border p-2" >
+                <h1 className="card-title text-center p-3 main-prp">{animals.animal.name}</h1>
+                <div className="mx-5 p-2" >
                     <img src={animals.animal.imageUrl} className="card-img-top" alt={animals.animal.name} />
                 </div>
                 <div className="card-body">
