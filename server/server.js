@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-//const http = require('http');
+// const http = require('http');
 const cookieParser = require('cookie-parser')
 const app = express()
 const animal = require('./routes/animal')
@@ -8,7 +8,7 @@ const user = require('./routes/user')
 const auth = require('./routes/auth')
 const message = require('./routes/message');
 const report = require('./routes/report'); // Added
-//const setupSocket = require('./socket/socket');
+// const socketSetUp = require('./socket/socket');
 /**
  * Connection to the database
  */
@@ -48,10 +48,10 @@ app.use('/api/report/', report);
 app.use('/api/user/', user)
 ///////////////////////////////////////////////////////////////////////////
 
-// // Create HTTP server with app
+// Create HTTP server with app
 // const server = http.createServer(app);
-// // Initialize Socket.IO with the HTTP server
-// setupSocket(server);
+// Initialize Socket.IO with the HTTP server
+// socketSetUp(server);
 
 const port = process.env.PORT || 8080
 // Load DB then start server
