@@ -10,18 +10,18 @@ const SpottedStrayCard = () => {
     const router = useRouter()
 
     const handleReportLostClick = () => {
-        setShowReportLost(true) // Show ReportLost component
+        setShowReportLost(true)
     }
 
     const handleGoBackClick = () => {
-        setShowReportLost(false) // Go back to the SpottedStrayCard
+        setShowReportLost(false)
     }
 
     const handleProtectedRouteClick = () => {
         if (!isAuthenticated) {
-            router.push('/login') // Redirect to login page if not authenticated
+            router.push('/login')
         } else {
-            router.push('/protected-route') // Replace with your actual protected route
+            router.push('/protected-route')
         }
     }
 
