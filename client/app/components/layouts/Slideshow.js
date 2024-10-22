@@ -3,12 +3,6 @@ import React from 'react';
 import Navbar from "@/app/components/layouts/Navbar";
 // Ensure Bootstrap CSS is imported
 
-import { useEffect } from 'react'
-import localFont from 'next/font/local'
-import 'bootstrap/dist/css/bootstrap.min.css' // Only one import of Bootstrap CSS
-
-import './globals.css' // Import your global styles
-
 
 
 const Slideshow = () => {
