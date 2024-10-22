@@ -106,3 +106,107 @@ body {
     height: 200px; /* Set height for your mini map */
     width: 100%; /* Full width */
 }
+
+/* Ensure the image container is a square */
+.img-container {
+    width: 100%; /* Take the full width of the card */
+    padding-top: 100%; /* Makes the height equal to the width, keeping it a square */
+    position: relative; /* Necessary for absolutely positioning the image */
+}
+
+.img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the square without distorting */
+}
+
+/* Styles for Advanced Search Link */
+.advanced-search-link {
+    color: blue; /* Default link color */
+    text-decoration: underline; /* Underline to resemble a traditional link */
+    cursor: pointer; /* Pointer cursor to indicate it's clickable */
+}
+
+.advanced-search-link:hover {
+    color: darkblue; /* Darker blue on hover for a nice effect */
+}
+
+.advanced-search-container {
+    min-height: 80vh; /* Set a height to center vertically */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.advanced-search-form {
+    width: 100%;
+    max-width: 500px; /* Limit the width of the form */
+    background-color: #f8f9fa; /* Light background for the form */
+    border-radius: 8px;
+}
+
+.advanced-search-form h3 {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Smaller Report button */
+.report-btn {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    max-width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content h4 {
+    margin-bottom: 15px;
+}
+
+.modal-content select,
+.modal-content button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.modal-content button {
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+}
