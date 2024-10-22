@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
-import ReportLost from '../../reportlost/components/ReportLost' // Adjust the path if necessary
+import ReportLost from '../../reportlost/components/ReportLost'
+import useAuth from '@/app/hooks/useAuth' // Assuming your useAuth hook is in utils
 
 const SpottedStrayCard = () => {
+    const { isAuthenticated } = useAuth() // Get authentication status
     const [showReportLost, setShowReportLost] = useState(false)
+    const router = useRouter() // For programmatic navigation
 
     const handleReportLostClick = () => {
         setShowReportLost(true) // Show ReportLost component
@@ -11,6 +15,15 @@ const SpottedStrayCard = () => {
 
     const handleGoBackClick = () => {
         setShowReportLost(false) // Go back to the SpottedStrayCard
+    }
+
+    // If user clicks on a protected route without being authenticated, redirect to login
+    const handleProtectedRouteClick = () => {
+        if (!isAuthenticated) {
+            router.push('/login') // Redirect to login page if not authenticated
+        } else {
+            router.push('/protected-route') // Replace with your actual protected route
+        }
     }
 
     if (showReportLost) {
@@ -40,20 +53,37 @@ const SpottedStrayCard = () => {
                         better), an approximate location, as well as an image or
                         a video if applicable.
                     </p>
-                    <Link href="/login" className="btn btn-primary">
-                        Login
-                    </Link>
+
+                    {/* Conditional rendering based on authentication status */}
+                    {!isAuthenticated ? (
+                        <Link href="/login" className="btn btn-primary">
+                            Login
+                        </Link>
+                    ) : (
+                        <button
+                            onClick={handleProtectedRouteClick}
+                            className="btn btn-primary"
+                        >
+                            Go to Protected Route
+                        </button>
+                    )}
                 </div>
+
                 <hr className="align-self-center" style={{ width: '90%' }} />
+
                 <div className="card-body">
                     <h5 className="card-title">Report a lost pet</h5>
                     <p className="card-text">
                         We'll keep you updated if any strays have been located
                         nearby that match your pet's features.
                     </p>
-                    <Link href="/reportlost" className="btn btn-primary">
+
+                    <button
+                        onClick={handleProtectedRouteClick}
+                        className="btn btn-primary"
+                    >
                         Report a Lost Pet
-                    </Link>
+                    </button>
                 </div>
             </div>
         </div>

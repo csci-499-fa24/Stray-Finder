@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser')
 const app = express()
 const animal = require('./routes/animal')
 const auth = require('./routes/auth')
-const user = require('./routes/user')
 const message = require('./routes/message');
 //const setupSocket = require('./socket/socket');
 /**
@@ -36,7 +35,6 @@ app.use((err, req, res, next) => {
  * Section for authentication routes
  */
 app.use('/auth', auth)
-app.use('/user', user)
 ///////////////////////////////////////////////////////////////////////////
 
 /**
