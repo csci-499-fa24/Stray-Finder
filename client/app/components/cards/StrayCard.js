@@ -22,7 +22,7 @@ const StrayCard = ({ id, name, image, species, breed, gender, state, description
 
         //KEEP FULL URL until production when everything is hosted on the same domain
         try {
-            const response = await fetch('http://localhost:8080/api/report/', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/report/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
