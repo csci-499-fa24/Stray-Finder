@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { registerUser } from '@/app/utils/api'
-import Link from 'next/link'
 
 const RegisterForm = () => {
     const router = useRouter()
@@ -10,12 +9,14 @@ const RegisterForm = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [repeatPassword, setRepeatPassword] = useState('')
+    const [errorMessage, setErrorMessage] = useState('') // State for error message
 
     const handleRegister = async (e) => {
         e.preventDefault()
+        setErrorMessage('') // Reset error message on new attempt
 
         if (password !== repeatPassword) {
-            console.error('Passwords do not match')
+            setErrorMessage('Passwords do not match')
             return
         }
 
@@ -23,43 +24,24 @@ const RegisterForm = () => {
             await registerUser(username, email, password)
             router.push(redirect)
         } catch (error) {
-            console.error('Registration failed', error)
+            // Ensure the server message is captured correctly
+            if (
+                error.response &&
+                error.response.data &&
+                error.response.data.message
+            ) {
+                setErrorMessage(error.response.data.message) // Show actual error message from the server
+            } else {
+                setErrorMessage('Registration failed') // Default message
+            }
         }
     }
 
     return (
         <div>
             <form onSubmit={handleRegister}>
-                <div className="text-center mb-3">
-                    <p>Sign up with:</p>
-                    <button
-                        type="button"
-                        className="btn btn-link btn-floating mx-1"
-                    >
-                        <i className="fab fa-facebook-f"></i>
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-link btn-floating mx-1"
-                    >
-                        <i className="fab fa-google"></i>
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-link btn-floating mx-1"
-                    >
-                        <i className="fab fa-twitter"></i>
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-link btn-floating mx-1"
-                    >
-                        <i className="fab fa-github"></i>
-                    </button>
-                </div>
-
-                <p className="text-center">or:</p>
-
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}{' '}
+                {/* Display error in red */}
                 <div className="form-outline mb-4">
                     <input
                         type="text"
@@ -70,7 +52,6 @@ const RegisterForm = () => {
                         placeholder="Username"
                     />
                 </div>
-
                 <div className="form-outline mb-4">
                     <input
                         type="email"
@@ -81,7 +62,6 @@ const RegisterForm = () => {
                         placeholder="Email"
                     />
                 </div>
-
                 <div className="form-outline mb-4">
                     <input
                         type="password"
@@ -92,7 +72,6 @@ const RegisterForm = () => {
                         placeholder="Password"
                     />
                 </div>
-
                 <div className="form-outline mb-4">
                     <input
                         type="password"
@@ -103,18 +82,6 @@ const RegisterForm = () => {
                         placeholder="Confirm Password"
                     />
                 </div>
-
-                <div className="form-check d-flex justify-content-center mb-4">
-                    <input
-                        className="form-check-input me-2"
-                        type="checkbox"
-                        id="registerCheck"
-                    />
-                    <label className="form-check-label" htmlFor="registerCheck">
-                        I have read and agree to the terms
-                    </label>
-                </div>
-
                 <button
                     type="submit"
                     className="btn-purple btn btn-primary btn-block mb-3"
