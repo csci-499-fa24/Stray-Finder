@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { loginUser } from '@/app/utils/api'
 import Link from 'next/link'
 
 const LoginForm = () => {
@@ -12,25 +13,7 @@ const LoginForm = () => {
         e.preventDefault()
 
         try {
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/login`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password }),
-                    credentials: 'include',
-                }
-            )
-
-            if (!response.ok) {
-                const errorData = await response.json()
-                console.error('Login failed', errorData)
-                return
-            }
-
-            const data = await response.json()
+            await loginUser(username, password)
             router.push(redirect)
         } catch (error) {
             console.error('Login failed', error)

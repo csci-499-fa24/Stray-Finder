@@ -5,7 +5,9 @@ const authenticate = async (req, res, next) => {
     const token = req.cookies.token
 
     if (!token) {
-        return res.status(401).json({ message: 'Authentication required' })
+        return res
+            .status(401)
+            .json({ authenticated: false, message: 'Authentication required' })
     }
 
     try {
@@ -14,17 +16,25 @@ const authenticate = async (req, res, next) => {
         const user = await User.findById(decodedToken.userId)
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' })
+            return res
+                .status(404)
+                .json({ authenticated: false, message: 'User not found' })
         }
 
-        // Attach the user object to req.user
         req.user = user
+
+        req.isAuthenticated = true
+
         next()
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({ message: 'Token expired' })
+            return res
+                .status(401)
+                .json({ authenticated: false, message: 'Token expired' })
         } else {
-            return res.status(401).json({ message: 'Invalid token' })
+            return res
+                .status(401)
+                .json({ authenticated: false, message: 'Invalid token' })
         }
     }
 }

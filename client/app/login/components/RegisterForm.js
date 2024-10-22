@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { registerUser } from '@/app/utils/api'
 import Link from 'next/link'
 
 const RegisterForm = () => {
     const router = useRouter()
-    const redirect = router.query?.redirect || '/';
-    const [username, setUsername] = useState('') // Username field
-    const [email, setEmail] = useState('') // Email field
-    const [password, setPassword] = useState('') // Password field
-    const [repeatPassword, setRepeatPassword] = useState('') // Confirm password field
+    const redirect = router.query?.redirect || '/'
+    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [repeatPassword, setRepeatPassword] = useState('')
 
     const handleRegister = async (e) => {
         e.preventDefault()
@@ -19,25 +20,7 @@ const RegisterForm = () => {
         }
 
         try {
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/register`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, email, password }),
-                    credentials: 'include',
-                }
-            )
-
-            if (!response.ok) {
-                const errorData = await response.json()
-                console.error('Registration failed', errorData)
-                return
-            }
-
-            const data = await response.json()
+            await registerUser(username, email, password)
             router.push(redirect)
         } catch (error) {
             console.error('Registration failed', error)
@@ -83,7 +66,7 @@ const RegisterForm = () => {
                         id="registerUsername"
                         className="form-control"
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)} // Controlled input
+                        onChange={(e) => setUsername(e.target.value)}
                         placeholder="Username"
                     />
                 </div>
@@ -94,7 +77,7 @@ const RegisterForm = () => {
                         id="registerEmail"
                         className="form-control"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)} // Controlled input
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
                     />
                 </div>
@@ -105,7 +88,7 @@ const RegisterForm = () => {
                         id="registerPassword"
                         className="form-control"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)} // Controlled input
+                        onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
                     />
                 </div>
@@ -116,7 +99,7 @@ const RegisterForm = () => {
                         id="registerRepeatPassword"
                         className="form-control"
                         value={repeatPassword}
-                        onChange={(e) => setRepeatPassword(e.target.value)} // Controlled input
+                        onChange={(e) => setRepeatPassword(e.target.value)}
                         placeholder="Confirm Password"
                     />
                 </div>
