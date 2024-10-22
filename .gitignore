@@ -44,3 +44,5 @@
 
 # local env files
 /server/.env
+
+.DS_Store
