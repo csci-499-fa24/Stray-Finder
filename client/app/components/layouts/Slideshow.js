@@ -41,7 +41,7 @@ const Slideshow = () => {
       <div className="carousel-inner">
         {/* Slide 1 */}
         <div className="carousel-item active">
-          <img src="your-image1.jpg" className="d-block w-100" alt="First Slide" />
+          <img src="./images/stray1.jpeg" className="d-block w-100" alt="First Slide" />
           <div className="carousel-caption d-none d-md-block">
             <h5>Welcome to Stray Finder</h5>
             <p>Helping you reunite with your furry friends!</p>
