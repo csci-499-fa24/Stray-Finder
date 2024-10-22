@@ -17,13 +17,13 @@ const SpottedStrayCard = () => {
         setShowReportLost(false)
     }
 
-    const handleProtectedRouteClick = () => {
-        if (!isAuthenticated) {
-            router.push('/login')
-        } else {
-            router.push('/protected-route')
-        }
-    }
+    // const handleProtectedRouteClick = () => {
+    //     if (!isAuthenticated) {
+    //         router.push('/login')
+    //     } else {
+    //         router.push('/protected-route')
+    //     }
+    // }
 
     if (showReportLost) {
         return (
