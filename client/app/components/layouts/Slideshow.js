@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 // Ensure Bootstrap CSS is imported
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -9,6 +7,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //import stray1 from 'images/stray1.jpeg';  // Import your images
 //import stray2 from '../images/stray2.jpeg';
 //import stray3 from '../images/stray3.jpeg';
+
+/*<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>*/
+
 
 const Slideshow = () => {
   return (
