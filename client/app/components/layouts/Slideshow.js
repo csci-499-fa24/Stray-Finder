@@ -49,7 +49,7 @@ const Slideshow = () => {
 
         {/* Slide 2 */}
         <div className="carousel-item">
-          <img src="/stray2.avif" className="d-block w-100" alt="Second Slide" />
+          <img src="/stray5.jpeg" className="d-block w-100" alt="Second Slide" />
           <div className="carousel-caption d-none d-md-block">
             <h5>Report a Lost Pet</h5>
             <p>Let others know if you've lost your pet.</p>
@@ -59,7 +59,7 @@ const Slideshow = () => {
 
         {/* Slide 3 */}
         <div className="carousel-item">
-          <img src="your-image3.jpg" className="d-block w-100" alt="Third Slide" />
+          <img src="/stray3.jpeg" className="d-block w-100" alt="Third Slide" />
           <div className="carousel-caption d-none d-md-block">
             <h5>Found a Stray?</h5>
             <p>Help bring pets home by reporting them.</p>

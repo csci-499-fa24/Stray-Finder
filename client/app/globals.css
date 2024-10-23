@@ -322,4 +322,5 @@ body {
     border-radius: 20px;         /* Round the corners */
     font-size: 1.2rem;letter-spacing: 2px;                     /* Increase spacing between the words */
     border-width: 2px dashed white;                /* Add small white dashes within the border */
+    
 }
