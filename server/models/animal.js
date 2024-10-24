@@ -45,4 +45,4 @@ const AnimalSchema = new mongoose.Schema({
 
 AnimalSchema.index({ coordinates: '2dsphere' })
 
-module.exports = mongoose.model('LostPet', AnimalSchema)
+module.exports = mongoose.model('Animal', AnimalSchema)
