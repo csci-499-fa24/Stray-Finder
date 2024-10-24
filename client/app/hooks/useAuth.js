@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { checkAuthStatus } from '@/app/utils/api'
 
 const useAuth = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [isAuthenticated, setIsAuthenticated] = useState(null) // Start with null to indicate status is unknown
     const [user, setUser] = useState(null)
 
     useEffect(() => {

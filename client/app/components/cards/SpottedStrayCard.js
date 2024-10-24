@@ -1,36 +1,22 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import ReportLost from '../../reportlost/components/ReportLost'
 import useAuth from '@/app/hooks/useAuth'
 
 const SpottedStrayCard = () => {
     const { isAuthenticated } = useAuth() // Get authentication status
-    const [showReportLost, setShowReportLost] = useState(false)
+    const [authChecked, setAuthChecked] = useState(null) // Set initially to null to block rendering until determined
     const router = useRouter()
 
+    // Handle when to show loading and when to show buttons based on authentication status
+    useEffect(() => {
+        if (isAuthenticated !== undefined) {
+            setAuthChecked(isAuthenticated) // Set authChecked to either true or false once status is determined
+        }
+    }, [isAuthenticated])
+
     const handleReportLostClick = () => {
-        setShowReportLost(true)
-    }
-
-    const handleGoBackClick = () => {
-        setShowReportLost(false)
-    }
-
-    // const handleProtectedRouteClick = () => {
-    //     if (!isAuthenticated) {
-    //         router.push('/login')
-    //     } else {
-    //         router.push('/protected-route')
-    //     }
-    // }
-
-    if (showReportLost) {
-        return (
-            <div>
-                <ReportLost onGoBack={handleGoBackClick} />
-            </div>
-        )
+        router.push('/reportAnimal') // Redirect to the reportAnimal page
     }
 
     return (
@@ -53,8 +39,12 @@ const SpottedStrayCard = () => {
                         a video if applicable.
                     </p>
 
-                    {/* Conditional rendering based on authentication status */}
-                    {!isAuthenticated ? (
+                    {/* Conditional rendering for the buttons based on authentication status */}
+                    {authChecked === null ? (
+                        <div className="d-flex justify-content-center">
+                            <p>Loading...</p>
+                        </div>
+                    ) : !authChecked ? (
                         <Link href="/login" className="btn btn-primary">
                             Login
                         </Link>
@@ -77,8 +67,12 @@ const SpottedStrayCard = () => {
                         nearby that match your pet's features.
                     </p>
 
-                    {/* Render 'Report a Lost Pet' button for authenticated users */}
-                    {isAuthenticated ? (
+                    {/* Conditional rendering for 'Report a Lost Pet' button */}
+                    {authChecked === null ? (
+                        <div className="d-flex justify-content-center">
+                            <p>Loading...</p>
+                        </div>
+                    ) : authChecked ? (
                         <button
                             onClick={handleReportLostClick}
                             className="btn btn-primary"
