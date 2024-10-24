@@ -1,6 +1,6 @@
 'use client';
 
-import Navbar from "@/app/components/layouts/Navbar";
+import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import MessagingInterface from "./components/MessagingInterface";
 import Footer from "@/app/components/layouts/Footer";
 

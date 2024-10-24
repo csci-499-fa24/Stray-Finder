@@ -1,12 +1,16 @@
 'use client'
 import Link from 'next/link'
 import useAuth from '@/app/hooks/useAuth'
+import { Background } from 'react-parallax';
 
 const Navbar = () => {
     const { isAuthenticated, user } = useAuth()
 
     return (
-        <nav className="navbar navbar-expand-lg justify-content-center custom-navbar">
+        <nav className="navbar navbar-expand-lg justify-content-center custom-navbar" style={{
+            backgroundImage: "linear-gradient(to right, #825A88, #8888cc)", // Gradient definition
+            width: "100vw"
+          }}>
             <div className="container-fluid d-flex">
                 <button
                     className="navbar-toggler"
@@ -21,7 +25,7 @@ const Navbar = () => {
                 </button>
 
                 {/* Navbar Brand */}
-                <Link className="navbar-brand" href="/">
+                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/" style= {{fontSize: '1.5rem'}}>
                     Stray Finder
                 </Link>
 
@@ -32,33 +36,21 @@ const Navbar = () => {
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
                         {/* Home Page Link */}
                         <li className="nav-item">
-                            <Link
-                                className="nav-link active"
-                                aria-current="page"
-                                href="/"
-                            >
+                            <Link className="nav-link active" aria-current="page" href="/" style = {{color: '#cf7bed'}}>
                                 Home
                             </Link>
                         </li>
 
                         {/* About Page Link */}
                         <li className="nav-item">
-                            <Link
-                                className="nav-link active"
-                                aria-current="page"
-                                href="/about"
-                            >
+                            <Link className="nav-link active" aria-current="page" href="/about" style = {{color: '#cf7bed'}}>
                                 About
                             </Link>
                         </li>
 
                         {/* Contact Page Link */}
                         <li className="nav-item">
-                            <Link
-                                className="nav-link active"
-                                aria-current="page"
-                                href="/contact"
-                            >
+                            <Link className="nav-link active" aria-current="page" href="/contact" style = {{color: '#cf7bed'}}>
                                 Contact
                             </Link>
                         </li>
@@ -71,37 +63,31 @@ const Navbar = () => {
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
+                                style = {{color: '#cf7bed'}}
                             >
                                 Actions
                             </Link>
                             <ul className="dropdown-menu">
                                 <li>
-                                    <Link
-                                        className="dropdown-item"
-                                        href="/report-lost"
-                                    >
+                                    <Link className="dropdown-item" href="/report-lost">
                                         Report Lost
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link
-                                        className="dropdown-item"
-                                        href="/report-found"
-                                    >
+                                    <Link className="dropdown-item" href="/report-found">
                                         Report Found
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link
-                                        className="dropdown-item"
-                                        href="/report-stray"
-                                    >
+                                    <Link className="dropdown-item" href="/report-stray">
                                         Report Stray
                                     </Link>
                                 </li>
                             </ul>
                         </li>
                     </ul>
+
+                    
                 </div>
 
                 {/* Conditional Login/Welcome User */}
@@ -109,7 +95,7 @@ const Navbar = () => {
                     {isAuthenticated && user ? (
                         <h6>{`Welcome, ${user.username}`}</h6>
                     ) : (
-                        <Link href="/login">Login</Link>
+                        <Link href="/login" style={{color: 'var(--purple-7)'}}>Login</Link>
                     )}
                     {/* Profile icon coming some time later */}
                 </div>
