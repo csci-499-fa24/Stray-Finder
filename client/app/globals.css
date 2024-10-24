@@ -24,16 +24,30 @@
     --purple-20: hsl(270, 50%, 100%);
 }
 
-* {
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+.stray-finder-logo {
+    font-family: 'Spectral', cursive ; /* Use Lobster font */
+    font-size: 2rem; /* Adjust font size if needed */
+    color: var(--purple-7); /* Optional: Set text color */
+    font-weight: bold;
+
 }
 
-.custom-navbar .navbar-brand,
-.custom-navbar .navbar-nav,
-.custom-navbar .nav-link.active,
-.custom-navbar .nav-link.dropdown-toggle {
+*{
+    font-family: sans-serif ;
+}
+
+.custom-navbar .navbar-brand{
     color: var(--purple-7);
 }
+
+.custom-navbar .navbar-nav{
+    color: var(--purple-7);
+}
+
+.custom-navbar .nav-link.active{
+    color: var(--purple-7);
+}
+
 
 .custom-navbar .search-button {
     color: var(--purple-7);
@@ -210,3 +224,62 @@ body {
     color: white;
     cursor: pointer;
 }
+
+
+/* -------------*/
+
+.background-purple-10 {
+    background-color: var(--purple-10);
+}
+
+
+.navbar-toggler-icon {
+    color: white;
+}
+
+
+.spotted-stray .card-header {
+    background-color: var(--purple-10);
+}
+
+.footer span {
+    color: var(--purple-7);
+}
+
+body {
+    background-color: var(--purple-19);
+    overflow-y: scroll; /* added a scroll wheel to every page to prevent shift of navbar in presence of a scroll wheel */
+    padding-right: 15px; /* shifted page to the right to center more because of the wheel */
+}
+
+/* For report lost */
+
+.border-purple {
+    border: 1px solid #6e42c150;
+}
+
+.main-prp {
+    color: var(--purple-7);
+}
+
+.bg-main-prp {
+    color: var(--purple-7);
+}
+
+.btn-purple {
+    background-color: #6f42c1; /* Adjust this color to match your purple */
+    border: none;
+    color: white;
+}
+
+.btn-purple:hover {
+    background-color: #5a31a1; /* Darker shade for hover effect */
+}
+
+/* Leaflet CSS */
+.leaflet-container {
+    height: 200px; /* Set height for your mini map */
+    width: 100%; /* Full width */
+}
+
+
