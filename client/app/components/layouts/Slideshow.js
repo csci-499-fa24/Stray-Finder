@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Navbar from "@/app/components/layouts/Navbar";
+import Navbar from "@/app/components/layouts/Navbar/Navbar";
 // Ensure Bootstrap CSS is imported
 
 

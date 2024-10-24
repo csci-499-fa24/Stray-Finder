@@ -1,9 +1,15 @@
 'use client'
 
 import Link from 'next/link'
+import useAuth from '@/app/hooks/useAuth'
 import { Background } from 'react-parallax';
 
+
+
 const Navbar = () => {
+
+    const { isAuthenticated, user } = useAuth()
+
     return (
         <nav className="navbar navbar-expand-lg justify-content-center custom-navbar" style={{
             backgroundImage: "linear-gradient(to right, #825A88, #8888cc)", // Gradient definition
@@ -102,8 +108,15 @@ const Navbar = () => {
                     </form>
                 </div>
 
+                {/* Conditional Login/Welcome User */}
                 {/* Login Link */}
                 <div className="p-3 ml-auto">
+                    {isAuthenticated && user ? (
+                        <h6>{`Welcome, ${user.username}`}</h6>
+                    ) : (
+                        <Link href="/login">Login</Link>
+                    )}
+                    {/* Profile icon coming some time later */}
                     <Link href="/login" style={{color: 'var(--purple-7)'}}>Login</Link>
                 </div>
             </div>
