@@ -31,7 +31,7 @@ const ParallaxComponent = () => {
       </Parallax>
 
       {/* Content between slides */}
-      <div style={{ height: '200px', textAlign: 'center', padding: '50px' }}>
+      <div style={{ height: '200px', textAlign: 'center', padding: '60px' }}>
         <p style={{ fontSize: '1.25rem' }}>Welcome to The Stray Registry! We are dedicated to a platform designed to help lost pets reunite with their owners. Our mission is to create a simple and effective way to report and find missing pets in your area. </p>
       </div>
 
@@ -43,7 +43,7 @@ const ParallaxComponent = () => {
       </Parallax>
 
       {/* More content below */}
-      <div style={{ height: '200px', textAlign: 'center', padding: '50px' }}>
+      <div style={{ height: '200px', textAlign: 'center', padding: '60px' }}>
         <p style={{ fontSize: '1.25rem' }}>We believe that every pet deserves to be home. Our goal is to assist communities in creating a network where lost pets are spotted, reported, and reunited with their families. </p>
       </div>
 

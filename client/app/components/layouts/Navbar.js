@@ -1,10 +1,13 @@
 'use client'
 
 import Link from 'next/link'
+import { Background } from 'react-parallax';
 
 const Navbar = () => {
     return (
-        <nav className="navbar navbar-expand-lg justify-content-center custom-navbar">
+        <nav className="navbar navbar-expand-lg justify-content-center custom-navbar" style={{
+            backgroundImage: "linear-gradient(to right, #825A88, #8888cc)", // Gradient definition
+          }}>
             <div className="container-fluid d-flex">
                 <button
                     className="navbar-toggler"
@@ -19,7 +22,7 @@ const Navbar = () => {
                 </button>
                 
                 {/* Navbar Brand */}
-                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/">
+                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/home">
                     Stray Finder
                 </Link>
                 
@@ -31,21 +34,21 @@ const Navbar = () => {
                         
                         {/* Home Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/">
+                            <Link className="nav-link active" aria-current="page" href="/home" style = {{color: '#cf7bed'}}>
                                 Home
                             </Link>
                         </li>
                         
                         {/* About Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/about">
+                            <Link className="nav-link active" aria-current="page" href="/about" style = {{color: '#cf7bed'}}>
                                 About
                             </Link>
                         </li>
                         
                         {/* Contact Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/contact">
+                            <Link className="nav-link active" aria-current="page" href="/contact" style = {{color: '#cf7bed'}}>
                                 Contact
                             </Link>
                         </li>
@@ -58,6 +61,7 @@ const Navbar = () => {
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
+                                style = {{color: '#cf7bed'}}
                             >
                                 Actions
                             </Link>
@@ -100,7 +104,7 @@ const Navbar = () => {
 
                 {/* Login Link */}
                 <div className="p-3 ml-auto">
-                    <Link href="/login">Login</Link>
+                    <Link href="/login" style={{color: 'var(--purple-7)'}}>Login</Link>
                 </div>
             </div>
         </nav>
