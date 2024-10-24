@@ -1,4 +1,4 @@
-import Navbar from "@/app/components/layouts/Navbar";
+import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import ReadMoreById from "./components/ReadMoreById";
 import Footer from "@/app/components/layouts/Footer";
 
