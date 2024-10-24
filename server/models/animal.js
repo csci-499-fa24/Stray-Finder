@@ -20,29 +20,21 @@ const AnimalSchema = new mongoose.Schema({
         enum: ['Male', 'Female', 'Unknown'],
         default: 'Unknown',
     },
+    fixed: {
+        type: String,
+        enum: ['Yes', 'No', 'Unknown'],
+        default: 'Unknown',
+    },
+    collar: {
+        type: Boolean,
+        default: false,
+    },
     description: {
         type: String,
     },
     imageUrl: {
         type: String,
     },
-    coordinates: {
-        type: {
-            type: String,
-            enum: ['Point'], // 'Point' for GeoJSON
-            required: true,
-        },
-        coordinates: {
-            type: [Number], // Array of numbers [lng, lat]
-            required: true,
-        },
-    },
-    dateReported: {
-        type: Date,
-        default: Date.now,
-    },
 })
-
-AnimalSchema.index({ coordinates: '2dsphere' })
 
 module.exports = mongoose.model('Animal', AnimalSchema)
