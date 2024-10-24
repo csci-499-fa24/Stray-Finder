@@ -9,6 +9,7 @@ const Navbar = () => {
     return (
         <nav className="navbar navbar-expand-lg justify-content-center custom-navbar" style={{
             backgroundImage: "linear-gradient(to right, #825A88, #8888cc)", // Gradient definition
+            width: "100vw"
           }}>
             <div className="container-fluid d-flex">
                 <button
@@ -24,7 +25,7 @@ const Navbar = () => {
                 </button>
 
                 {/* Navbar Brand */}
-                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/">
+                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/" style= {{fontSize: '1.5rem'}}>
                     Stray Finder
                 </Link>
 
@@ -86,30 +87,15 @@ const Navbar = () => {
                         </li>
                     </ul>
 
-                    {/* Search Form */}
-                    <form className="d-flex" role="search">
-                        <input
-                            className="form-control me-2"
-                            type="search"
-                            placeholder="e.g. name, breed"
-                            aria-label="Search"
-                        />
-                        <button
-                            className="btn btn-outline-success search-button"
-                            type="submit"
-                        >
-                            Search
-                        </button>
-                    </form>
+                    
                 </div>
-                
 
                 {/* Conditional Login/Welcome User */}
                 <div className="p-3 ml-auto">
                     {isAuthenticated && user ? (
                         <h6>{`Welcome, ${user.username}`}</h6>
                     ) : (
-                        <Link href="/login">Login</Link>
+                        <Link href="/login" style={{color: 'var(--purple-7)'}}>Login</Link>
                     )}
                     {/* Profile icon coming some time later */}
                 </div>

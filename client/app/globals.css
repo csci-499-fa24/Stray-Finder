@@ -34,7 +34,10 @@
 
 *{
     font-family: sans-serif ;
+    /*box-sizing: border-box;*/
 }
+
+
 
 .custom-navbar .navbar-brand{
     color: var(--purple-7);
