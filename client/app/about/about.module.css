@@ -8,3 +8,48 @@
     height: auto;
     margin-top: 20px;
 }
+
+/* General styles for parallax sections */
+.parallax-section {
+    position: relative;
+    height: 100vh; /* Full screen height */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* First parallax image */
+.image1 {
+    background-image: url('/stray1.jpeg'); /* Add your actual image path */
+}
+
+/* Second parallax image */
+.image2 {
+    background-image: url('/stray2.jpg'); /* Add your actual image path */
+}
+
+/* Content section inside parallax */
+.centered-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for better text readability */
+}
+
+/* Contact Section (Non-parallax) */
+.contact-section {
+    background-color: #f7f7f7;
+    padding: 50px 0;
+    text-align: center;
+}
+
+.para3-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+

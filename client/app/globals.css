@@ -24,7 +24,15 @@
     --purple-20: hsl(270, 50%, 100%);
 }
 
-* {
+.stray-finder-logo {
+    font-family: 'Spectral', cursive ; /* Use Lobster font */
+    font-size: 2rem; /* Adjust font size if needed */
+    color: var(--purple-7); /* Optional: Set text color */
+    font-weight: bold;
+
+}
+
+*{
     font-family: sans-serif ;
 }
 
@@ -59,6 +67,7 @@
     background-color: var(--purple-10);
 }
 
+/*
 .navbar-brand {
     line-height: 70px;
     padding: 10px;
@@ -68,7 +77,7 @@
 .navbar-toggler-icon {
     color: white;
 }
-
+*/
 .custom-navbar .navbar-nav .nav-link {
     font-weight: bold;
 }
@@ -238,27 +247,10 @@ body {
     background-color: var(--purple-10);
 }
 
-.highlight-brand {
-    background: linear-gradient(45deg,  #6392c7, #d870ad);  /* Background color */
-    color: rgb(225, 199, 199);               /* Text color */
-    padding: 4px 4px;         /* Add padding */
-    border-radius: 15px;         /* Round the corners */
-    font-size: 1.8rem;
-}
-
-.highlight-brand:hover {
-    background: linear-gradient(27deg, #d870ad, #6392c7); /* Reverse gradient on hover */
-    
-}
 
 
 
-.navbar-brand {
-    line-height: 70px;
-    padding: 0.05px 5px;
-    font-size: 24px;
-    color:hsl(270, 50%, 100%)
-}
+
 
 
 
@@ -267,9 +259,7 @@ body {
     color: white;
 }
 
-.custom-navbar .navbar-nav .nav-link {
-    font-weight: bold;
-}
+
 
 .spotted-stray .card-header {
     background-color: var(--purple-10);
@@ -315,12 +305,4 @@ body {
     width: 100%; /* Full width */
 }
 
-.navbar-nav {
-    background: linear-gradient(45deg,  #b24ed0, #767fd8);  /* Background color */
-    color: rgb(225, 199, 199);               /* Text color */
-    padding: 4px 4px;         /* Add padding */
-    border-radius: 20px;         /* Round the corners */
-    font-size: 1.2rem;letter-spacing: 2px;                     /* Increase spacing between the words */
-    border-width: 2px dashed white;                /* Add small white dashes within the border */
-    
-}
+

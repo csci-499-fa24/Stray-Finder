@@ -11,7 +11,7 @@ import Slideshow from './components/layouts/Slideshow'
 export default function Home() {
     return (
         <div>
-            {/*<Navbar />*/}
+            <Navbar />
             <Slideshow />
             {/*<Breadcrumb */}
             <SpottedStrayCard />

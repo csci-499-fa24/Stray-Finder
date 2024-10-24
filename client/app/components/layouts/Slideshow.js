@@ -8,8 +8,8 @@ import Navbar from "@/app/components/layouts/Navbar";
 const Slideshow = () => {
   return (
     <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
-      {/* Navbar */}
-      <Navbar />
+      {/* <Navbar /> */}
+      
 
       {/* Indicators */}
       <div className="carousel-indicators">
@@ -39,7 +39,7 @@ const Slideshow = () => {
       <div className="carousel-inner">
         {/* Slide 1 */}
         <div className="carousel-item active">
-          <img src="/stray1.jpeg" className="d-block w-100" alt="First Slide" />
+          <img src="/stray6.jpeg" className="d-block w-100" alt="First Slide" />
           <div className="carousel-caption d-none d-md-block">
             <h5>Welcome to Stray Finder</h5>
             <p>Helping you reunite with your furry friends!</p>
@@ -49,7 +49,7 @@ const Slideshow = () => {
 
         {/* Slide 2 */}
         <div className="carousel-item">
-          <img src="/stray5.jpeg" className="d-block w-100" alt="Second Slide" />
+          <img src="/stray5.webp" className="d-block w-100" alt="Second Slide" />
           <div className="carousel-caption d-none d-md-block">
             <h5>Report a Lost Pet</h5>
             <p>Let others know if you've lost your pet.</p>
@@ -59,7 +59,7 @@ const Slideshow = () => {
 
         {/* Slide 3 */}
         <div className="carousel-item">
-          <img src="/stray3.jpeg" className="d-block w-100" alt="Third Slide" />
+          <img src="/stray4.webp" className="d-block w-100" alt="Third Slide" />
           <div className="carousel-caption d-none d-md-block">
             <h5>Found a Stray?</h5>
             <p>Help bring pets home by reporting them.</p>
