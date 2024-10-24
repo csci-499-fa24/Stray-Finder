@@ -85,7 +85,24 @@ const Navbar = () => {
                             </ul>
                         </li>
                     </ul>
+
+                    {/* Search Form */}
+                    <form className="d-flex" role="search">
+                        <input
+                            className="form-control me-2"
+                            type="search"
+                            placeholder="e.g. name, breed"
+                            aria-label="Search"
+                        />
+                        <button
+                            className="btn btn-outline-success search-button"
+                            type="submit"
+                        >
+                            Search
+                        </button>
+                    </form>
                 </div>
+                
 
                 {/* Conditional Login/Welcome User */}
                 <div className="p-3 ml-auto">
