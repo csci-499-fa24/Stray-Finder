@@ -45,7 +45,7 @@ const SpottedStrayCard = () => {
                             <p>Loading...</p>
                         </div>
                     ) : !authChecked ? (
-                        <Link href="/login" className="btn btn-primary">
+                        <Link href="/auth" className="btn btn-primary">
                             Login
                         </Link>
                     ) : (
@@ -80,7 +80,7 @@ const SpottedStrayCard = () => {
                             Report a Lost Pet
                         </button>
                     ) : (
-                        <Link href="/login" className="btn btn-primary">
+                        <Link href="/auth" className="btn btn-primary">
                             Login
                         </Link>
                     )}
