@@ -2,27 +2,32 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api'
 import { useRouter } from 'next/navigation'
+import useAuth from '@/app/hooks/useAuth'
 
-const ReportLost = () => {
-    const router = useRouter() // Initialize router for navigation
+const ReportAnimal = () => {
+    const router = useRouter()
+    const { isAuthenticated, user } = useAuth() // Get user and authentication status from useAuth
     const [formData, setFormData] = useState({
+        reportType: '',
         name: '',
         species: '',
         breed: '',
         color: '',
         gender: 'Unknown',
+        fixed: 'Unknown',
+        collar: false, // Collar field
         description: '',
         location: '',
         imageUrl: '',
         coordinates: { lat: 51.505, lng: -0.09 }, // Default coordinates
     })
 
-    const [isOtherBreed, setIsOtherBreed] = useState(false) // Manage 'Other' breed input
-    const [commonBreeds, setCommonBreeds] = useState([]) // Manage breed options based on species
-    const [userLocation, setUserLocation] = useState(null) // User's current location
-    const [locationAsked, setLocationAsked] = useState(false) // Track if location has been asked
-    const [loading, setLoading] = useState(false) // Loading state for form submission
-    const [error, setError] = useState('') // Error state for submission
+    const [isOtherBreed, setIsOtherBreed] = useState(false)
+    const [commonBreeds, setCommonBreeds] = useState([])
+    const [userLocation, setUserLocation] = useState(null)
+    const [locationAsked, setLocationAsked] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
 
     const speciesOptions = [
         {
@@ -58,15 +63,19 @@ const ReportLost = () => {
                 'Other',
             ],
         },
-        { value: 'Other', label: "I don't know", breeds: [] }, // No specific breeds
+        { value: 'Other', label: "I don't know", breeds: [] },
     ]
 
     useEffect(() => {
-        // Ask for location once when the component mounts
-        if (navigator.geolocation && !locationAsked) {
+        if (isAuthenticated === false) {
+            router.push('/login') // Redirect to login if not authenticated
+        }
+
+        if (isAuthenticated && navigator.geolocation && !locationAsked) {
             const askForLocation = window.confirm(
                 'Would you like to share your location?'
             )
+
             if (askForLocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -79,25 +88,33 @@ const ReportLost = () => {
                         }))
                     },
                     (error) => {
-                        console.error('Error getting location: ', error)
+                        console.error('Error getting location:', error)
                         alert(
                             'Unable to retrieve your location. Please enter it manually.'
                         )
                     }
                 )
             }
-            setLocationAsked(true) // Mark that the user has been asked
+
+            setLocationAsked(true)
         }
-    }, []) // Run the effect only on component mount
+    }, [isAuthenticated, locationAsked, router])
+
+    if (isAuthenticated === null) {
+        return <div>Loading...</div> // Show loading while auth status is unknown
+    }
+
+    if (isAuthenticated === false) {
+        return null // Return nothing if the user is not authenticated (will redirect)
+    }
 
     const handleChange = (e) => {
-        const { name, value } = e.target
+        const { name, value, type, checked } = e.target
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: type === 'checkbox' ? checked : value,
         }))
 
-        // If the species changes, update the breeds
         if (name === 'species') {
             const selectedSpecies = speciesOptions.find(
                 (species) => species.value === value
@@ -109,7 +126,6 @@ const ReportLost = () => {
             }))
         }
 
-        // If the breed is selected as "Other", set the state to show the additional input
         if (name === 'breed' && value === 'Other') {
             setIsOtherBreed(true)
         } else {
@@ -119,54 +135,39 @@ const ReportLost = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setLoading(true) // Start loading state
-        setError('') // Reset error state
+        setLoading(true)
+        setError('')
 
-        // Format the coordinates as GeoJSON
+        // Include the logged-in user's ID as `reportedBy`
         const formattedData = {
             ...formData,
-            coordinates: {
-                type: 'Point',
-                coordinates: [
-                    formData.coordinates.lng,
-                    formData.coordinates.lat,
-                ], // [lng, lat] for GeoJSON
+            reportedBy: user._id, // Use the user ID from useAuth
+            location: {
+                address: formData.location,
+                coordinates: {
+                    type: 'Point',
+                    coordinates: [
+                        formData.coordinates.lng,
+                        formData.coordinates.lat,
+                    ],
+                },
             },
         }
 
         try {
-            // Log cookies before sending the request
-            console.log('Current Cookies before request:', document.cookie)
-
-            // Set up request options
             const requestOptions = {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formattedData),
-                credentials: 'include', // Include cookies in the request
+                credentials: 'include',
             }
 
-            console.log('Request Options:', requestOptions) // Log request options
-
-            // Make the request
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`,
                 requestOptions
             )
-
-            // Log response details
-            console.log('Response Status:', response.status)
-            console.log('Response Headers:', response.headers)
-
-            if (response.status === 401 || response.status === 403) {
-                console.error('Unauthorized: Redirecting to login')
-                router.push(
-                    `/login?redirect=${encodeURIComponent(router.asPath)}`
-                )
-                return
-            }
 
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`)
@@ -174,12 +175,11 @@ const ReportLost = () => {
 
             const result = await response.json()
             console.log('Form submitted successfully:', result)
-            router.push('/') // Navigate back to the home page after submission
+            router.push('/')
         } catch (error) {
-            setError(error.message) // Set error message
-            console.error('Error submitting form:', error)
+            setError(error.message)
         } finally {
-            setLoading(false) // End loading state
+            setLoading(false)
         }
     }
 
@@ -189,7 +189,7 @@ const ReportLost = () => {
         setFormData((prevData) => ({
             ...prevData,
             coordinates: { lat, lng },
-            location: `Lat: ${lat}, Lng: ${lng}`, // Update location input
+            location: `Lat: ${lat}, Lng: ${lng}`,
         }))
     }
 
@@ -200,12 +200,31 @@ const ReportLost = () => {
             <div className="row justify-content-center">
                 <div className="col-md-8">
                     <div className="border border-purple rounded p-4">
-                        <h2 className="text-center">Report a Lost Pet</h2>
+                        <h2 className="text-center">Report an Animal</h2>
                         {error && (
                             <div className="alert alert-danger">{error}</div>
-                        )}{' '}
-                        {/* Display error message */}
+                        )}
                         <form onSubmit={handleSubmit}>
+                            <div className="mb-3">
+                                <label
+                                    htmlFor="reportType"
+                                    className="form-label"
+                                >
+                                    Report Type
+                                </label>
+                                <select
+                                    className="form-select"
+                                    id="reportType"
+                                    name="reportType"
+                                    value={formData.reportType}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="">Select report type</option>
+                                    <option value="Lost">Lost</option>
+                                    <option value="Stray">Stray</option>
+                                </select>
+                            </div>
                             <div className="mb-3">
                                 <label htmlFor="name" className="form-label">
                                     Name
@@ -316,6 +335,37 @@ const ReportLost = () => {
                             </div>
 
                             <div className="mb-3">
+                                <label htmlFor="fixed" className="form-label">
+                                    Neutered/Spayed
+                                </label>
+                                <select
+                                    className="form-select"
+                                    id="fixed"
+                                    name="fixed"
+                                    value={formData.fixed}
+                                    onChange={handleChange}
+                                >
+                                    <option value="Unknown">Unknown</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            <div className="mb-3">
+                                <label htmlFor="collar" className="form-label">
+                                    Has Collar
+                                </label>
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input mx-2"
+                                    id="collar"
+                                    name="collar"
+                                    checked={formData.collar}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="mb-3">
                                 <label
                                     htmlFor="description"
                                     className="form-label"
@@ -333,7 +383,6 @@ const ReportLost = () => {
                             </div>
 
                             <div className="mb-3">
-                                {/* Google Map Component */}
                                 <LoadScriptNext googleMapsApiKey={apiKey}>
                                     <GoogleMap
                                         onClick={handleMapClick}
@@ -343,7 +392,7 @@ const ReportLost = () => {
                                         }}
                                         center={
                                             userLocation || formData.coordinates
-                                        } // Center the map on user's location if available
+                                        }
                                         zoom={13}
                                     >
                                         <Marker
@@ -353,12 +402,12 @@ const ReportLost = () => {
                                             <Marker
                                                 position={userLocation}
                                                 icon={{
-                                                    url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png', // Custom icon for user location
+                                                    url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
                                                     scaledSize:
                                                         new window.google.maps.Size(
                                                             30,
                                                             30
-                                                        ), // Size of the icon
+                                                        ),
                                                 }}
                                             />
                                         )}
@@ -405,4 +454,4 @@ const ReportLost = () => {
     )
 }
 
-export default ReportLost
+export default ReportAnimal

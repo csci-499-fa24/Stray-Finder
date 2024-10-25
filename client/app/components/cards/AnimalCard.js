@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-const StrayCard = ({ id, name, image, species, breed, gender, state, description }) => {
+const AnimalCard = ({ id, name, image, species, breed, gender, state, description }) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedReason, setSelectedReason] = useState('');
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);  // New state for login modal
@@ -117,4 +117,4 @@ const StrayCard = ({ id, name, image, species, breed, gender, state, description
     );
 };
 
-export default StrayCard;
+export default AnimalCard;

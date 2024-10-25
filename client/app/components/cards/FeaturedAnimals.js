@@ -1,5 +1,5 @@
 import { useEffect, useState, memo } from 'react'
-import StrayCard from './StrayCard'
+import AnimalCard from './AnimalCard'
 
 const FeaturedStrays = () => {
     const [animals, setAnimals] = useState([]) // State to hold the fetched animals
@@ -152,7 +152,7 @@ const AnimalList = ({ animals, loading }) => {
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center p-2 text-start">
             {animals.length > 0 ? (
                 animals.map((animal) => (
-                    <StrayCard
+                    <AnimalCard
                         key={animal._id}
                         id={animal._id}
                         name={animal.name}
