@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { GoogleMap, Marker, LoadScriptNext } from '@react-google-maps/api'
 import { useEffect, useState } from 'react'
+import styles from '../ReadMore.module.css';
 
 const AnimalReportProfile = ({ id }) => {
     const [reportProfile, setReportProfile] = useState(null) // State for storing single animal report data
@@ -42,18 +43,12 @@ const AnimalReportProfile = ({ id }) => {
 
     return (
         <div className="col p-5">
-            <div className="card m-3 p-0">
-                <h1 className="card-title text-center p-3 main-prp">
-                    {reportProfile?.animal?.name}
-                </h1>
-                <div className="mx-5 p-2">
-                    <img
-                        src={reportProfile?.animal?.imageUrl}
-                        className="card-img-top"
-                        alt={reportProfile?.animal?.name}
-                    />
-                </div>
-                <div className="card-body">
+            <div className={`${styles.card} m-3 p-0`}>
+                <h1 className={`${styles.cardTitle} text-center p-3`}>{reportProfile?.animal?.name}</h1>
+                    <div className={`mx-5 p-2`}>
+                        <img src={reportProfile?.animal?.imageUrl} className={`${styles.cardImgTop}`} alt={reportProfile?.animal?.name} />
+                    </div>
+                    <div className={`${styles.cardBody}`}>
                     <p className="card-text">{reportProfile?.description}</p>
                 </div>
                 <ul className="list-group list-group-flush">
@@ -91,7 +86,7 @@ const AnimalReportProfile = ({ id }) => {
                 </li>
                 </ul>
                 {reportProfile?.location?.coordinates && (
-                    <div className="mx-3 mt-2">
+                    <div className={`${styles.mapContainer} mx-3 mt-2`}>
                         {/* Render Google Map */}
                         <LoadScriptNext
                             googleMapsApiKey={
@@ -100,9 +95,9 @@ const AnimalReportProfile = ({ id }) => {
                         >
                             <GoogleMap
                                 mapContainerStyle={{
-                                    height: '500px',
-                                    width: '100%',
-                                }}
+                                height: '400px', // Adjust height to make it smaller
+                                width: '100%',
+                            }}
                                 center={mapCenter}
                                 zoom={17}
                             >
