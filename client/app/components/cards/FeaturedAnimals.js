@@ -2,7 +2,7 @@ import { useEffect, useState, memo } from 'react'
 import AnimalCard from './AnimalCard'
 
 const FeaturedStrays = () => {
-    const [animals, setAnimals] = useState([]) // State to hold the fetched animals
+    const [reports, setReports] = useState([]) // State to hold the fetched animals
     const [loading, setLoading] = useState(false) // State to track loading
     const [filters, setFilters] = useState({
         species: '',
@@ -24,7 +24,7 @@ const FeaturedStrays = () => {
 
     useEffect(() => {
         // Fetch animals from the backend with filters applied
-        const fetchAnimals = async () => {
+        const fetchReports = async () => {
             setLoading(true)
             try {
                 const queryParams = new URLSearchParams(
@@ -35,18 +35,31 @@ const FeaturedStrays = () => {
                     )
                 )
                 const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal?${queryParams}`
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?${queryParams}`
                 )
                 const data = await response.json()
-                setAnimals(data.animals || []) // Fallback to empty array if `animals` is undefined
+
+                const filteredReports = data.reports.filter((report) => {
+                    const { species, gender, name } = debouncedFilters;
+                    const animal = report.animal;
+
+                    return (
+                        (!species || animal.species === species) &&
+                        (!gender || animal.gender) &&
+                        (!name || animal.name.toLowerCase().includes(name.toLowerCase()))
+                    );
+                });
+
+
+                setReports(filteredReports || []) // Fallback to empty array if `animals` is undefined
             } catch (error) {
-                console.error('Error fetching animals:', error)
+                console.error('Error fetching reports:', error)
             } finally {
                 setLoading(false) // Turn off loading once the fetch is complete
             }
         }
 
-        fetchAnimals()
+        fetchReports()
     }, [debouncedFilters]) // Run the effect when debounced filters change
 
     const handleFilterChange = (event) => {
@@ -68,7 +81,7 @@ const FeaturedStrays = () => {
                 handleFilterChange={handleFilterChange}
             />
 
-            <AnimalList animals={animals} loading={loading} />
+            <ReportList reports={reports} loading={loading} />
         </div>
     )
 }
@@ -143,25 +156,25 @@ const Filters = ({ filters, handleFilterChange }) => {
 // Memoize the filters to avoid unnecessary re-renders
 const MemoizedFilters = memo(Filters)
 
-const AnimalList = ({ animals, loading }) => {
+const ReportList = ({ reports, loading }) => {
     if (loading) {
         return <div>Loading...</div>
     }
 
     return (
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center p-2 text-start">
-            {animals.length > 0 ? (
-                animals.map((animal) => (
+            {reports.length > 0 ? (
+                reports.map((report) => (
                     <AnimalCard
-                        key={animal._id}
-                        id={animal._id}
-                        name={animal.name}
-                        image={animal.imageUrl}
-                        species={animal.species}
-                        breed={animal.breed}
-                        gender={animal.gender}
+                        key={report.animal._id}
+                        id={report.animal._id}
+                        name={report.animal.name}
+                        image={report.animal.imageUrl}
+                        species={report.animal.species}
+                        breed={report.animal.breed}
+                        gender={report.animal.gender}
                         state="Unknown" // Update this if you have a proper state for animals
-                        description={animal.description}
+                        description={report.animal.description}
                     />
                 ))
             ) : (
