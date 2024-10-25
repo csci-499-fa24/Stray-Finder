@@ -3,26 +3,26 @@ import Link from 'next/link'
 import { GoogleMap, Marker, LoadScriptNext } from '@react-google-maps/api'
 import { useEffect, useState } from 'react'
 
-const ReadMoreById = ({ id }) => {
-    const [animal, setAnimal] = useState(null) // State for storing single animal data
+const AnimalReportProfile = ({ id }) => {
+    const [reportProfile, setReportProfile] = useState(null) // State for storing single animal report data
     const [loading, setLoading] = useState(true) // State for loading
     const [mapCenter, setMapCenter] = useState({ lat: 51.505, lng: -0.09 }) // Default coordinates for the map
 
     useEffect(() => {
-        const fetchAnimalData = async () => {
+        const fetchReportData = async () => {
             try {
                 const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal/${id}`
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report/${id}`
                 )
                 const data = await response.json()
+                setReportProfile(data.report) // stores data in the state
 
-                setAnimal(data.animal) // stores data in the state
-
+                console.log(data);
                 // Set map center based on coordinates from JSON if available
-                if (data.animal && data.animal.coordinates) {
+                if (data.report && data.report.location.coordinates) {
                     setMapCenter({
-                        lat: data.animal.coordinates[1], // latitude comes second in GeoJSON
-                        lng: data.animal.coordinates[0], // longitude comes first
+                        lat: data.report.location.coordinates.coordinates[1], // latitude comes second in GeoJSON
+                        lng: data.report.location.coordinates.coordinates[0], // longitude comes first
                     })
                 }
             } catch (error) {
@@ -32,7 +32,7 @@ const ReadMoreById = ({ id }) => {
             }
         }
         if (id) {
-            fetchAnimalData()
+            fetchReportData()
         }
     }, [id])
 
@@ -44,37 +44,53 @@ const ReadMoreById = ({ id }) => {
         <div className="col p-5">
             <div className="card m-3 p-0">
                 <h1 className="card-title text-center p-3 main-prp">
-                    {animal?.name}
+                    {reportProfile?.animal?.name}
                 </h1>
                 <div className="mx-5 p-2">
                     <img
-                        src={animal?.imageUrl}
+                        src={reportProfile?.animal?.imageUrl}
                         className="card-img-top"
-                        alt={animal?.name}
+                        alt={reportProfile?.animal?.name}
                     />
                 </div>
                 <div className="card-body">
-                    <p className="card-text">{animal?.description}</p>
+                    <p className="card-text">{reportProfile?.description}</p>
                 </div>
                 <ul className="list-group list-group-flush">
                     <li className="list-group-item">
-                        Species: {animal?.species}
+                        Status: {reportProfile?.reportType}
                     </li>
                     <li className="list-group-item">
-                        Breed: {animal?.breed || 'Unknown'}
+                        Species: {reportProfile?.animal?.species}
                     </li>
                     <li className="list-group-item">
-                        Color: {animal?.color || 'Unknown'}
+                        Breed: {reportProfile?.animal?.breed || 'Unknown'}
                     </li>
                     <li className="list-group-item">
-                        Gender: {animal?.gender}
+                        Color: {reportProfile?.animal?.color || 'Unknown'}
                     </li>
-                    <li className="list-group-item">Fixed: {animal?.fixed}</li>
                     <li className="list-group-item">
-                        Collar: {animal?.collar ? 'Yes' : 'No'}
+                        Gender: {reportProfile?.animal?.gender}
                     </li>
+                    <li className="list-group-item">Fixed: {reportProfile?.animal?.fixed}</li>
+                    <li className="list-group-item">
+                        Collar: {reportProfile?.animal?.collar ? 'Yes' : 'No'}
+                    </li>
+                    <li className="list-group-item">
+                        Date Reported: {reportProfile?.dateReported ? (
+                        new Date(reportProfile.dateReported).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: true
+                        })
+                    ) : 'N/A'}
+                </li>
                 </ul>
-                {animal?.coordinates && (
+                {reportProfile?.location?.coordinates && (
                     <div className="mx-3 mt-2">
                         {/* Render Google Map */}
                         <LoadScriptNext
@@ -106,4 +122,4 @@ const ReadMoreById = ({ id }) => {
     )
 }
 
-export default ReadMoreById
+export default AnimalReportProfile

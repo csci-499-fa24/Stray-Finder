@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-const AnimalCard = ({ id, name, image, species, breed, gender, state, description }) => {
+const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state, description }) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedReason, setSelectedReason] = useState('');
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);  // New state for login modal
@@ -29,7 +29,7 @@ const AnimalCard = ({ id, name, image, species, breed, gender, state, descriptio
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    animalId: id,
+                    animalId: animal_id,
                     description: 'A report was made about the posting associated with that animal ID',
                     reason: selectedReason,
                 }),
@@ -73,7 +73,7 @@ const AnimalCard = ({ id, name, image, species, breed, gender, state, descriptio
                     <li className="list-group-item">State: {state}</li>
                 </ul>
                 <div className="card-body">
-                    <Link href={`/animal/${id}`} className="card-link">
+                    <Link href={`/animal/${report_id}`} className="card-link">
                         Read More
                     </Link>
                     <button className="report-btn" onClick={handleReportClick}>

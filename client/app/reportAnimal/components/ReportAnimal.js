@@ -68,7 +68,7 @@ const ReportAnimal = () => {
 
     useEffect(() => {
         if (isAuthenticated === false) {
-            router.push('/login') // Redirect to login if not authenticated
+            router.push('/auth') // Redirect to login if not authenticated
         }
 
         if (isAuthenticated && navigator.geolocation && !locationAsked) {
