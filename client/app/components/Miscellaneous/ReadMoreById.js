@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { GoogleMap, Marker, LoadScriptNext } from '@react-google-maps/api';
 import { useEffect, useState } from 'react';
+import styles from './ReadMore.module.css'; // Import your styles
 
 const ReadMoreById = ({ id }) => {
     const [animals, setAnimals] = useState([]); // State for storing animals data
@@ -9,8 +10,8 @@ const ReadMoreById = ({ id }) => {
     const [mapCenter, setMapCenter] = useState({ lat: 51.505, lng: -0.09 }); // Default coordinates for the map
 
     useEffect(() => {
-        const fetchStrayData = async () =>{
-            try{
+        const fetchStrayData = async () => {
+            try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal/${id}`);
                 const data = await response.json();
 
@@ -22,38 +23,36 @@ const ReadMoreById = ({ id }) => {
                         lng: data.animal.coordinates.coordinates[0]  // longitude comes first
                     });
                 }
-            } catch(error) {
+            } catch (error) {
                 console.error('Error fetching animals data: ', error);
             } finally {
                 setLoading(false); // stop loading when the fetching of data is complete
             }
         };
-        if(id) {
+        if (id) {
             fetchStrayData();
         }
-    },[]);
+    }, []);
 
-    if (loading){
-        return (
-            <div> Loading....</div>
-        )
+    if (loading) {
+        return <div> Loading....</div>;
     }
     return (
-        <div className="col">
-            <div className="card m-3 p-0">
-                <h1 className="card-title">{animals.animal.name}</h1>
-                <div className="mx-3 border p-2" >
-                    <img src={animals.animal.imageUrl} className="card-img-top" alt={animals.animal.name} />
+        <div className="col p-5">
+            <div className={`${styles.card} m-3 p-0`}>
+                <h1 className={`${styles.cardTitle} text-center p-3`}>{animals.animal.name}</h1>
+                <div className={`mx-5 p-2`}>
+                    <img src={animals.animal.imageUrl} className={`${styles.cardImgTop}`} alt={animals.animal.name} />
                 </div>
-                <div className="card-body">
+                <div className={`${styles.cardBody}`}>
                     <p className="card-text">{animals.animal.description}</p>
                 </div>
-                <ul className="list-group list-group-flush">
-                    <li className="list-group-item">Species: {animals.animal.species}</li>
-                    <li className="list-group-item">Breed: {animals.animal.breed}</li>
-                    <li className="list-group-item">Gender: {animals.animal.gender}</li>
-                    <li className="list-group-item">State: {animals.animal.state}</li>
-                    <li className="list-group-item">Date Reported: {new Date(animals.animal.dateReported).toLocaleDateString('en-US', {
+                <ul className={`list-group list-group-flush`}>
+                    <li className={`list-group-item`}>Species: {animals.animal.species}</li>
+                    <li className={`list-group-item`}>Breed: {animals.animal.breed}</li>
+                    <li className={`list-group-item`}>Gender: {animals.animal.gender}</li>
+                    <li className={`list-group-item`}>State: {animals.animal.state}</li>
+                    <li className={`list-group-item`}>Date Reported: {new Date(animals.animal.dateReported).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
@@ -61,17 +60,16 @@ const ReadMoreById = ({ id }) => {
                         hour: 'numeric',
                         minute: 'numeric'
                     })}</li>
-                    <li className="list-group-item">Coordinates:<br/>
-                    Latitude: {animals.animal.coordinates.coordinates[1]}<br/>
-                    Longitude: {animals.animal.coordinates.coordinates[0]}</li>
-
+                    <li className={`list-group-item`}>Coordinates:<br />
+                        Latitude: {animals.animal.coordinates.coordinates[1]}<br />
+                        Longitude: {animals.animal.coordinates.coordinates[0]}</li>
                 </ul>
-                <div className = "mx-3 mt-2">
+                <div className={`${styles.mapContainer} mx-3 mt-2`}>
                     {/* Render Google Map */}
                     <LoadScriptNext googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
                         <GoogleMap
                             mapContainerStyle={{
-                                height: '1000px',
+                                height: '400px', // Adjust height to make it smaller
                                 width: '100%',
                             }}
                             center={mapCenter}
@@ -94,7 +92,7 @@ const ReadMoreById = ({ id }) => {
                 </div>
             </div>
         </div>
-    );  
+    );
 };
 
 export default ReadMoreById;
