@@ -44,7 +44,7 @@ app.use('/auth', auth)
  * Section for APIs
  */
 app.use('/api/animal/', animal)
-app.use('/api/animalReport/', animalReport)
+app.use('/api/animal-report/', animalReport)
 app.use('/api/message/', message);
 app.use('/api/report/', report);
 app.use('/api/user/', user)

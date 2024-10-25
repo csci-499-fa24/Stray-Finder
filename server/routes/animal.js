@@ -9,7 +9,7 @@ const {
 } = require('../controllers/animal')
 const authenticate = require('../middleware/auth')
 
-router.route('/').get(getAnimals).post(authenticate, createAnimal)
+router.route('/').get(getAnimals)
 
 router
     .route('/:id')
