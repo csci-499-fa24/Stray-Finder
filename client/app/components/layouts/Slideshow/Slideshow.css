@@ -1,0 +1,18 @@
+.carousel-caption {
+    border: 2px solid white; /* Creates the hollow box border */
+    padding: 15px; /* Adds space inside the box */
+    display: inline-block; /* Makes sure the box fits tightly around the text */
+    background-color: rgba(0, 0, 0, 0.5); /* Optional: Adds a semi-transparent background for better text readability */
+    border-radius: 10px; /* Rounds the corners of the box */
+  }
+  
+  .carousel-caption h5, 
+  .carousel-caption p {
+    color: white; /* Ensures the text is visible over the image */
+    margin: 5px 0; /* Adds some spacing between elements */
+  }
+  
+  .carousel-caption button {
+    margin-top: 10px; /* Adds space between the text and button */
+  }
+  

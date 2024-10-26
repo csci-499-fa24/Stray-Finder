@@ -3,6 +3,8 @@ import Link from 'next/link'
 import useAuth from '@/app/hooks/useAuth'
 import { Background } from 'react-parallax';
 
+
+
 const Navbar = () => {
     const { isAuthenticated, user } = useAuth()
 
