@@ -9,7 +9,8 @@ const Navbar = () => {
     return (
         <nav className="navbar navbar-expand-lg justify-content-center custom-navbar" style={{
             backgroundImage: "linear-gradient(to right, #825A88, #8888cc)", // Gradient definition
-            width: "100vw"
+            width: "100vw",
+            lineHeight: '5px',
           }}>
             <div className="container-fluid d-flex">
                 <button
@@ -25,7 +26,10 @@ const Navbar = () => {
                 </button>
 
                 {/* Navbar Brand */}
-                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/" style= {{fontSize: '1.5rem'}}>
+                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/" style= {{
+                    fontSize: '1.5rem',
+                    color: '#b67cd9'
+                }}>
                     Stray Finder
                 </Link>
 
@@ -36,21 +40,21 @@ const Navbar = () => {
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
                         {/* Home Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/" style = {{color: '#cf7bed'}}>
+                            <Link className="nav-link active" aria-current="page" href="/" style = {{color: '#ffffff'}}>
                                 Home
                             </Link>
                         </li>
 
                         {/* About Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/about" style = {{color: '#cf7bed'}}>
+                            <Link className="nav-link active" aria-current="page" href="/about" style = {{color: '#ffffff'}}>
                                 About
                             </Link>
                         </li>
 
                         {/* Contact Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/contact" style = {{color: '#cf7bed'}}>
+                            <Link className="nav-link active" aria-current="page" href="/contact" style = {{color: '#ffffff'}}>
                                 Contact
                             </Link>
                         </li>
@@ -63,7 +67,7 @@ const Navbar = () => {
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
-                                style = {{color: '#cf7bed'}}
+                                style = {{color: '#ffffff'}}
                             >
                                 Actions
                             </Link>
@@ -95,7 +99,7 @@ const Navbar = () => {
                     {isAuthenticated && user ? (
                         <h6>{`Welcome, ${user.username}`}</h6>
                     ) : (
-                        <Link href="/login" style={{color: 'var(--purple-7)'}}>Login</Link>
+                        <Link href="/login" style={{color: '#ffffff'}}>Login</Link>
                     )}
                     {/* Profile icon coming some time later */}
                 </div>
