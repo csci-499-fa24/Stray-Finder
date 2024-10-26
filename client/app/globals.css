@@ -24,6 +24,10 @@
     --purple-20: hsl(270, 50%, 100%);
 }
 
+body {
+    overflow-x: hidden;
+}
+
 .stray-finder-logo {
     font-family: 'Spectral', cursive ; /* Use Lobster font */
     font-size: 2rem; /* Adjust font size if needed */
