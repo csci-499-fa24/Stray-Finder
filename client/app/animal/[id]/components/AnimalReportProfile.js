@@ -2,12 +2,16 @@
 import Link from 'next/link'
 import { GoogleMap, Marker, LoadScriptNext } from '@react-google-maps/api'
 import { useEffect, useState } from 'react'
-import styles from '../ReadMore.module.css';
+import styles from '../AnimalReportProfile.module.css';
+import EditAnimalModal from './EditAnimalModal';
+import useAuth from '@/app/hooks/useAuth'
 
 const AnimalReportProfile = ({ id }) => {
+    const { isAuthenticated, user } = useAuth();
     const [reportProfile, setReportProfile] = useState(null) // State for storing single animal report data
     const [loading, setLoading] = useState(true) // State for loading
     const [mapCenter, setMapCenter] = useState({ lat: 51.505, lng: -0.09 }) // Default coordinates for the map
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchReportData = async () => {
@@ -18,7 +22,6 @@ const AnimalReportProfile = ({ id }) => {
                 const data = await response.json()
                 setReportProfile(data.report) // stores data in the state
 
-                console.log(data);
                 // Set map center based on coordinates from JSON if available
                 if (data.report && data.report.location.coordinates) {
                     setMapCenter({
@@ -36,6 +39,9 @@ const AnimalReportProfile = ({ id }) => {
             fetchReportData()
         }
     }, [id])
+    
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     if (loading) {
         return <div>Loading....</div>
@@ -44,6 +50,12 @@ const AnimalReportProfile = ({ id }) => {
     return (
         <div className="col p-5">
             <div className={`${styles.card} m-3 p-0`}>
+                { isAuthenticated && user?._id === reportProfile?.reportedBy._id && (
+                    <div className="d-flex justify-content-end">
+                        <button className="btn btn-secondary ms-auto" onClick={openModal}>Edit Animal</button>
+                        <EditAnimalModal isOpen={isModalOpen} onClose={closeModal} reportData={reportProfile} />
+                    </div>
+                )}
                 <h1 className={`${styles.cardTitle} text-center p-3`}>{reportProfile?.animal?.name}</h1>
                     <div className={`mx-5 p-2`}>
                         <img src={reportProfile?.animal?.imageUrl} className={`${styles.cardImgTop}`} alt={reportProfile?.animal?.name} />
@@ -52,6 +64,9 @@ const AnimalReportProfile = ({ id }) => {
                     <p className="card-text">{reportProfile?.description}</p>
                 </div>
                 <ul className="list-group list-group-flush">
+                    <li className="list-group-item">
+                        Reported By: {reportProfile?.reportedBy?.username}
+                    </li>
                     <li className="list-group-item">
                         Status: {reportProfile?.reportType}
                     </li>
