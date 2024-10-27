@@ -15,16 +15,13 @@ const ReportAnimal = () => {
         color: '',
         gender: 'Unknown',
         fixed: 'Unknown',
-        collar: false, // Collar field
+        collar: false,
         description: '',
         location: '',
-        imageUrl: '',
-        coordinates: {
-            lat: 40.768,
-            lng: -73.964,
-        }, // Default coordinates
+        coordinates: { lat: 40.768, lng: -73.964 }, // Default coordinates
     })
 
+    const [file, setFile] = useState(null) // Store the image file
     const [isOtherBreed, setIsOtherBreed] = useState(false)
     const [commonBreeds, setCommonBreeds] = useState([])
     const [userLocation, setUserLocation] = useState(null)
@@ -78,7 +75,6 @@ const ReportAnimal = () => {
             const askForLocation = window.confirm(
                 'Would you like to share your location?'
             )
-
             if (askForLocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -98,7 +94,6 @@ const ReportAnimal = () => {
                     }
                 )
             }
-
             setLocationAsked(true)
         }
     }, [isAuthenticated, locationAsked, router])
@@ -136,34 +131,52 @@ const ReportAnimal = () => {
         }
     }
 
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]) // Store the selected file
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
         setError('')
 
-        // Include the logged-in user's ID as `reportedBy`
-        const formattedData = {
-            ...formData,
-            reportedBy: user._id, // Use the user ID from useAuth
-            location: {
-                address: formData.location,
-                coordinates: {
-                    type: 'Point',
-                    coordinates: [
-                        formData.coordinates.lng,
-                        formData.coordinates.lat,
-                    ],
-                },
+        // Prepare FormData for the image and other form data
+        const uploadData = new FormData()
+        uploadData.append('reportType', formData.reportType)
+        uploadData.append('name', formData.name)
+        uploadData.append('species', formData.species)
+        uploadData.append('breed', formData.breed)
+        uploadData.append('color', formData.color)
+        uploadData.append('gender', formData.gender)
+        uploadData.append('fixed', formData.fixed)
+        uploadData.append('collar', formData.collar)
+        uploadData.append('description', formData.description)
+        uploadData.append('reportedBy', user._id) // Add user ID
+
+        // Create the location data in GeoJSON format
+        const locationData = {
+            address: formData.location || 'Unknown', // Default to 'Unknown' if no address is provided
+            coordinates: {
+                type: 'Point',
+                coordinates: [
+                    formData.coordinates.lng,
+                    formData.coordinates.lat,
+                ], // Coordinates in GeoJSON format: [longitude, latitude]
             },
+        }
+
+        // Append location as a stringified JSON object
+        uploadData.append('location', JSON.stringify(locationData))
+
+        // If an image file is selected, append it to the FormData
+        if (file) {
+            uploadData.append('image', file)
         }
 
         try {
             const requestOptions = {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formattedData),
+                body: uploadData, // Use FormData
                 credentials: 'include',
             }
 
@@ -207,7 +220,10 @@ const ReportAnimal = () => {
                         {error && (
                             <div className="alert alert-danger">{error}</div>
                         )}
-                        <form onSubmit={handleSubmit}>
+                        <form
+                            onSubmit={handleSubmit}
+                            encType="multipart/form-data"
+                        >
                             <div className="mb-3">
                                 <label
                                     htmlFor="reportType"
@@ -418,22 +434,21 @@ const ReportAnimal = () => {
                                 </LoadScriptNext>
                             </div>
 
+                            {/* File Input for Image */}
                             <div className="mb-3">
-                                <label
-                                    htmlFor="imageUrl"
-                                    className="form-label"
-                                >
-                                    Image URL
+                                <label htmlFor="image" className="form-label">
+                                    Upload Image
                                 </label>
                                 <input
-                                    type="url"
+                                    type="file"
                                     className="form-control"
-                                    id="imageUrl"
-                                    name="imageUrl"
-                                    value={formData.imageUrl}
-                                    onChange={handleChange}
+                                    id="image"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
                                 />
                             </div>
+
                             <div className="d-flex">
                                 <button
                                     type="submit"
