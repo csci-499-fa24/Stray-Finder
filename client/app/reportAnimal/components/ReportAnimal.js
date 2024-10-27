@@ -63,7 +63,7 @@ const ReportAnimal = () => {
                 'Other',
             ],
         },
-        { value: 'Other', label: "I don't know", breeds: [] },
+        { value: 'Unknown', label: "I don't know", breeds: [] },
     ]
 
     useEffect(() => {
@@ -294,6 +294,7 @@ const ReportAnimal = () => {
                                     value={formData.breed}
                                     onChange={handleChange}
                                     required
+                                    disabled={formData.species === 'Unknown'}
                                 >
                                     <option value="">Select breed</option>
                                     {commonBreeds.map((breed) => (

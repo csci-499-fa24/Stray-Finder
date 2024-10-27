@@ -6,7 +6,7 @@ const upload = require('../middleware/uploadMiddleware')
 
 /**
  * @get     : Retrieves list of animal reports
- * @route   : GET /api/animal-reports
+ * @route   : GET /api/animal-report
  * @access  : public
  * @description : 
     to use filter, go to server/api/animal-reports?key=value&key=value
@@ -45,7 +45,7 @@ const getAnimalReports = async (req, res) => {
 
 /**
  * @post    : Creates a new animal report
- * @route   : POST /api/animal-reports
+ * @route   : POST /api/animal-report
  * @access  : public
  */
 const createAnimalReport = async (req, res) => {
@@ -139,7 +139,7 @@ const createAnimalReport = async (req, res) => {
 
 /**
  * @get     : Retrieves a specific animal report by ID
- * @route   : GET /api/animal-reports/:id
+ * @route   : GET /api/animal-report/:id
  * @access  : public
  */
 const getAnimalReportById = async (req, res) => {
@@ -165,7 +165,7 @@ const getAnimalReportById = async (req, res) => {
 
 /**
  * @put     : Updates an animal report by ID
- * @route   : PUT /api/animal-reports/:id
+ * @route   : PUT /api/animal-report/:id
  * @access  : public
  */
 const updateAnimalReport = async (req, res) => {
@@ -192,7 +192,7 @@ const updateAnimalReport = async (req, res) => {
         if (imageUrl) {
             await Animal.findByIdAndUpdate(report.animal._id, { imageUrl })
         }
-
+        
         // Update the report fields
         const updatedReport = await AnimalReport.findByIdAndUpdate(
             id,
