@@ -160,7 +160,6 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
         setFormData((prevData) => ({
             ...prevData,
             coordinates: { lat, lng },
-            location: `Lat: ${lat}, Lng: ${lng}`,
         }))
     }
 
