@@ -2,7 +2,7 @@
 import React from 'react';
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import "./Slideshow.css"
-// Ensure Bootstrap CSS is imported
+
 
 
 const Slideshow = () => {
