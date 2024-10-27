@@ -19,7 +19,10 @@ const ReportAnimal = () => {
         description: '',
         location: '',
         imageUrl: '',
-        coordinates: { lat: 51.505, lng: -0.09 }, // Default coordinates
+        coordinates: {
+            lat: 40.768,
+            lng: -73.964,
+        }, // Default coordinates
     })
 
     const [isOtherBreed, setIsOtherBreed] = useState(false)

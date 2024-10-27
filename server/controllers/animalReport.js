@@ -28,8 +28,11 @@ const getAnimalReports = async (req, res) => {
         })
 
         const reports = await AnimalReport.find(query)
-            .populate('animal') // populate animal data
-            .populate('reportedBy') // populate user data
+            .populate('animal')
+            .populate({
+                path: 'reportedBy',
+                select: 'id username',
+            })
             .exec()
 
         res.status(200).json({ reports })
@@ -40,6 +43,7 @@ const getAnimalReports = async (req, res) => {
         })
     }
 }
+
 
 /**
  * @post    : Creates a new animal report
@@ -128,7 +132,10 @@ const getAnimalReportById = async (req, res) => {
         const { id } = req.params
         const report = await AnimalReport.findById(id)
             .populate('animal')
-            .populate('reportedBy')
+            .populate({
+                path: 'reportedBy',
+                select: 'id username',
+            })
             .exec()
 
         if (!report) {
@@ -143,6 +150,7 @@ const getAnimalReportById = async (req, res) => {
         })
     }
 }
+
 
 /**
  * @put     : Updates an animal report by ID
