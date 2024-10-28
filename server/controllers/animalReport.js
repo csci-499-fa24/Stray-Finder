@@ -1,6 +1,8 @@
 const AnimalReport = require('../models/animalReport')
 const Animal = require('../models/animal')
 const User = require('../models/user')
+const uploadImage = require('../cloudinary/upload')
+const upload = require('../middleware/uploadMiddleware')
 
 /**
  * @get     : Retrieves list of animal reports
@@ -28,11 +30,8 @@ const getAnimalReports = async (req, res) => {
         })
 
         const reports = await AnimalReport.find(query)
-            .populate('animal')
-            .populate({
-                path: 'reportedBy',
-                select: 'id username',
-            })
+            .populate('animal') // populate animal data
+            .populate('reportedBy') // populate user data
             .exec()
 
         res.status(200).json({ reports })
@@ -43,7 +42,6 @@ const getAnimalReports = async (req, res) => {
         })
     }
 }
-
 
 /**
  * @post    : Creates a new animal report
@@ -63,22 +61,24 @@ const createAnimalReport = async (req, res) => {
             description,
             location,
             reportType,
-            imageUrl,
             reportedBy,
         } = req.body
 
-        // Check if all required animal fields are present
+        console.log('Incoming body:', req.body) // Log the parsed request body
+        console.log('Incoming file:', req.file) // Log the uploaded file
+
+        // Check if required fields are missing
         if (!name || !species || !location || !reportType || !reportedBy) {
+            console.error('Validation failed - Missing required fields')
             return res.status(400).json({ message: 'Missing required fields' })
         }
 
-        // Validate location structure
-        if (
-            !location.coordinates ||
-            location.coordinates.type !== 'Point' ||
-            !Array.isArray(location.coordinates.coordinates)
-        ) {
-            return res.status(400).json({ message: 'Invalid location format' })
+        // If an image was uploaded, upload it to Cloudinary
+        let imageUrl = null
+        if (req.file) {
+            console.log('Uploading image to Cloudinary...')
+            imageUrl = await uploadImage(req.file) // Ensure you pass req.file here
+            console.log('Image uploaded successfully. URL:', imageUrl)
         }
 
         // First, create the Animal record
@@ -91,23 +91,35 @@ const createAnimalReport = async (req, res) => {
             fixed,
             collar,
             description,
-            imageUrl,
+            imageUrl, // Save Cloudinary URL for the image
         }
+
+        // Log the animal data before saving
+        console.log('Animal data to be saved:', animalData)
 
         const animal = new Animal(animalData)
         await animal.save()
 
+        // Log the created animal
+        console.log('Created animal:', animal)
+
         // Create the Animal Report record with a reference to the newly created animal
         const reportData = {
             animal: animal._id, // Reference the created animal's ID
-            location,
+            location: JSON.parse(location), // Ensure location is parsed properly
             reportType,
             description,
             reportedBy,
         }
 
+        // Log the report data before saving
+        console.log('Animal report data to be saved:', reportData)
+
         const animalReport = new AnimalReport(reportData)
         await animalReport.save()
+
+        // Log the created animal report
+        console.log('Created animal report:', animalReport)
 
         // Return the created report
         return res.status(201).json({
@@ -115,12 +127,15 @@ const createAnimalReport = async (req, res) => {
             report: animalReport,
         })
     } catch (error) {
+        console.error('Error creating animal report:', error.message)
         return res.status(500).json({
             message: 'Failed to create animal report',
             error: error.message,
         })
     }
 }
+
+
 
 /**
  * @get     : Retrieves a specific animal report by ID
@@ -132,10 +147,7 @@ const getAnimalReportById = async (req, res) => {
         const { id } = req.params
         const report = await AnimalReport.findById(id)
             .populate('animal')
-            .populate({
-                path: 'reportedBy',
-                select: 'id username',
-            })
+            .populate('reportedBy')
             .exec()
 
         if (!report) {
@@ -151,7 +163,6 @@ const getAnimalReportById = async (req, res) => {
     }
 }
 
-
 /**
  * @put     : Updates an animal report by ID
  * @route   : PUT /api/animal-report/:id
@@ -161,10 +172,35 @@ const updateAnimalReport = async (req, res) => {
     try {
         const { id } = req.params
         const { location, reportType, description } = req.body
+        let imageUrl = null
+
+        // If an image file is provided, upload the new image to Cloudinary
+        if (req.file) {
+            console.log('Uploading new image to Cloudinary...')
+            imageUrl = await uploadImage(req.file) // Upload the new image
+            console.log('New image uploaded successfully. URL:', imageUrl)
+        }
+
+        // Find the animal report to update
+        const report = await AnimalReport.findById(id).populate('animal')
+
+        if (!report) {
+            return res.status(404).json({ message: 'Animal report not found' })
+        }
+
+        // If a new image was uploaded, update the animal's image URL
+        if (imageUrl) {
+            await Animal.findByIdAndUpdate(report.animal._id, { imageUrl })
+        }
         
+        // Update the report fields
         const updatedReport = await AnimalReport.findByIdAndUpdate(
             id,
-            { location, reportType, description },
+            {
+                location: JSON.parse(location), // Ensure location is parsed correctly
+                reportType,
+                description,
+            },
             { new: true }
         )
 
@@ -174,12 +210,14 @@ const updateAnimalReport = async (req, res) => {
 
         res.status(200).json({ report: updatedReport })
     } catch (error) {
+        console.error('Error updating animal report:', error.message)
         res.status(500).json({
             message: 'Failed to update animal report',
             error: error.message,
         })
     }
 }
+
 
 /**
  * @delete  : Deletes an animal report by ID
