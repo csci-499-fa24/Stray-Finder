@@ -1,5 +1,5 @@
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
-import ReadMoreById from "./components/ReadMoreById";
+import AnimalReportProfile from "./components/AnimalReportProfile";
 import Footer from "@/app/components/layouts/Footer";
 
 const StrayDetailsPage = ({ params }) => {
@@ -8,7 +8,7 @@ const StrayDetailsPage = ({ params }) => {
     return (
         <div>
             <Navbar />
-            <ReadMoreById id={id} />
+            <AnimalReportProfile id={id} />
             <Footer />
         </div>
     )
