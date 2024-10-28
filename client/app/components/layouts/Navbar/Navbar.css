@@ -24,9 +24,7 @@
     --purple-20: hsl(270, 50%, 100%);
 }
 
-* {
-    font-family: sans-serif;
-}
+
 
 .custom-navbar .navbar-brand {
     color: var(--purple-7);
@@ -44,17 +42,12 @@
     color: var(--purple-7);
 }
 
-.custom-navbar {
-    background: linear-gradient(90deg, var(--purple-5), var(--purple-15)); /* Horizontal gradient */
-}
 
+/*
 .nav-link {
-    color: white !important; /* White text color for nav links */
+    color: white !important; /* White text color for nav links 
 }
-
-.navbar-brand {
-    color: white !important;
-}
+*/
 
 .navbar-toggler {
     border-color: white; /* White border for the toggler */
@@ -82,6 +75,8 @@
     background-color: #5b0cae; /* Slightly darker purple for hover effect */
 }
 
+
+
 .custom-navbar .search-button:hover {
     color: white;
     background-color: var(--purple-7);
@@ -92,5 +87,67 @@
     border-color: var(--purple-7);
 }
 
+
+
+
+.custom-navbar .navbar-nav .nav-link {
+    padding: 0.5rem 1rem; /* Adjust the padding of nav links */
+    font-size: 16px; /* Adjust the font size for nav links */
+}
+
 /* Stray Finder Logo styling */
+
+
+.nav-link {
+    position: relative; /* Position for the pseudo-elements */
+    display: inline-block; /* Allows padding and width to take effect */
+    text-transform: uppercase; /* Uppercase for all links */
+    padding: 10px 20px; /* Padding around the link */
+    margin: 20px 0; /* Margin to create space between links */
+    color: white !important; /* White text color */
+    transition: color 0.5s; /* Transition for text color */
+}
+
+.nav-link:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-top: 2px solid #ffffff; /* White border on top */
+    border-bottom: 2px solid #ffffff; /* White border on bottom */
+    transform: scaleY(2); /* Scale for hover effect */
+    opacity: 0; /* Start as invisible */
+    transition: transform 0.3s, opacity 0.3s; /* Transition for scaling and opacity */
+    z-index: 1; /* Ensure it sits above the background */
+}
+
+.nav-link:after {
+    content: '';
+    position: absolute;
+    top: 2px; /* Slight offset to create a shadow effect */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3); /* Light background on hover */
+    transform: scale(0); /* Start as scaled down */
+    opacity: 0; /* Start as invisible */
+    transition: transform 0.3s, opacity 0.3s; /* Transition for scaling and opacity */
+    z-index: 0; /* Ensure it sits below the link text */
+}
+
+.nav-link:hover {
+    color: #fff; /* Change text color on hover */
+}
+
+.nav-link:hover:before {
+    transform: scaleY(1); /* Scale up the border */
+    opacity: 1; /* Make the border visible */
+}
+
+.nav-link:hover:after {
+    transform: scale(1); /* Scale the background to full size */
+    opacity: 1; /* Make the background visible */
+}
 

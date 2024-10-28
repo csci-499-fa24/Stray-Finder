@@ -24,6 +24,7 @@
     --purple-20: hsl(270, 50%, 100%);
 }
 
+
 .stray-finder-logo {
     font-family: 'Spectral', cursive ; /* Use Lobster font */
     font-size: 2rem; /* Adjust font size if needed */
@@ -31,6 +32,8 @@
     font-weight: bold;
 
 }
+
+
 
 *{
     font-family: sans-serif ;
@@ -66,11 +69,7 @@
     background-color: var(--purple-10);
 }
 
-.navbar-brand {
-    line-height: 70px;
-    padding: 10px;
-    font-size: 24px;
-}
+
 
 .navbar-toggler-icon {
     color: white;
@@ -92,6 +91,7 @@ body {
     background-color: var(--purple-19);
     overflow-y: scroll; /* added a scroll wheel to every page to prevent shift of navbar in presence of a scroll wheel */
     padding-right: 15px; /* shifted page to the right to center more because of the wheel */
+    overflow-x: hidden; /* horizontal scrollbar fix attempt */
 }
 
 /* For report lost */
@@ -108,17 +108,19 @@ body {
     color: var(--purple-7);
 }
 
+/*
 .btn-purple {
-    background-color: #6f42c1; /* Adjust this color to match your purple */
+    background-color: #6f42c1; /* Adjust this color to match your purple /
     border: none;
     color: white;
 }
 
 .btn-purple:hover {
-    background-color: #5a31a1; /* Darker shade for hover effect */
-}
+    background-color: #5a31a1; /* Darker shade for hover effect /
+} */
 
-/* Leaflet CSS */
+/* Leaflet CSS ----- */
+
 .leaflet-container {
     height: 200px; /* Set height for your mini map */
     width: 100%; /* Full width */
@@ -267,22 +269,6 @@ body {
 
 .bg-main-prp {
     color: var(--purple-7);
-}
-
-.btn-purple {
-    background-color: #6f42c1; /* Adjust this color to match your purple */
-    border: none;
-    color: white;
-}
-
-.btn-purple:hover {
-    background-color: #5a31a1; /* Darker shade for hover effect */
-}
-
-/* Leaflet CSS */
-.leaflet-container {
-    height: 200px; /* Set height for your mini map */
-    width: 100%; /* Full width */
 }
 
 
