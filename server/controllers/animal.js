@@ -49,9 +49,7 @@ const updateAnimal = async (req, res) => {
 
         // Check if an image file is provided and upload it to Cloudinary
         if (req.file) {
-            console.log('Uploading new image to Cloudinary...')
-            imageUrl = await uploadImage(req.file) // Assuming uploadImage uploads the file and returns the URL
-            console.log('Image uploaded successfully. URL:', imageUrl)
+            imageUrl = await uploadImage(req.file)
         }
 
         // Get the existing animal document
