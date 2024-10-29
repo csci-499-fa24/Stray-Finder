@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -30,4 +35,4 @@ jobs:
         uses: ArtiomTr/jest-coverage-report-action@v2.3.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          working-directory: ./server
+          working-directory: ./server  # Specify the server directory
