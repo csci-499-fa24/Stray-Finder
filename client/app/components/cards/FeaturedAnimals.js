@@ -161,21 +161,21 @@ const ReportList = ({ reports, loading }) => {
         return <div>Loading...</div>
     }
 
-    const strayReports = reports.filter(report => report.reportType === 'Stray')
+    const strayReports = reports.filter(report => report?.reportType === 'Stray')
     return (
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center p-2 text-start">
             {strayReports.length > 0 ? (
                 strayReports.map((report) => (
                     <AnimalCard
-                        key={report.animal._id}
-                        report_id={report._id}
-                        animal_id={report.animal._id}
-                        name={report.animal.name}
-                        image={report.animal.imageUrl}
-                        species={report.animal.species}
-                        gender={report.animal.gender}
+                        key={report?.animal?._id}
+                        report_id={report?._id}
+                        animal_id={report?.animal?._id}
+                        name={report?.animal?.name}
+                        image={report?.animal?.imageUrl}
+                        species={report?.animal?.species}
+                        gender={report?.animal?.gender}
                         state="Unknown" // Update this if you have a proper state for animals
-                        description={report.animal.description}
+                        description={report?.animal?.description}
                     />
                 ))
             ) : (

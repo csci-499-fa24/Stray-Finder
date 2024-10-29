@@ -47,3 +47,30 @@
     border-radius: 10px; /* Rounded corners for the map */
     overflow: hidden; /* Prevent overflow */
 }
+
+/* YourComponent.module.css */
+.modalOverlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Overlay color */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000; /* Make sure the overlay is on top */
+}
+
+.customModal {
+    width: 400px; /* Set your desired width */
+    max-width: 90%; /* Responsive max width */
+    height: 275px; /* Set your desired height */
+    max-height: 90%; /* Responsive max height */
+    margin: auto; /* Center the modal */
+    padding: 20px; /* Inner padding */
+    border-radius: 10px; /* Rounded corners */
+    border: 1px solid #ccc; /* Border style */
+    background-color: white; /* Background color of the modal */
+    position: fixed; /* Fixed positioning to allow centering */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for the modal's size */
+}

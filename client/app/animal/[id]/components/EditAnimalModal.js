@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api'
+import DeleteAnimalModal from './DeleteAnimalModal';
 
 const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         reportType: reportData?.reportType || '',
         name: reportData?.animal?.name || '',
@@ -163,6 +165,10 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
         }))
     }
 
+
+    const openDeleteModal = () => setIsDeleteModalOpen(true);
+    const closeDeleteModal = () => setIsDeleteModalOpen(false);
+
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
     if (!isOpen) return null;
 
@@ -172,7 +178,7 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
             onRequestClose={onClose}
             contentLabel="Animal Details"
         >
-            <div className='scroll-component'>
+            <div>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label
@@ -395,6 +401,11 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                     <button className='btn btn-secondary ms-auto' onClick={onClose}>Cancel</button>
                 </div>
             </form>
+                <div className="d-flex">
+                    <br></br>
+                    <button className="btn btn-danger ms-auto" onClick={openDeleteModal}>Delete</button>
+                    <DeleteAnimalModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} report_id={reportData?._id} animal_id={reportData?.animal?._id} />
+                </div>
             </div>
         </Modal>
     );
