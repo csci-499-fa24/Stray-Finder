@@ -8,7 +8,7 @@ const Slideshow = () => {
     style={{
         width: "100vw",
         margin: "0 auto" // Center the slideshow horizontally
-          }}
+  }}
     >
       {/* <Navbar /> */}
       {/* Indicators */}
