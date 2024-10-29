@@ -1,20 +1,13 @@
 'use client'
 import Link from 'next/link'
+import ProfileMenu from './Profile_Menu' // Import the Profile Menu component
 import useAuth from '@/app/hooks/useAuth'
-import { Background } from 'react-parallax';
-
-
 
 const Navbar = () => {
     const { isAuthenticated, user } = useAuth()
 
     return (
-        <nav className="navbar navbar-expand-lg justify-content-center custom-navbar" style={{
-            backgroundImage: 'white',
-            //"linear-gradient(to right, #825A88, #8888cc)", // Gradient definition
-            width: "100vw",
-            lineHeight: '5px',
-          }}>
+        <nav className="navbar navbar-expand-lg justify-content-center custom-navbar">
             <div className="container-fluid d-flex">
                 <button
                     className="navbar-toggler"
@@ -29,82 +22,43 @@ const Navbar = () => {
                 </button>
 
                 {/* Navbar Brand */}
-                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/" style= {{
+                <Link className="navbar-brand highlight-brand stray-finder-logo" href="/" style={{
                     fontSize: '1.5rem',
                     color: '#a826a2'
                 }}>
                     Stray Finder
                 </Link>
 
-                <div
-                    className="collapse navbar-collapse"
-                    id="navbarSupportedContent"
-                >
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
-                        {/* Home Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/" style = {{color: '#67347a'}}>
-                                Home
-                            </Link>
+                            <Link className="nav-link active" href="/" style={{ color: '#67347a' }}>Home</Link>
                         </li>
-
-                        {/* About Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/about" style = {{color: '#67347a'}}>
-                                About
-                            </Link>
+                            <Link className="nav-link active" href="/about" style={{ color: '#67347a' }}>About</Link>
                         </li>
-
-                        {/* Contact Page Link */}
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="/contact" style = {{color: '#67347a'}}>
-                                Contact
-                            </Link>
+                            <Link className="nav-link active" href="/contact" style={{ color: '#67347a' }}>Contact</Link>
                         </li>
-
-                        {/* Dropdown Menu */}
                         <li className="nav-item dropdown">
-                            <Link
-                                className="nav-link dropdown-toggle"
-                                href="#"
-                                role="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                style = {{color: '#67347a'}}
-                            >
+                            <Link className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{ color: '#67347a' }}>
                                 Actions
                             </Link>
                             <ul className="dropdown-menu">
-                                <li>
-                                    <Link className="dropdown-item" href="/report-lost">
-                                        Report Lost
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link className="dropdown-item" href="/report-found">
-                                        Report Found
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link className="dropdown-item" href="/report-stray">
-                                        Report Stray
-                                    </Link>
-                                </li>
+                                <li><Link className="dropdown-item" href="/report-lost">Report Lost</Link></li>
+                                <li><Link className="dropdown-item" href="/report-found">Report Found</Link></li>
+                                <li><Link className="dropdown-item" href="/report-stray">Report Stray</Link></li>
                             </ul>
                         </li>
                     </ul>
-
-                    
                 </div>
 
-                {/* Conditional Login/Welcome User */}
                 <div className="p-3 ml-auto">
                     {isAuthenticated && user ? (
-                        <h6>{`Welcome, ${user.username}`}</h6>
+                        <ProfileMenu />
                     ) : (
-                        <Link href="/auth" style={{color: '#67347ag'}}>Login</Link>
+                        <Link href="/auth" style={{ color: '#67347a' }}>Login</Link>
                     )}
-                    {/* Profile icon coming some time later */}
                 </div>
             </div>
         </nav>
