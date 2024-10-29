@@ -322,7 +322,6 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                                     {breed}
                                 </option>
                             ))}
-                            <option value="Other">Other</option>
                         </select>
                         {isOtherBreed && (
                             <input
