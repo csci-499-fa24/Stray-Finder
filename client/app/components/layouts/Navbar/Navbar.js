@@ -1,8 +1,11 @@
 'use client'
 import Link from 'next/link'
-import ProfileMenu from './Profile_Menu.js' // Import the Profile Menu component
+import ProfileMenu from './Profile_Menu' // Import the Profile Menu component
+import useAuth from '@/app/hooks/useAuth'
 
 const Navbar = () => {
+    const { isAuthenticated, user } = useAuth()
+
     return (
         <nav className="navbar navbar-expand-lg justify-content-center custom-navbar">
             <div className="container-fluid d-flex">
@@ -50,8 +53,13 @@ const Navbar = () => {
                     </ul>
                 </div>
 
-                {/* User Profile Icon & Dropdown */}
-                <ProfileMenu />
+                <div className="p-3 ml-auto">
+                    {isAuthenticated && user ? (
+                        <ProfileMenu />
+                    ) : (
+                        <Link href="/auth" style={{ color: '#67347a' }}>Login</Link>
+                    )}
+                </div>
             </div>
         </nav>
     )

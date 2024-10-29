@@ -24,7 +24,7 @@
     min-width: 100px;
     padding: 5px 0;
     text-align: center;
-    transform: translate(-45%, 10px); /* Adjusted to be more centered */
+    transform: translate(-42%, 10px); /* Adjusted to be more centered */
 }
 
 .dropdown-item {
