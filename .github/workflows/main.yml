@@ -1,42 +1,30 @@
-name: 'coverage'
+name: Jest Coverage Report
+
 on:
   pull_request:
     branches:
-      - master
       - main
 
-permissions:
-  checks: write
-  contents: read
-
 jobs:
-  coverage:
+  test:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Set Up Node 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
-
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ./server/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('./server/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: '16'
 
       - name: Install dependencies
-        run: npm install  
-        working-directory: ./server
+        run: npm install
 
-      - name: Run Tests
+      - name: Run tests with coverage
         run: npm test -- --coverage
-        working-directory: ./server
 
-      - name: Coverage Report
-        uses: ArtiomTr/jest-coverage-report-action@v2.3.1 
+      - name: Jest coverage report
+        uses: ArtiomTr/jest-coverage-report-action@v2.3.1
         with:
-          working-directory: ./server
+          github_token: ${{ secrets.GITHUB_TOKEN }}
