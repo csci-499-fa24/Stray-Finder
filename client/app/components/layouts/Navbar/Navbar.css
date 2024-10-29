@@ -24,7 +24,9 @@
     --purple-20: hsl(270, 50%, 100%);
 }
 
-
+.custom-navbar {
+    background: linear-gradient(90deg, var(--purple-5), var(--purple-15));
+}
 
 .custom-navbar .navbar-brand {
     color: var(--purple-7);
@@ -41,13 +43,6 @@
 .custom-navbar .nav-link.dropdown-toggle {
     color: var(--purple-7);
 }
-
-
-/*
-.nav-link {
-    color: white !important; /* White text color for nav links 
-}
-*/
 
 .navbar-toggler {
     border-color: white; /* White border for the toggler */
@@ -75,8 +70,6 @@
     background-color: #5b0cae; /* Slightly darker purple for hover effect */
 }
 
-
-
 .custom-navbar .search-button:hover {
     color: white;
     background-color: var(--purple-7);
@@ -87,17 +80,12 @@
     border-color: var(--purple-7);
 }
 
-
-
-
 .custom-navbar .navbar-nav .nav-link {
     padding: 0.5rem 1rem; /* Adjust the padding of nav links */
     font-size: 16px; /* Adjust the font size for nav links */
 }
 
 /* Stray Finder Logo styling */
-
-
 .nav-link {
     position: relative; /* Position for the pseudo-elements */
     display: inline-block; /* Allows padding and width to take effect */
@@ -151,3 +139,7 @@
     opacity: 1; /* Make the background visible */
 }
 
+/* Fix for horizontal scrolling */
+body {
+    overflow-x: hidden;
+}

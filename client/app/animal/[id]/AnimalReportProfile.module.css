@@ -1,62 +1,70 @@
-/* ReadMore.module.css */
 .card {
-    border: 1px solid #dcdcdc; /* Light border for visibility */
-    border-radius: 10px; /* Rounded corners */
-    overflow: hidden; /* Prevent content from overflowing */
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    background-color: #ffffff;
+    max-width: 800px; /* Increased max width of the card */
+    margin: 20px auto; /* Center the card with vertical spacing */
 }
 
+.card-title {
+    font-size: 1.8rem;
+    color: #7B4BA4; /* Changed color to purple */
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
 
 .card-img-top {
-    width: 80%; /* Smaller image size */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 10px; /* Rounded corners */
-    margin: 0 auto; /* Center the image */
-    display: block; /* Make it a block element */
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    display: block;
 }
 
 .card-body {
-    padding: 15px; /* Increase padding for better spacing */
+    padding: 20px;
+    background-color: #f3f4f6; /* Light grey for contrast */
 }
 
 .list-group {
-    border: 1px solid #dcdcdc; /* Light border around the list */
-    border-radius: 10px; /* Rounded corners for the list */
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 .list-group-item {
-    font-size: 1.1rem; /* Larger font size for readability */
-    background-color: #f8f9fa; /* Light background color for items */
-    border-bottom: 1px solid #dcdcdc; /* Separate list items */
+    font-size: 1.1rem;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e0e0e0;
+    color: #555555;
 }
 
-.list-group-item:last-child {
-    border-bottom: none; /* Remove the border from the last item */
+.map-container {
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #dcdcdc;
+    background-color: #f3f4f6;
 }
 
 .btn {
-    background-color: #7B4BA4; /* Theme color */
-    color: white; /* White text for contrast */
+    background-color: #7B4BA4;
+    color: white;
+    font-weight: 600;
+    margin: 0 10px; /* Adjust spacing for center alignment */
 }
 
 .btn:hover {
-    background-color: #6a3c8c; /* Darker shade on hover */
+    background-color: #6a3c8c;
 }
 
 .map-container {
     margin-top: 20px; /* Space above the map */
     border-radius: 10px; /* Rounded corners for the map */
     overflow: hidden; /* Prevent overflow */
-}
-
-/* YourComponent.module.css */
-.modalOverlay {
-    background-color: rgba(0, 0, 0, 0.5); /* Overlay color */
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000; /* Make sure the overlay is on top */
 }
 
 .customModal {
@@ -73,4 +81,31 @@
     top: 50%; /* Center vertically */
     left: 50%; /* Center horizontally */
     transform: translate(-50%, -50%); /* Adjust for the modal's size */
+}
+.center-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.overlayContent {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
 }

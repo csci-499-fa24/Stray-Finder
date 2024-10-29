@@ -1,12 +1,12 @@
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api'
-import { useRouter } from 'next/navigation'
-import useAuth from '@/app/hooks/useAuth'
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api';
+import { useRouter } from 'next/navigation';
+import useAuth from '@/app/hooks/useAuth';
 
 const ReportAnimal = () => {
-    const router = useRouter()
-    const { isAuthenticated, user } = useAuth() // Get user and authentication status from useAuth
+    const router = useRouter();
+    const { isAuthenticated, user } = useAuth(); // Get user and authentication status from useAuth
     const [formData, setFormData] = useState({
         reportType: '',
         name: '',
@@ -19,15 +19,15 @@ const ReportAnimal = () => {
         description: '',
         location: '',
         coordinates: { lat: 40.768, lng: -73.964 }, // Default coordinates
-    })
+    });
 
-    const [file, setFile] = useState(null) // Store the image file
-    const [isOtherBreed, setIsOtherBreed] = useState(false)
-    const [commonBreeds, setCommonBreeds] = useState([])
-    const [userLocation, setUserLocation] = useState(null)
-    const [locationAsked, setLocationAsked] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
+    const [file, setFile] = useState(null); // Store the image file
+    const [isOtherBreed, setIsOtherBreed] = useState(false);
+    const [commonBreeds, setCommonBreeds] = useState([]);
+    const [userLocation, setUserLocation] = useState(null);
+    const [locationAsked, setLocationAsked] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const speciesOptions = [
         {
@@ -64,94 +64,109 @@ const ReportAnimal = () => {
             ],
         },
         { value: 'Unknown', label: "I don't know", breeds: [] },
-    ]
+    ];
 
     useEffect(() => {
         if (isAuthenticated === false) {
-            router.push('/auth') // Redirect to login if not authenticated
+            router.push('/auth'); // Redirect to login if not authenticated
         }
 
         if (isAuthenticated && navigator.geolocation && !locationAsked) {
             const askForLocation = window.confirm(
                 'Would you like to share your location?'
-            )
+            );
             if (askForLocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        const { latitude, longitude } = position.coords
-                        setUserLocation({ lat: latitude, lng: longitude })
+                        const { latitude, longitude } = position.coords;
+                        setUserLocation({ lat: latitude, lng: longitude });
                         setFormData((prevData) => ({
                             ...prevData,
                             coordinates: { lat: latitude, lng: longitude },
                             location: `Lat: ${latitude}, Lng: ${longitude}`,
-                        }))
+                        }));
                     },
                     (error) => {
-                        console.error('Error getting location:', error)
+                        console.error('Error getting location:', error);
                         alert(
                             'Unable to retrieve your location. Please enter it manually.'
-                        )
+                        );
                     }
-                )
+                );
             }
-            setLocationAsked(true)
+            setLocationAsked(true);
         }
-    }, [isAuthenticated, locationAsked, router])
+    }, [isAuthenticated, locationAsked, router]);
 
     if (isAuthenticated === null) {
-        return <div>Loading...</div> // Show loading while auth status is unknown
+        return <div>Loading...</div>; // Show loading while auth status is unknown
     }
 
     if (isAuthenticated === false) {
-        return null // Return nothing if the user is not authenticated (will redirect)
+        return null; // Return nothing if the user is not authenticated (will redirect)
     }
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target
+        const { name, value, type, checked } = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: type === 'checkbox' ? checked : value,
-        }))
+        }));
 
         if (name === 'species') {
             const selectedSpecies = speciesOptions.find(
                 (species) => species.value === value
-            )
-            setCommonBreeds(selectedSpecies ? selectedSpecies.breeds : [])
+            );
+            setCommonBreeds(selectedSpecies ? selectedSpecies.breeds : []);
             setFormData((prevData) => ({
                 ...prevData,
-                breed: '',
-            }))
+                breed: '', // Reset breed when species changes
+            }));
+            setIsOtherBreed(false); // Reset Other option when species changes
         }
 
-        if (name === 'breed' && value === 'Other') {
-            setIsOtherBreed(true)
-        } else {
-            setIsOtherBreed(false)
+        // Handling breed selection
+        if (name === 'breed') {
+            // Check if 'Other' is selected to allow user input
+            if (value === 'Other') {
+                setIsOtherBreed(true);
+                // Maintain current breed value so it doesn't reset
+                setFormData((prevData) => ({
+                    ...prevData,
+                    breed: prevData.breed, // Maintain the custom input if it's already typed
+                }));
+            } else {
+                setIsOtherBreed(false);
+                // Update the breed in formData directly for the dropdown selection
+                setFormData((prevData) => ({
+                    ...prevData,
+                    breed: value,
+                }));
+            }
         }
-    }
+    };
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]) // Store the selected file
-    }
+        setFile(e.target.files[0]); // Store the selected file
+    };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        setLoading(true)
-        setError('')
+        e.preventDefault();
+        setLoading(true);
+        setError('');
 
         // Prepare FormData for the image and other form data
-        const uploadData = new FormData()
-        uploadData.append('reportType', formData.reportType)
-        uploadData.append('name', formData.name)
-        uploadData.append('species', formData.species)
-        uploadData.append('breed', formData.breed)
-        uploadData.append('color', formData.color)
-        uploadData.append('gender', formData.gender)
-        uploadData.append('fixed', formData.fixed)
-        uploadData.append('collar', formData.collar)
-        uploadData.append('description', formData.description)
-        uploadData.append('reportedBy', user._id) // Add user ID
+        const uploadData = new FormData();
+        uploadData.append('reportType', formData.reportType);
+        uploadData.append('name', formData.name);
+        uploadData.append('species', formData.species);
+        uploadData.append('breed', formData.breed);
+        uploadData.append('color', formData.color);
+        uploadData.append('gender', formData.gender);
+        uploadData.append('fixed', formData.fixed);
+        uploadData.append('collar', formData.collar);
+        uploadData.append('description', formData.description);
+        uploadData.append('reportedBy', user._id); // Add user ID
 
         // Create the location data in GeoJSON format
         const locationData = {
@@ -163,14 +178,14 @@ const ReportAnimal = () => {
                     formData.coordinates.lat,
                 ], // Coordinates in GeoJSON format: [longitude, latitude]
             },
-        }
+        };
 
         // Append location as a stringified JSON object
-        uploadData.append('location', JSON.stringify(locationData))
+        uploadData.append('location', JSON.stringify(locationData));
 
         // If an image file is selected, append it to the FormData
         if (file) {
-            uploadData.append('image', file)
+            uploadData.append('image', file);
         }
 
         try {
@@ -178,38 +193,38 @@ const ReportAnimal = () => {
                 method: 'POST',
                 body: uploadData, // Use FormData
                 credentials: 'include',
-            }
+            };
 
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`,
                 requestOptions
-            )
+            );
 
             if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`)
+                throw new Error(`Error: ${response.statusText}`);
             }
 
-            const result = await response.json()
-            console.log('Form submitted successfully:', result)
-            router.push('/')
+            const result = await response.json();
+            console.log('Form submitted successfully:', result);
+            router.push('/');
         } catch (error) {
-            setError(error.message)
+            setError(error.message);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     const handleMapClick = (event) => {
-        const lat = event.latLng.lat()
-        const lng = event.latLng.lng()
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
         setFormData((prevData) => ({
             ...prevData,
             coordinates: { lat, lng },
             location: `Lat: ${lat}, Lng: ${lng}`,
-        }))
-    }
+        }));
+    };
 
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
     return (
         <div className="container my-4">
@@ -291,7 +306,11 @@ const ReportAnimal = () => {
                                     className="form-select"
                                     id="breed"
                                     name="breed"
-                                    value={formData.breed}
+                                    value={
+                                        isOtherBreed
+                                            ? 'Other'
+                                            : formData.breed
+                                    } // Set to 'Other' if isOtherBreed is true
                                     onChange={handleChange}
                                     required
                                     disabled={formData.species === 'Unknown'}
@@ -302,21 +321,18 @@ const ReportAnimal = () => {
                                             {breed}
                                         </option>
                                     ))}
+                                    <option value="Other">Other</option>
                                 </select>
                                 {isOtherBreed && (
                                     <input
                                         type="text"
                                         className="form-control mt-2"
                                         placeholder="Please specify"
-                                        value={
-                                            formData.breed === 'Other'
-                                                ? ''
-                                                : formData.breed
-                                        }
+                                        value={formData.breed} // Use formData.breed for custom input
                                         onChange={(e) =>
                                             setFormData({
                                                 ...formData,
-                                                breed: e.target.value,
+                                                breed: e.target.value, // Update breed directly from input
                                             })
                                         }
                                     />
@@ -334,6 +350,7 @@ const ReportAnimal = () => {
                                     name="color"
                                     value={formData.color}
                                     onChange={handleChange}
+                                    required
                                 />
                             </div>
 
@@ -347,6 +364,7 @@ const ReportAnimal = () => {
                                     name="gender"
                                     value={formData.gender}
                                     onChange={handleChange}
+                                    required
                                 >
                                     <option value="Unknown">Unknown</option>
                                     <option value="Male">Male</option>
@@ -356,7 +374,7 @@ const ReportAnimal = () => {
 
                             <div className="mb-3">
                                 <label htmlFor="fixed" className="form-label">
-                                    Neutered/Spayed
+                                    Is it fixed?
                                 </label>
                                 <select
                                     className="form-select"
@@ -364,6 +382,7 @@ const ReportAnimal = () => {
                                     name="fixed"
                                     value={formData.fixed}
                                     onChange={handleChange}
+                                    required
                                 >
                                     <option value="Unknown">Unknown</option>
                                     <option value="Yes">Yes</option>
@@ -373,23 +392,26 @@ const ReportAnimal = () => {
 
                             <div className="mb-3">
                                 <label htmlFor="collar" className="form-label">
-                                    Has Collar
+                                    Does it have a collar?
                                 </label>
                                 <input
                                     type="checkbox"
-                                    className="form-check-input mx-2"
+                                    className="form-check-input"
                                     id="collar"
                                     name="collar"
                                     checked={formData.collar}
                                     onChange={handleChange}
                                 />
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="collar"
+                                >
+                                    Yes
+                                </label>
                             </div>
 
                             <div className="mb-3">
-                                <label
-                                    htmlFor="description"
-                                    className="form-label"
-                                >
+                                <label htmlFor="description" className="form-label">
                                     Description
                                 </label>
                                 <textarea
@@ -399,78 +421,74 @@ const ReportAnimal = () => {
                                     rows="3"
                                     value={formData.description}
                                     onChange={handleChange}
+                                    required
                                 ></textarea>
                             </div>
 
                             <div className="mb-3">
-                                <LoadScriptNext googleMapsApiKey={apiKey}>
-                                    <GoogleMap
-                                        onClick={handleMapClick}
-                                        mapContainerStyle={{
-                                            height: '400px',
-                                            width: '100%',
-                                        }}
-                                        center={
-                                            userLocation || formData.coordinates
-                                        }
-                                        zoom={13}
-                                    >
-                                        <Marker
-                                            position={formData.coordinates}
-                                        />
-                                        {userLocation && (
-                                            <Marker
-                                                position={userLocation}
-                                                icon={{
-                                                    url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                                                    scaledSize:
-                                                        new window.google.maps.Size(
-                                                            30,
-                                                            30
-                                                        ),
-                                                }}
-                                            />
-                                        )}
-                                    </GoogleMap>
-                                </LoadScriptNext>
+                                <label htmlFor="location" className="form-label">
+                                    Location
+                                </label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="location"
+                                    name="location"
+                                    value={formData.location}
+                                    onChange={handleChange}
+                                    required
+                                />
                             </div>
 
-                            {/* File Input for Image */}
                             <div className="mb-3">
-                                <label htmlFor="image" className="form-label">
-                                    Upload Image
+                                <label htmlFor="file" className="form-label">
+                                    Upload Image (optional)
                                 </label>
                                 <input
                                     type="file"
                                     className="form-control"
-                                    id="image"
-                                    name="image"
-                                    accept="image/*"
+                                    id="file"
+                                    name="file"
                                     onChange={handleFileChange}
                                 />
                             </div>
 
-                            <div className="d-flex">
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary"
-                                    disabled={loading}
+                            <div className="mb-3">
+                                <label htmlFor="map" className="form-label">
+                                    Select Location on Map
+                                </label>
+                                <LoadScriptNext
+                                    googleMapsApiKey={apiKey}
                                 >
-                                    {loading ? 'Submitting...' : 'Submit'}
-                                </button>
-                                <Link
-                                    href="/"
-                                    className="btn btn-secondary ms-auto"
-                                >
-                                    Cancel
-                                </Link>
+                                    <GoogleMap
+                                        onClick={handleMapClick}
+                                        mapContainerStyle={{
+                                            height: '300px',
+                                            width: '100%',
+                                        }}
+                                        center={formData.coordinates}
+                                        zoom={15}
+                                    >
+                                        <Marker
+                                            position={formData.coordinates}
+                                        />
+                                    </GoogleMap>
+                                </LoadScriptNext>
                             </div>
+
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                disabled={loading}
+                            >
+                                {loading ? 'Submitting...' : 'Submit'}
+                            </button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default ReportAnimal
+export default ReportAnimal;
