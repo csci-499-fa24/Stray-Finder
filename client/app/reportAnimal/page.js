@@ -1,4 +1,4 @@
-'use client'
+\'use client'
 
 import ReportAnimal from './components/ReportAnimal'
 import Navbar from '../components/layouts/Navbar/Navbar'

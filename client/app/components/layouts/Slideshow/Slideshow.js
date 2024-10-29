@@ -1,20 +1,16 @@
-
 import React from 'react';
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import "./Slideshow.css"
-
-
 
 const Slideshow = () => {
   return (
     <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel"
     style={{
         width: "100vw",
-      }}
+        margin: "0 auto" // Center the slideshow horizontally
+          }}
     >
       {/* <Navbar /> */}
-
-
       {/* Indicators */}
       <div className="carousel-indicators">
         <button
@@ -38,7 +34,6 @@ const Slideshow = () => {
           aria-label="Slide 3"
         ></button>
       </div>
-
       {/* Slideshow content */}
       <div className="carousel-inner">
         {/* Slide 1 */}
@@ -50,7 +45,6 @@ const Slideshow = () => {
             <button className="btn btn-primary">Learn More</button>
           </div>
         </div>
-
         {/* Slide 2 */}
         <div className="carousel-item">
           <img src="/stray5.webp" className="d-block w-100" alt="Second Slide" />
@@ -60,7 +54,6 @@ const Slideshow = () => {
             <button className="btn btn-secondary">Report Now</button>
           </div>
         </div>
-
         {/* Slide 3 */}
         <div className="carousel-item">
           <img src="/stray4.webp" className="d-block w-100" alt="Third Slide" />
@@ -71,7 +64,6 @@ const Slideshow = () => {
           </div>
         </div>
       </div>
-
       {/* Navigation buttons */}
       <button
         className="carousel-control-prev"
@@ -94,5 +86,4 @@ const Slideshow = () => {
     </div>
   );
 };
-
 export default Slideshow;
