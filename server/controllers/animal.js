@@ -1,5 +1,6 @@
 const Animal = require('../models/animal')
 const uploadImage = require('../cloudinary/upload')
+const mongoose = require('mongoose')
 const upload = require('../middleware/uploadMiddleware')
 
 // GET: Retrieve all animals based on query parameters
@@ -28,6 +29,12 @@ const getAnimals = async (req, res) => {
 const getAnimalById = async (req, res) => {
     try {
         const { id } = req.params
+
+        // Check if id is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({ message: 'Animal not found' })
+        }
+
         const animal = await Animal.findById(id)
 
         if (!animal) {

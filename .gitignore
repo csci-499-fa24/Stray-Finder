@@ -46,3 +46,5 @@
 /server/.env
 
 .DS_Store
+/server/coverage
+.env.test
