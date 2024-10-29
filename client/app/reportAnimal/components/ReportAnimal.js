@@ -321,7 +321,6 @@ const ReportAnimal = () => {
                                             {breed}
                                         </option>
                                     ))}
-                                    <option value="Other">Other</option>
                                 </select>
                                 {isOtherBreed && (
                                     <input
