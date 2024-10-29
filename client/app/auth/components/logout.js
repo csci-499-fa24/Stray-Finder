@@ -11,7 +11,7 @@ const LogoutButton = () => {
             console.log('Token cookie removed');
 
             // Redirect to the login page or homepage after logging out
-            router.push('/auth'); // Adjust as needed
+            router.push('/'); // Adjust as needed
         } catch (error) {
             console.error('Logout error:', error);
             alert('An error occurred while logging out');
