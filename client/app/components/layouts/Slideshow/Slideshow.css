@@ -1,18 +1,28 @@
 .carousel-caption {
-    border: 2px solid white; /* Creates the hollow box border */
-    padding: 15px; /* Adds space inside the box */
-    display: inline-block; /* Makes sure the box fits tightly around the text */
-    background-color: rgba(0, 0, 0, 0.5); /* Optional: Adds a semi-transparent background for better text readability */
-    border-radius: 10px; /* Rounds the corners of the box */
-  }
+    position: absolute; /* positioning the caption absolutely within the carousel */
+    bottom: 5%; /* placing it 10% from the bottom of the carousel */
+    left: 50%; /* positioning it horizontally centered */
+    transform: translateX(-50%); /* adjusting its position to be perfectly centered */
+    background-color: rgba(0, 0, 0, 0.494); /* setting a semi-transparent black background for better text visibility */
+    border: 2px solid white; /* giving it a white border to make it stand out */
+    padding: 20px 60px; /* adding some padding inside the box for spacing */
+    color: white; /* setting the text color to white for contrast */
+    text-align: center; /* aligning the text to the center */
+    width: fit-content; /* making the width just enough to fit the text */
+    border-radius: 10px; /* softening the edges with rounded corners */
+}
   
-  .carousel-caption h5, 
-  .carousel-caption p {
-    color: white; /* Ensures the text is visible over the image */
-    margin: 5px 0; /* Adds some spacing between elements */
-  }
-  
-  .carousel-caption button {
-    margin-top: 10px; /* Adds space between the text and button */
-  }
-  
+
+.carousel-caption h5 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.carousel-caption p {
+  font-size: 1.25rem;
+  margin: 10px 0 15px;
+}
+
+.carousel-caption button {
+  font-size: 1rem;
+}

@@ -1,17 +1,17 @@
-'use client'
+\'use client'
 
-import ReportLost from './components/ReportLost'
+import ReportAnimal from './components/ReportAnimal'
 import Navbar from '../components/layouts/Navbar/Navbar'
 import Footer from '../components/layouts/Footer'
 
-const ReportLostPage = () => {
+const ReportAnimalPage = () => {
     return (
         <div>
             <Navbar />
-            <ReportLost />
+            <ReportAnimal />
             <Footer />
         </div>
     )
 }
 
-export default ReportLostPage
+export default ReportAnimalPage

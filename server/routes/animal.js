@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const upload = require('../middleware/uploadMiddleware')
 const {
     getAnimals,
     createAnimal,
@@ -9,12 +10,12 @@ const {
 } = require('../controllers/animal')
 const authenticate = require('../middleware/auth')
 
-router.route('/').get(getAnimals).post(authenticate, createAnimal)
+router.route('/').get(getAnimals)
 
 router
     .route('/:id')
     .get(getAnimalById)
-    .put(authenticate, updateAnimal)
+    .put(authenticate, upload.single('image'), updateAnimal)
     .delete(authenticate, deleteAnimal)
 
 module.exports = router
