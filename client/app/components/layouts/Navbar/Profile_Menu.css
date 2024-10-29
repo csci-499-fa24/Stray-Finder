@@ -1,0 +1,41 @@
+.avatar-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #a826a2;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    transition: border 0.3s ease, transform 0.3s ease; /* Added transform for subtle scaling */
+}
+
+.avatar-circle:hover {
+    border: 3px solid rgba(0, 0, 0, 0.3); /* Thicker border for more prominence */
+    transform: scale(1.1); /* Slight scale up for extra emphasis */
+}
+
+/* Dropdown menu adjustments for alignment */
+.dropdown-menu {
+    background-color: white;
+    border: 1px solid #67347a;
+    min-width: 100px;
+    padding: 5px 0;
+    text-align: center;
+    transform: translate(-45%, 10px); /* Adjusted to be more centered */
+}
+
+.dropdown-item {
+    padding: 8px;
+    color: #67347a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background-color: #67347a;
+    color: white;
+}
