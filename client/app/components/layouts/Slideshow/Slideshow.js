@@ -1,12 +1,14 @@
 import React from 'react';
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import "./Slideshow.css"
+
 const Slideshow = () => {
   return (
     <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel"
     style={{
         width: "100vw",
-      }}
+        margin: "0 auto" // Center the slideshow horizontally
+          }}
     >
       {/* <Navbar /> */}
       {/* Indicators */}
