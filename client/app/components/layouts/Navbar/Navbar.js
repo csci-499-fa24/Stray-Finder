@@ -102,7 +102,7 @@ const Navbar = () => {
                     {isAuthenticated && user ? (
                         <h6>{`Welcome, ${user.username}`}</h6>
                     ) : (
-                        <Link href="/login" style={{color: '#67347ag'}}>Login</Link>
+                        <Link href="/auth" style={{color: '#67347ag'}}>Login</Link>
                     )}
                     {/* Profile icon coming some time later */}
                 </div>
