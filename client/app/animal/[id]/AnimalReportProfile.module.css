@@ -61,6 +61,27 @@
     background-color: #6a3c8c;
 }
 
+.map-container {
+    margin-top: 20px; /* Space above the map */
+    border-radius: 10px; /* Rounded corners for the map */
+    overflow: hidden; /* Prevent overflow */
+}
+
+.customModal {
+    width: 400px; /* Set your desired width */
+    max-width: 90%; /* Responsive max width */
+    height: 275px; /* Set your desired height */
+    max-height: 90%; /* Responsive max height */
+    margin: auto; /* Center the modal */
+    padding: 20px; /* Inner padding */
+    border-radius: 10px; /* Rounded corners */
+    border: 1px solid #ccc; /* Border style */
+    background-color: white; /* Background color of the modal */
+    position: fixed; /* Fixed positioning to allow centering */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for the modal's size */
+}
 .center-button {
     text-align: center;
     margin-top: 20px;
