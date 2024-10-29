@@ -1,6 +1,6 @@
 .carousel-caption {
     position: absolute; /* positioning the caption absolutely within the carousel */
-    bottom: 5%; /* placing it 10% from the bottom of the carousel */
+    bottom: 20%; /* placing it 10% from the bottom of the carousel */
     left: 50%; /* positioning it horizontally centered */
     transform: translateX(-50%); /* adjusting its position to be perfectly centered */
     background-color: rgba(0, 0, 0, 0.494); /* setting a semi-transparent black background for better text visibility */
