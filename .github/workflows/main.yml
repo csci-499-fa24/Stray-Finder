@@ -18,11 +18,15 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install server dependencies
+        run: |
+          cd server  # Navigate to the server directory
+          npm install
 
-      - name: Run tests with coverage
-        run: npm test -- --coverage
+      - name: Run Jest tests with coverage
+        run: |
+          cd server  # Ensure we're in the server directory
+          npm test -- --coverage
 
       - name: Jest coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2.3.1
