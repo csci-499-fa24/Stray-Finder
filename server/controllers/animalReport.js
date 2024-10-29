@@ -64,9 +64,6 @@ const createAnimalReport = async (req, res) => {
             reportedBy,
         } = req.body
 
-        console.log('Incoming body:', req.body) // Log the parsed request body
-        console.log('Incoming file:', req.file) // Log the uploaded file
-
         // Check if required fields are missing
         if (!name || !species || !location || !reportType || !reportedBy) {
             console.error('Validation failed - Missing required fields')
@@ -76,9 +73,7 @@ const createAnimalReport = async (req, res) => {
         // If an image was uploaded, upload it to Cloudinary
         let imageUrl = null
         if (req.file) {
-            console.log('Uploading image to Cloudinary...')
             imageUrl = await uploadImage(req.file) // Ensure you pass req.file here
-            console.log('Image uploaded successfully. URL:', imageUrl)
         }
 
         // First, create the Animal record
@@ -94,14 +89,8 @@ const createAnimalReport = async (req, res) => {
             imageUrl, // Save Cloudinary URL for the image
         }
 
-        // Log the animal data before saving
-        console.log('Animal data to be saved:', animalData)
-
         const animal = new Animal(animalData)
         await animal.save()
-
-        // Log the created animal
-        console.log('Created animal:', animal)
 
         // Create the Animal Report record with a reference to the newly created animal
         const reportData = {
@@ -112,14 +101,8 @@ const createAnimalReport = async (req, res) => {
             reportedBy,
         }
 
-        // Log the report data before saving
-        console.log('Animal report data to be saved:', reportData)
-
         const animalReport = new AnimalReport(reportData)
         await animalReport.save()
-
-        // Log the created animal report
-        console.log('Created animal report:', animalReport)
 
         // Return the created report
         return res.status(201).json({
@@ -176,9 +159,7 @@ const updateAnimalReport = async (req, res) => {
 
         // If an image file is provided, upload the new image to Cloudinary
         if (req.file) {
-            console.log('Uploading new image to Cloudinary...')
             imageUrl = await uploadImage(req.file) // Upload the new image
-            console.log('New image uploaded successfully. URL:', imageUrl)
         }
 
         // Find the animal report to update
