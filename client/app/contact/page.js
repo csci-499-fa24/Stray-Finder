@@ -1,7 +1,7 @@
 import Navbar from '../components/layouts/Navbar/Navbar'
 import Footer from '../components/layouts/Footer'
 import styles from './contact.module.css'; // Import your CSS module
-import Slideshow from './components/layouts/Slideshow'
+import Slideshow from '../components/layouts/Slideshow/Slideshow'
 
 const ContactPage = () => {
     return (
