@@ -105,7 +105,7 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                         <div className="modal-content">
                             <h4>User must be logged in</h4>
                             <p>Please log in to submit a report.</p>
-                            <Link href="/login">
+                            <Link href="/auth">
                                 <button className="btn-purple btn">Log In</button>
                             </Link>
                             <button onClick={() => setLoginModalOpen(false)}>Cancel</button>
