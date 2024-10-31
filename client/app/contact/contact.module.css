@@ -16,8 +16,9 @@
     height: 100vh; /* Full viewport height */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center content vertically */
+    justify-content: flex-start; /* Align content to the top */
     align-items: center; /* Center content horizontally */
+    position: relative; /* Create a positioning context for absolute children */
 }
 
 .overlay {
@@ -27,7 +28,12 @@
     text-align: center; /* Center the text */
     max-width: 600px; /* Maximum width for the box */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+    position: absolute; /* Absolute positioning */
+    top: 60px; /* Align to the top */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for center alignment */
 }
+
 
 .aboutImage {
     margin-top: 20px; /* Space above the image */

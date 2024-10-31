@@ -41,9 +41,9 @@ const SpottedStrayCard = () => {
 
                     {/* Conditional rendering for the buttons based on authentication status */}
                     {authChecked === null ? (
-                        <div className="d-flex justify-content-center">
-                            <p>Loading...</p>
-                        </div>
+                                <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only"></span>
+                              </div>
                     ) : !authChecked ? (
                         <Link href="/auth" className="btn btn-primary">
                             Login
@@ -69,9 +69,9 @@ const SpottedStrayCard = () => {
 
                     {/* Conditional rendering for 'Report a Lost Pet' button */}
                     {authChecked === null ? (
-                        <div className="d-flex justify-content-center">
-                            <p>Loading...</p>
-                        </div>
+                    <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only"></span>
+                    </div>
                     ) : authChecked ? (
                         <button
                             onClick={handleReportLostClick}
