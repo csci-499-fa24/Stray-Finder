@@ -1,14 +1,17 @@
-import React from 'react';
+import React from "react";
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
-import "./Slideshow.css"
+import "./Slideshow.css";
 
 const Slideshow = () => {
   return (
-    <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel"
-    style={{
+    <div
+      id="carouselExampleIndicators"
+      className="carousel slide"
+      data-bs-ride="carousel"
+      style={{
         width: "100vw",
-        margin: "0 auto" // Center the slideshow horizontally
-  }}
+        margin: "0 auto", // Center the slideshow horizontally
+      }}
     >
       {/* <Navbar /> */}
       {/* Indicators */}
@@ -47,7 +50,11 @@ const Slideshow = () => {
         </div>
         {/* Slide 2 */}
         <div className="carousel-item">
-          <img src="/stray5.webp" className="d-block w-100" alt="Second Slide" />
+          <img
+            src="/stray5.webp"
+            className="d-block w-100"
+            alt="Second Slide"
+          />
           <div className="carousel-caption d-none d-md-block">
             <h5>Report a Lost Pet</h5>
             <p>Let others know if you've lost your pet.</p>

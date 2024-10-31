@@ -1,145 +1,177 @@
-@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap");
 
-:root {
-    /* Define a range of shades of purple */
-    --purple-1: hsl(270, 50%, 10%);
-    --purple-2: hsl(270, 50%, 15%);
-    --purple-3: hsl(270, 50%, 20%);
-    --purple-4: hsl(270, 50%, 25%);
-    --purple-5: hsl(270, 50%, 30%);
-    --purple-6: hsl(270, 50%, 35%);
-    --purple-7: hsl(270, 50%, 40%);
-    --purple-8: hsl(270, 50%, 45%);
-    --purple-9: hsl(270, 50%, 50%);
-    --purple-10: hsl(270, 50%, 55%);
-    --purple-11: hsl(270, 50%, 60%);
-    --purple-12: hsl(270, 50%, 65%);
-    --purple-13: hsl(270, 50%, 70%);
-    --purple-14: hsl(270, 50%, 75%);
-    --purple-15: hsl(270, 50%, 80%);
-    --purple-16: hsl(270, 50%, 85%);
-    --purple-17: hsl(270, 50%, 90%);
-    --purple-18: hsl(270, 50%, 95%);
-    --purple-19: hsl(270, 50%, 98%);
-    --purple-20: hsl(270, 50%, 100%);
+.navbar.custom-navbar {
+  background-color: #6a0dad;
+  min-height: 80px;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
 }
 
-.custom-navbar {
-    background: linear-gradient(90deg, var(--purple-5), var(--purple-15));
+.custom-navbar .container-fluid {
+  min-height: 80px;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  position: relative;
 }
 
 .custom-navbar .navbar-brand {
-    color: var(--purple-7);
+  text-decoration: none;
+  padding: 0 1rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  min-width: max-content;
+}
+.brand-container {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.custom-navbar .brand-text {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: white;
+  letter-spacing: 2px;
+}
+
+.custom-navbar .navbar-collapse {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .custom-navbar .navbar-nav {
-    color: var(--purple-7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  width: auto;
 }
 
-.custom-navbar .nav-link.active {
-    color: var(--purple-7);
+.custom-navbar .nav-link-custom {
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+.custom-navbar .nav-link-custom:hover,
+.custom-navbar .nav-link-custom:focus {
+  background-color: #8a2be2;
+  color: white;
+  transform: scale(0.95);
 }
 
-.custom-navbar .nav-link.dropdown-toggle {
-    color: var(--purple-7);
+.custom-navbar .dropdown-menu {
+  background-color: #6a0dad;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  z-index: 1000;
+}
+.custom-navbar .dropdown-item {
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  text-align: center;
+}
+.custom-navbar .dropdown-item:hover,
+.custom-navbar .dropdown-item:focus {
+  background-color: #8a2be2;
+  color: white;
+  transform: scale(0.95);
 }
 
-.navbar-toggler {
-    border-color: white; /* White border for the toggler */
+.profile .dropdown-menu {
+  background-color: white;
+  position: absolute;
+  left: -30px;
+  top: 100%;
+  min-width: 150px;
+  max-width: 200px;
+  border: 1px solid rgba(106, 13, 173, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.profile .dropdown-item {
+  color: #6a0dad;
+  font-size: 0.9rem;
+  text-align: left;
+  background-color: white;
+}
+.profile .dropdown-item:hover,
+.profile .dropdown-item:focus {
+  background-color: #f8f4ff;
+  color: #6a0dad;
+  transform: none;
 }
 
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+.nav-item.dropdown .dropdown-menu {
+  background-color: white;
+  position: absolute;
+  min-width: 150px;
+  max-width: 200px;
+  border: 1px solid rgba(106, 13, 173, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.nav-item.dropdown .dropdown-item {
+  color: #6a0dad;
+  font-size: 0.9rem;
+  text-align: left;
+  background-color: white;
+}
+.nav-item.dropdown .dropdown-item:hover,
+.nav-item.dropdown .dropdown-item:focus {
+  background-color: #f8f4ff;
+  color: #6a0dad;
+  transform: none;
 }
 
-/* Centering links */
-.navbar-nav {
-    margin: 0 auto;
+.custom-navbar .login-button {
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  text-decoration: none;
+  border: 2px solid white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  margin-right: 1rem;
 }
-
-/* Dropdown styling */
-.dropdown-menu {
-    background-color: #6a0dad; /* Same purple color */
+.custom-navbar .login-button:hover {
+  background-color: white;
+  color: #6a0dad;
 }
-
-.dropdown-item {
-    color: white !important;
+.custom-navbar .navbar-toggler {
+  border-color: white;
+  margin-right: 1rem;
 }
-
-.dropdown-item:hover {
-    background-color: #5b0cae; /* Slightly darker purple for hover effect */
+.custom-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
-
-.custom-navbar .search-button:hover {
-    color: white;
-    background-color: var(--purple-7);
+.center-item {
+  display: flex;
+  margin-right: 200px;
 }
-
-.custom-navbar .search-button {
-    color: var(--purple-7);
-    border-color: var(--purple-7);
-}
-
-.custom-navbar .navbar-nav .nav-link {
-    padding: 0.5rem 1rem; /* Adjust the padding of nav links */
-    font-size: 16px; /* Adjust the font size for nav links */
-}
-
-/* Stray Finder Logo styling */
-.nav-link {
-    position: relative; /* Position for the pseudo-elements */
-    display: inline-block; /* Allows padding and width to take effect */
-    text-transform: uppercase; /* Uppercase for all links */
-    padding: 10px 20px; /* Padding around the link */
-    margin: 20px 0; /* Margin to create space between links */
-    color: white !important; /* White text color */
-    transition: color 0.5s; /* Transition for text color */
-}
-
-.nav-link:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-top: 2px solid #ffffff; /* White border on top */
-    border-bottom: 2px solid #ffffff; /* White border on bottom */
-    transform: scaleY(2); /* Scale for hover effect */
-    opacity: 0; /* Start as invisible */
-    transition: transform 0.3s, opacity 0.3s; /* Transition for scaling and opacity */
-    z-index: 1; /* Ensure it sits above the background */
-}
-
-.nav-link:after {
-    content: '';
-    position: absolute;
-    top: 2px; /* Slight offset to create a shadow effect */
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.3); /* Light background on hover */
-    transform: scale(0); /* Start as scaled down */
-    opacity: 0; /* Start as invisible */
-    transition: transform 0.3s, opacity 0.3s; /* Transition for scaling and opacity */
-    z-index: 0; /* Ensure it sits below the link text */
-}
-
-.nav-link:hover {
-    color: #fff; /* Change text color on hover */
-}
-
-.nav-link:hover:before {
-    transform: scaleY(1); /* Scale up the border */
-    opacity: 1; /* Make the border visible */
-}
-
-.nav-link:hover:after {
-    transform: scale(1); /* Scale the background to full size */
-    opacity: 1; /* Make the background visible */
-}
-
-/* Fix for horizontal scrolling */
-body {
-    overflow-x: hidden;
+.login,
+.profile {
+  margin-right: 30px;
 }
