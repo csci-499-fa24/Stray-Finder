@@ -5,6 +5,7 @@ const {
     getUserProfile,
     updateUserPassword,
     deleteUser,
+    getUserById,
 } = require('../controllers/user')
 
 router
@@ -12,5 +13,9 @@ router
     .get(authenticate, getUserProfile)
     .put(authenticate, updateUserPassword)
     .delete(authenticate, deleteUser)
+
+router
+    .route('/:id')
+    .get(getUserById)
 
 module.exports = router

@@ -1,4 +1,3 @@
-'use client'
 import Link from 'next/link';
 import { GoogleMap, Marker, LoadScriptNext } from '@react-google-maps/api';
 import { useEffect, useState } from 'react';
@@ -79,7 +78,11 @@ const AnimalReportProfile = ({ id }) => {
                 </div>
                 <ul className={`${styles.listGroup} list-group list-group-flush`}>
                     <li className="list-group-item d-flex justify-content-between align-items-center">
-                        <span>Reported By: {reportProfile?.reportedBy?.username}</span>
+                        <span>Reported By: 
+                            <Link href={`/profile/${reportProfile?.reportedBy._id}`} style={{ textDecoration: 'none' }}>
+                                {` ${reportProfile?.reportedBy?.username}`}
+                            </Link>
+                        </span>
                         {isAuthenticated && user?._id !== reportProfile?.reportedBy._id && (
                             <button 
                                 className="btn btn-primary"

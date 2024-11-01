@@ -18,7 +18,7 @@ const ProfileMenu = () => {
                 {user.username.charAt(0).toUpperCase()}
             </span>
             <ul className="dropdown-menu dropdown-menu-right">
-                <li><Link className="dropdown-item" href="/profile">Profile</Link></li>
+                <li><Link className="dropdown-item" href={`/profile/${user._id}`}>Profile</Link></li>
                 <li><Link className="dropdown-item" href="/my-listings">My Listings</Link></li>
                 <li><Link className="dropdown-item" href="/settings">Settings</Link></li>
             </ul>
