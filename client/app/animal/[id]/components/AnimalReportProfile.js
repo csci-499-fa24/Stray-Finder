@@ -46,8 +46,8 @@ const AnimalReportProfile = ({ id }) => {
     const closeModal = () => setIsModalOpen(false);
 
     if (loading) {
-        return <div class="spinner-border text-primary" role="status">
-        <span class="sr-only"></span>
+        return <div className="spinner-border text-primary" role="status">
+        <span className="sr-only"></span>
       </div>;
     }
 
@@ -119,7 +119,7 @@ const AnimalReportProfile = ({ id }) => {
                         <LoadScriptNext
                             googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
                         >
-                            {mapLoading && <div class="spinner-border text-primary" role="status"> <span class="sr-only"></span>
+                            {mapLoading && <div className="spinner-border text-primary" role="status"> <span className="sr-only"></span>
                             </div>}
                             <GoogleMap
                                 mapContainerStyle={{ height: '400px', width: '100%' }} // Adjust height to make it smaller

@@ -3,9 +3,11 @@
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import UserProfile from "./components/UserProfile";
 import Footer from "@/app/components/layouts/Footer";
+import { useParams } from 'next/navigation'; // Import useParams for unwrapping params
 
-const ProfilePage = async ({ params }) => {
-    const { id } = await params;
+const ProfilePage = () => {
+    const params = useParams();
+    const id = params.id;
 
     return (
         <div>

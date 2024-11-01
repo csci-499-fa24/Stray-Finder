@@ -1,3 +1,12 @@
+.container {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space items between */
+    align-items: center; /* Center items vertically */
+	position: relative;           /* Allow for absolute positioning */
+	height: 70px;
+	background-color: #f9f9f9; /* Light background color for contrast */
+}
+
 .h1 {
 	padding: .5em;
     font-size: 2em;              /* Larger font size for emphasis */
@@ -6,11 +15,16 @@
     font-weight: bold;           /* Bold text for prominence */
     text-align: left;           /* Align text to the left */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow for depth */
+	position: absolute;           /* Position the heading absolutely */
+    left: 50%;                   /* Align it to the center of the container */
+    transform: translateX(-50%); /* Offset it back to truly center it */
 }
 
 .h1.userName {
     font-size: 2.3em;           /* Slightly smaller for username */
     color: #34495e;             /* A softer color for username */
+	flex: 1; /* Allow the heading to take up available space */
+    text-align: center; /* Center the text */
 }
 
 .h1.report-title {
@@ -46,6 +60,8 @@
     list-style-type: none; /* Remove default bullets */
     padding: 0; /* Remove default padding */
     margin: 0; /* Remove default margin */
+	max-height: 400px; /* Set your desired maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .li {
@@ -85,4 +101,26 @@
     .dt {
         font-size: 1.1em; /* Smaller title size on mobile */
     }
+}
+.button34 {
+	background-color: #a637f6;
+	border-radius: 999px;
+	box-shadow: #5E5DF0 0 10px 20px -10px;
+	box-sizing: border-box;
+	color: #FFFFFF;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 24px;
+	opacity: 1;
+	outline: 0 solid transparent;
+	padding: 8px 18px;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	width: fit-content;
+	height: 50px;
+	word-break: break-word;
+	border: 0;
+	margin-left: auto;           /* Push the button to the right */
 }
