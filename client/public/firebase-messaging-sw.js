@@ -13,14 +13,14 @@ importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-com
 // your app's Firebase config object.
 // https://firebase.google.com/docs/web/setup#config-object
 firebase.initializeApp({
-        apiKey: "AIzaSyDAAMNLBHKw0ar2RR4iidrWI5sF9lvk52M",
-        authDomain: "strayfinder-a092f.firebaseapp.com",
-        projectId: "strayfinder-a092f",
-        storageBucket: "strayfinder-a092f.firebasestorage.app",
-        messagingSenderId: "293970270878",
-        appId: "1:293970270878:web:03152a189e81d938dbf98f",
-        measurementId: "G-JDBC1XTL7G"
-      });
+    apiKey: "<%= NEXT_PUBLIC_FIREBASE_API_KEY %>",
+    authDomain: "<%= NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN %>",
+    projectId: "<%= NEXT_PUBLIC_FIREBASE_PROJECT_ID %>",
+    storageBucket: "<%= NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET %>",
+    messagingSenderId: "<%= NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID %>",
+    appId: "<%= NEXT_PUBLIC_FIREBASE_APP_ID %>",
+    measurementId: "<%= NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID %>"
+});
 
 
 
