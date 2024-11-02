@@ -42,11 +42,11 @@ const compareBreed = (breed1, breed2) => {
         isInSameGroup(breed1, breed2, breedGroups.cat) ||
         isInSameGroup(breed1, breed2, breedGroups.dog)
     ) {
-        return 0.7 // Adjusted similarity score for similar breeds
+        return 0.75 // Adjusted similarity score for similar breeds
     }
 
     // Return a lower score if breeds do not match or belong to any similar group
-    return 0.3
+    return 0.2
 }
 
 const compareColor = (color1, color2) => {
@@ -77,11 +77,11 @@ const compareColor = (color1, color2) => {
 
     // Determine if colors are similar based on the defined groups
     if (isInSameGroup(color1, color2, colorGroups)) {
-        return 0.8 // High similarity score for colors in the same group
+        return 0.75 // High similarity score for colors in the same group
     }
 
     // Return a lower score if colors do not match or belong to any similar group
-    return 0.3
+    return 0.2
 }
 
 const compareGender = (gender1, gender2) => {
@@ -91,8 +91,8 @@ const compareGender = (gender1, gender2) => {
     // 100% for a match
     if (gender1 === gender2) return 1
 
-    // 20% incase of mistaken gender
-    return 0.2
+    // 10% incase of mistaken gender
+    return 0.1
 }
 
 const compareFixedStatus = (fixed1, fixed2) => {
@@ -102,8 +102,8 @@ const compareFixedStatus = (fixed1, fixed2) => {
     // 100% for a match
     if (fixed1 === fixed2) return 1
 
-    // 20% incase of mistaken status
-    return 0.2
+    // 10% incase of mistaken status
+    return 0.1
 }
 
 // to be updated later for when a string is added to collar. idk why i ever made it a boolean kinda dumb
@@ -116,11 +116,11 @@ const compareCollarStatus = (collar1, collar2) => {
 // Aggregation function with weighting
 const aggregateAnimalScores = (scores) => {
     const weights = {
-        speciesScore: 0.4, // Highest weight for species
+        speciesScore: 0.5, // Highest weight for species
         breedScore: 0.2, // Second most important
         colorScore: 0.15, // Moderate importance
-        genderScore: 0.1, // Moderate-low importance
-        fixedScore: 0.1, // Moderate-low importance
+        genderScore: 0.05,
+        fixedScore: 0.05,
         collarScore: 0.05, // Least important (for now)
     }
 

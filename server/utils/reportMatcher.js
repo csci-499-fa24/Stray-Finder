@@ -6,10 +6,10 @@ const compareAnimal = require('./comparisons/compareAnimal')
 // Helper function to aggregate individual scores into a final match score
 const aggregateScores = (scores) => {
     const weights = {
-        locationScore: 0.45,
-        animalScore: 0.3,
+        locationScore: 0.4,
+        animalScore: 0.4,
         descriptionScore: 0.05,
-        dateReportedScore: 0.2,
+        dateReportedScore: 0.15,
     }
 
     const weightedScore =
