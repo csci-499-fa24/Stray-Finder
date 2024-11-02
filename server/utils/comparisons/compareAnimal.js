@@ -1,31 +1,32 @@
 const compareSpecies = (species1, species2) => {
-    if (!species1 || !species2) return 0.5 // Default score if one or both species are undefined
-    return species1.toLowerCase() === species2.toLowerCase() ? 1 : 0 // 1 for match, 0 for no match
+    if (!species1 || !species2) return 0.2 // Low score if species is unknown
+    return species1.toLowerCase() === species2.toLowerCase() ? 1 : 0 // High penalty for mismatch
 }
 
-module.exports = compareSpecies
-
-
 const compareBreed = (breed1, breed2) => {
-    // 50% if either breed is unknown
-    if (breed1 === "I don't know" || breed2 === "I don't know") return 0.5
+    if (breed1 === "I don't know" || breed2 === "I don't know") return 0.4
 
-    // 00% match for exact breed match
+    // Standardize breed names to lowercase for consistent comparison
+    breed1 = breed1.toLowerCase()
+    breed2 = breed2.toLowerCase()
+
+    // Return 100% match for exact breed match
     if (breed1 === breed2) return 1
 
+    // Define similar breed groups for cats and dogs
     const breedGroups = {
         cat: [
-            ['Persian', 'Himalayan', 'Exotic Shorthair'], // Group 1: Similar flat-faced breeds
-            ['Siamese', 'Balinese', 'Oriental Shorthair'], // Group 2: Similar slender breeds
-            ['Maine Coon', 'Norwegian Forest Cat'], // Group 3: Large, similar long-haired cats
-            // More to be added
+            ['persian', 'himalayan', 'exotic shorthair'], // Group 1: Similar flat-faced breeds
+            ['siamese', 'balinese', 'oriental shorthair'], // Group 2: Similar slender breeds
+            ['maine coon', 'norwegian forest cat'], // Group 3: Large, similar long-haired cats
+            // Add more groups as needed
         ],
         dog: [
-            ['Labrador Retriever', 'Golden Retriever'], // Group 1: Similar retriever breeds
-            ['German Shepherd', 'Belgian Malinois'], // Group 2: Similar working breeds
-            ['Bulldog', 'French Bulldog', 'Pug'], // Group 3: Brachycephalic dogs
-            ['Siberian Husky', 'Alaskan Malamute'], // Group 4: Northern sled dogs
-            // More to be added
+            ['labrador retriever', 'golden retriever'], // Group 1: Similar retriever breeds
+            ['german shepherd', 'belgian malinois'], // Group 2: Similar working breeds
+            ['bulldog', 'french bulldog', 'pug'], // Group 3: Brachycephalic dogs
+            ['siberian husky', 'alaskan malamute'], // Group 4: Northern sled dogs
+            // Add more groups as needed
         ],
     }
 
@@ -36,12 +37,12 @@ const compareBreed = (breed1, breed2) => {
         )
     }
 
-    // Determine if breeds are similar based on the defined groups
+    // Determine if breeds are similar based on defined groups
     if (
         isInSameGroup(breed1, breed2, breedGroups.cat) ||
         isInSameGroup(breed1, breed2, breedGroups.dog)
     ) {
-        return 0.8 // High similarity score for breeds in the same group
+        return 0.7 // Adjusted similarity score for similar breeds
     }
 
     // Return a lower score if breeds do not match or belong to any similar group
@@ -83,16 +84,15 @@ const compareColor = (color1, color2) => {
     return 0.3
 }
 
-
 const compareGender = (gender1, gender2) => {
     // 50% if either or is Unknown
     if (gender1 === 'Unknown' || gender2 === 'Unknown') return 0.5
 
     // 100% for a match
-    if (gender1 === gender2) return 1;
+    if (gender1 === gender2) return 1
 
     // 20% incase of mistaken gender
-    return 0.2;
+    return 0.2
 }
 
 const compareFixedStatus = (fixed1, fixed2) => {
@@ -108,11 +108,9 @@ const compareFixedStatus = (fixed1, fixed2) => {
 
 // to be updated later for when a string is added to collar. idk why i ever made it a boolean kinda dumb
 const compareCollarStatus = (collar1, collar2) => {
-    // 100% if both collars match
     if (collar1 === collar2) return 1
-
-    // 50% otherwise
-    return 0.5
+    if (!collar1 && !collar2) return 0.4 // Slightly lower if both have no collar
+    return 0
 }
 
 // Aggregation function with weighting
@@ -138,7 +136,6 @@ const aggregateAnimalScores = (scores) => {
     return weightedScore
 }
 
-
 const compareAnimal = (animal1, animal2) => {
     const speciesScore = compareSpecies(animal1.species, animal2.species)
     const breedScore = compareBreed(animal1.breed, animal2.breed)
@@ -157,6 +154,4 @@ const compareAnimal = (animal1, animal2) => {
     })
 }
 
-
 module.exports = compareAnimal
-
