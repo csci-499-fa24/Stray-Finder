@@ -1,7 +1,10 @@
-// Animal-specific attribute comparison functions
 const compareSpecies = (species1, species2) => {
-    (species1 === species2 ? 1 : 0)
+    if (!species1 || !species2) return 0.5 // Default score if one or both species are undefined
+    return species1.toLowerCase() === species2.toLowerCase() ? 1 : 0 // 1 for match, 0 for no match
 }
+
+module.exports = compareSpecies
+
 
 const compareBreed = (breed1, breed2) => {
     // 50% if either breed is unknown
@@ -153,6 +156,7 @@ const compareAnimal = (animal1, animal2) => {
         collarScore,
     })
 }
+
 
 module.exports = compareAnimal
 

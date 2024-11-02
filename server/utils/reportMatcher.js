@@ -35,7 +35,12 @@ const calculateMatchScore = (report1, report2) => {
         report2.dateReported
     )
 
-    // Aggregate all scores and calculate final score
+    console.log('locationScore:', locationScore)
+    console.log('animalScore:', animalScore)
+    console.log('descriptionScore:', descriptionScore)
+    console.log('dateReportedScore:', dateReportedScore)
+
+    // Aggregate all scores and calculate final score without reportTypeScore
     return aggregateScores({
         locationScore,
         animalScore,
@@ -43,6 +48,7 @@ const calculateMatchScore = (report1, report2) => {
         dateReportedScore,
     })
 }
+
 
 module.exports = {
     calculateMatchScore,
