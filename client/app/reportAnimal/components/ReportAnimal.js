@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/app/hooks/useAuth';
+import toast from 'react-hot-toast';
+
 
 const ReportAnimal = () => {
     const router = useRouter();
@@ -156,8 +158,8 @@ const ReportAnimal = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
-
         // Prepare FormData for the image and other form data
+    
         const uploadData = new FormData();
         uploadData.append('reportType', formData.reportType);
         uploadData.append('name', formData.name);
@@ -168,9 +170,9 @@ const ReportAnimal = () => {
         uploadData.append('fixed', formData.fixed);
         uploadData.append('collar', formData.collar);
         uploadData.append('description', formData.description);
-        uploadData.append('reportedBy', user._id); // Add user ID
-
         // Create the location data in GeoJSON format
+        uploadData.append('reportedBy', user._id);
+    
         const locationData = {
             address: formData.location || 'Unknown', // Default to 'Unknown' if no address is provided
             coordinates: {
@@ -181,41 +183,42 @@ const ReportAnimal = () => {
                 ], // Coordinates in GeoJSON format: [longitude, latitude]
             },
         };
-
-        // Append location as a stringified JSON object
+    
         uploadData.append('location', JSON.stringify(locationData));
-
-        // If an image file is selected, append it to the FormData
         if (file) {
             uploadData.append('image', file);
         }
-
+    
         try {
             const requestOptions = {
                 method: 'POST',
                 body: uploadData, // Use FormData
                 credentials: 'include',
             };
-
+    
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`,
                 requestOptions
             );
-
+    
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`);
             }
-
+    
             const result = await response.json();
             console.log('Form submitted successfully:', result);
+    
+            toast.success("Report submitted successfully!");
+    
             router.push('/');
         } catch (error) {
             setError(error.message);
+            toast.error("An error occurred while submitting the report.");
         } finally {
             setLoading(false);
         }
     };
-
+    
     const handleMapClick = (event) => {
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
