@@ -85,13 +85,21 @@ export const loginUser = async (username, password) => {
     }
 }
 
-// export const logoutUser = async () => {
-//     try {
-//         await fetch('/api/auth/logout', {
-//             method: 'POST',
-//             credentials: 'include',
-//         })
-//     } catch (error) {
-//         console.error('Error logging out:', error)
-//     }
-// }
+export const logoutUser = async () => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/logout`, {
+            method: 'POST',
+            credentials: 'include',
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to logout');
+        }
+        
+        localStorage.removeItem('token');
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    } catch (error) {
+        console.error('Error logging out:', error);
+    }
+};
+
