@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import styles from './editProfile.module.css'
 
@@ -11,6 +11,20 @@ const ChangePassword = ({isOpen, onClose}) => {
         });
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+
+    useEffect (() => {
+        // Disable scrolling on body when modal is open
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset'; // Reset to default
+        }
+
+        // Cleanup function to reset styles when the component unmounts
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -61,7 +75,7 @@ const ChangePassword = ({isOpen, onClose}) => {
                 className={styles.modalContent}
             >
                 <div>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className={styles.input}>
                             <label htmlFor="name">Current Password</label>
                             <input
