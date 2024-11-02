@@ -3,6 +3,7 @@ const router = express.Router()
 const authenticate = require('../middleware/auth')
 const {
     getUserProfile,
+    updateUser,
     updateUserPassword,
     deleteUser,
     getUserById,
@@ -11,6 +12,7 @@ const {
 router
     .route('/')
     .get(authenticate, getUserProfile)
+    .post(authenticate, updateUser)
     .put(authenticate, updateUserPassword)
     .delete(authenticate, deleteUser)
 

@@ -41,6 +41,7 @@ const DeleteAnimalModal = ({isOpen, onClose, report_id, animal_id}) => {
                 onRequestClose={onClose}
                 contentLabel="Delete Prompt"
                 className={styles.customModal}
+                ariaHideApp={false}
             >
                 <div className='text-center'>
                     <h1>Are you sure you want to delete this report?</h1>

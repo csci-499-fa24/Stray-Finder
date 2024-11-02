@@ -1,10 +1,16 @@
-.container {
+.namecontainer {
     display: flex; /* Use flexbox for layout */
     justify-content: space-between; /* Space items between */
+    justify-content: flex-end;
     align-items: center; /* Center items vertically */
 	position: relative;           /* Allow for absolute positioning */
 	height: 70px;
 	background-color: #f9f9f9; /* Light background color for contrast */
+}
+
+.reportcontainer {
+    display: flex; /* Enables flexbox layout */
+    align-items: center; /* Centers items vertically */
 }
 
 .h1 {
@@ -122,5 +128,12 @@
 	height: 50px;
 	word-break: break-word;
 	border: 0;
-	margin-left: auto;           /* Push the button to the right */
+	margin-left: 10px;           /* Push the button to the right */
+}
+
+.imagestyle {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* This will ensure the image covers the area without distortion */
+    margin-right: 10px;
 }

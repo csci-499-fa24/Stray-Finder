@@ -1,9 +1,10 @@
 import useAuth from '@/app/hooks/useAuth';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from "next/image";
-import penIcon from "./pen.png";
-import styles from './profile.module.css';
+import EditProfile from './EditProfile';
+import PenIcon from './PenIcon';
+import styles from './profile.module.css'
+import ChangePassword from './ChangePassword';
 
 const UserProfile = ({ id }) => {
     const { isAuthenticated, user } = useAuth();
@@ -13,6 +14,7 @@ const UserProfile = ({ id }) => {
     const [userReports, setUserReports] = useState([]);
     const [selfProfile, setSelfProfile] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
+    const [isChangePassword, setIsChangePassword] = useState(false);
     
     useEffect(() => {
         const fetchUser = async () => {      
@@ -45,11 +47,6 @@ const UserProfile = ({ id }) => {
             fetchUser();
     }, [id, user]); 
 
-
-
-
-    const handleEdit = () => setIsEdit;
-
     if (loading) {
         return <div className="spinner-border text-primary" role="status">
         <span className="sr-only"></span>
@@ -62,21 +59,21 @@ const UserProfile = ({ id }) => {
         <div>
             <div>   
                 {isAuthenticated && selfProfile ? (
-                    <div className={styles.container}>
-                        <h1 className={`${styles.h1} ${styles.userName}`}>Your Profile</h1>
-                        <button className={`${styles.button34}`} onClick={handleEdit}>
-                            Edit Account Details
-                            <Image
-                                src={penIcon}
-                                alt="Pen Icon"
-                                width={30}
-                                height={30}
-                                priority
-                            />
-                        </button>
+                    <div className={styles.namecontainer}>
+                        <h1 className={`${styles.h1} ${styles.userName}`}>{userData.username}'s Profile</h1>
+                        <div className={styles.buttonContainer}>
+                            <button className={`${styles.button34}`} onClick={() => setIsEdit(true)}>
+                                Edit Account Details
+                                <PenIcon length={30}/>
+                            </button>
+                            <button className={`${styles.button34}`} onClick={() => setIsChangePassword(true)}>
+                                Change Password
+                                <PenIcon length={30}/>
+                            </button>
+                        </div>
                     </div>
                 ) : (
-                    <div className='d-flex justify-content-center align-items-center'>
+                    <div className={styles.namecontainer}>
                         <h1 className={`${styles.h1} ${styles.userName}`}>{userData.username}'s Profile</h1>
                     </div>
                 )}
@@ -90,12 +87,28 @@ const UserProfile = ({ id }) => {
                 <ul className={styles.ul}>
                     {userReports.map((report) => (
                         <li className={styles.li} key={report._id}>
-                            <Link className={styles.dt} href={`/animal/${report._id}`}>{report.animal.name}</Link>
-                            <p className={styles.dd}>Report Type: {report.reportType}</p>
+                            <div >
+                                <Link href={`/animal/${report._id}`}>
+                                    <img 
+                                        src={report.animal.imageUrl} 
+                                        className={styles.imagestyle}
+                                        alt={report.animal.name} 
+                                    />
+                                </Link>
+                                <Link href={`/animal/${report._id}`} className={styles.dt}>{report.animal.name}</Link>
+                                <p className={styles.dd}>Report Type: {report.reportType}</p>
+                            </div>
                         </li>
                     ))}
                 </ul>
             </div>
+            <EditProfile user={user} isOpen={isEdit} onClose={() => setIsEdit(false)}>
+                <button onClick={() => setIsEdit(false)}></button>
+            </EditProfile>
+
+            <ChangePassword isOpen={isChangePassword} onClose={() => setIsChangePassword(false)}>
+                <button onClick={() => setIsChangePassword(false)}></button>
+            </ChangePassword>
         </div>
     );
 };
