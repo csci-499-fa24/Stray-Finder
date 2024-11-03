@@ -13,20 +13,13 @@ const LoginForm = () => {
         e.preventDefault()
         setErrorMessage('') // Reset error message on new attempt
 
-        try {
-            await loginUser(username, password)
+        const result = await loginUser(username, password)
+        if (result.error) {
+            // Set the error message if the loginUser function returns an error
+            setErrorMessage(result.message)
+        } else {
+            // Login successful, redirect
             router.push(redirect)
-        } catch (error) {
-            // Ensure the server message is captured correctly
-            if (
-                error.response &&
-                error.response.data &&
-                error.response.data.message
-            ) {
-                setErrorMessage(error.response.data.message) // Show actual error message from the server
-            } else {
-                setErrorMessage('Login failed') // Default message
-            }
         }
     }
 
@@ -38,8 +31,7 @@ const LoginForm = () => {
             aria-labelledby="tab-login"
         >
             <form onSubmit={handleLogin}>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}{' '}
-                {/* Display error in red */}
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 <div className="form-outline mb-4">
                     <input
                         type="text"
