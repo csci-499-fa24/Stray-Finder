@@ -47,3 +47,10 @@
 coverage
 
 .DS_Store
+
+# Python virtual environment
+venv/
+
+# Python bytecode files
+*.pyc
+__pycache__/
