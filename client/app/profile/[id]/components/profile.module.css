@@ -1,0 +1,139 @@
+.namecontainer {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space items between */
+    justify-content: flex-end;
+    align-items: center; /* Center items vertically */
+	position: relative;           /* Allow for absolute positioning */
+	height: 70px;
+	background-color: #f9f9f9; /* Light background color for contrast */
+}
+
+.reportcontainer {
+    display: flex; /* Enables flexbox layout */
+    align-items: center; /* Centers items vertically */
+}
+
+.h1 {
+	padding: .5em;
+    font-size: 2em;              /* Larger font size for emphasis */
+    color: #2c3e50;             /* Dark color for better contrast */
+    margin: 0.5em 0;            /* Vertical spacing */
+    font-weight: bold;           /* Bold text for prominence */
+    text-align: left;           /* Align text to the left */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow for depth */
+	position: absolute;           /* Position the heading absolutely */
+    left: 50%;                   /* Align it to the center of the container */
+    transform: translateX(-50%); /* Offset it back to truly center it */
+}
+
+.h1.userName {
+    font-size: 2.3em;           /* Slightly smaller for username */
+    color: #34495e;             /* A softer color for username */
+	flex: 1; /* Allow the heading to take up available space */
+    text-align: center; /* Center the text */
+}
+
+.h1.report-title {
+    font-size: 1.2em;           /* Smaller font for report titles */
+    color: #2980b9;             /* A blue color for report titles */
+    margin-bottom: 0.2em;       /* Less space below report titles */
+}
+
+.user-reports-title {
+    font-size: 1.5em;             /* Larger font size for visibility */
+    color: #34495e;               /* Dark gray color for the title */
+    font-weight: bold;            /* Bold font for emphasis */
+    margin-bottom: 1em;           /* Space below the title */
+    text-align: center;           /* Center the title text */
+    padding: 0.5em;               /* Padding around the title */
+    border-bottom: 2px solid #2980b9; /* Underline with a color accent */
+}
+
+.dl {
+    padding: 1em; /* Padding around the list */
+    background-color: #f9f9f9; /* Light background color for contrast */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.h2 {
+    margin-bottom: 0.5em; /* Space below the header */
+    font-size: 1.5em; /* Header size */
+    color: #333; /* Dark text color */
+}
+
+.ul {
+    list-style-type: none; /* Remove default bullets */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+	max-height: 400px; /* Set your desired maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.li {
+    background-color: #fff; /* White background for list items */
+    border: 1px solid #ddd; /* Light border around items */
+    border-radius: 4px; /* Rounded corners for items */
+    padding: 1em; /* Padding inside list items */
+    margin-bottom: 0.5em; /* Space between list items */
+    transition: background-color 0.3s; /* Smooth background change on hover */
+}
+
+.item:hover {
+    background-color: #f1f1f1; /* Change background color on hover */
+}
+
+.dt {
+    font-weight: bold; /* Bold text for report titles */
+    font-size: 1.2em; /* Slightly larger font for titles */
+    color: #2c3e50; /* Darker color for titles */
+}
+
+.dd {
+    color: #555; /* Grey color for description text */
+    font-size: 0.9em; /* Smaller font for descriptions */
+}
+
+/* Optional: Add a responsive design */
+@media (max-width: 600px) {
+    .dl {
+        padding: 0.5em; /* Less padding on smaller screens */
+    }
+
+    .h2 {
+        font-size: 1.3em; /* Smaller header size on mobile */
+    }
+
+    .dt {
+        font-size: 1.1em; /* Smaller title size on mobile */
+    }
+}
+.button34 {
+	background-color: #a637f6;
+	border-radius: 999px;
+	box-shadow: #5E5DF0 0 10px 20px -10px;
+	box-sizing: border-box;
+	color: #FFFFFF;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 24px;
+	opacity: 1;
+	outline: 0 solid transparent;
+	padding: 8px 18px;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	width: fit-content;
+	height: 50px;
+	word-break: break-word;
+	border: 0;
+	margin-left: 10px;           /* Push the button to the right */
+}
+
+.imagestyle {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* This will ensure the image covers the area without distortion */
+    margin-right: 10px;
+}

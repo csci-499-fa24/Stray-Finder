@@ -223,6 +223,7 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
             isOpen={isOpen}
             onRequestClose={onClose}
             contentLabel="Animal Details"
+            ariaHideApp={false}
             style={{
                 content: {
                     maxWidth: '1000px', // Adjust this value to your preference

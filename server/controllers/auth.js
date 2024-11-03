@@ -23,7 +23,11 @@ const register = async (req, res, next) => {
 
         res.status(201).json({ message: 'User successfully registered!' })
     } catch (error) {
-        next(error)
+        if (error.name === 'ValidationError') {
+            const errors = Object.values(error.errors).map((err) => err.message);
+            return res.status(400).json({ message: errors.join(', ') }); // combine all messages
+        }
+        res.status(500).json({ message: 'Server error during registration' });
     }
 }
 
@@ -71,4 +75,10 @@ const login = async (req, res, next) => {
     }
 }
 
-module.exports = { register, login }
+const logout = (req, res) => {
+    res.clearCookie('token'); 
+    return res.status(200).json({ message: 'Logout successful' });
+    
+};
+
+module.exports = { register, login, logout }
