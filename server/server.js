@@ -8,8 +8,10 @@ const animalReport = require('./routes/animalReport')
 const user = require('./routes/user')
 const auth = require('./routes/auth')
 const message = require('./routes/message');
-const report = require('./routes/report'); // Added
+const report = require('./routes/report');
+const match = require('./routes/match')
 // const socketSetUp = require('./socket/socket');
+
 /**
  * Connection to the database
  */
@@ -48,6 +50,7 @@ app.use('/api/animal-report/', animalReport)
 app.use('/api/message/', message);
 app.use('/api/report/', report);
 app.use('/api/user/', user)
+app.use('/api/match/', match)
 ///////////////////////////////////////////////////////////////////////////
 
 // Create HTTP server with app

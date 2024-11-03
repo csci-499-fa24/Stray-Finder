@@ -18,24 +18,15 @@ const RegisterForm = () => {
         if (password !== repeatPassword) {
             setErrorMessage('Passwords do not match')
             return
-        }
+            }
 
         try {
-            await registerUser(username, email, password)
-            router.push(redirect)
+            await registerUser(username, email, password);
+            router.push(redirect);
         } catch (error) {
-            // Ensure the server message is captured correctly
-            if (
-                error.response &&
-                error.response.data &&
-                error.response.data.message
-            ) {
-                setErrorMessage(error.response.data.message) // Show actual error message from the server
-            } else {
-                setErrorMessage('Registration failed') // Default message
-            }
+            setErrorMessage(error.message || 'Registration failed');
         }
-    }
+    };
 
     return (
         <div>

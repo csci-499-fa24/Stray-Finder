@@ -43,6 +43,7 @@
 /server/node_modules
 
 # local env files
-/server/.env
+/server/.env*
+coverage
 
 .DS_Store
