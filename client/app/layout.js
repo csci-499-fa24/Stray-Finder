@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import localFont from 'next/font/local'
-import 'bootstrap/dist/css/bootstrap.min.css' // Only one import of Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './globals.css' // Import your global styles
 
 const geistSans = localFont({

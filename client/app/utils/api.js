@@ -48,16 +48,17 @@ export const registerUser = async (username, email, password) => {
         )
 
         if (!response.ok) {
-            const errorData = await response.json()
-            throw new Error(errorData.message || 'Registration failed')
+            const errorData = await response.json().catch(() => null)
+            const message = errorData?.message || 'Registration failed'
+            return { error: true, message } // Return error structure instead of throwing
         }
 
         return await response.json()
     } catch (error) {
-        console.error('Registration failed', error)
-        throw error
+        return { error: true, message: 'Server error. Please try again later.' }
     }
 }
+
 
 export const loginUser = async (username, password) => {
     try {
@@ -74,14 +75,14 @@ export const loginUser = async (username, password) => {
         )
 
         if (!response.ok) {
-            const errorData = await response.json()
-            throw new Error(errorData.message || 'Login failed')
+            const errorData = await response.json().catch(() => null)
+            const message = 'Incorrect username or password'
+            return { error: true, message }
         }
 
         return await response.json()
     } catch (error) {
-        console.error('Login failed', error)
-        throw error
+        return { error: true, message: 'Server error. Please try again later.' }
     }
 }
 
