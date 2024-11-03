@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import localFont from 'next/font/local'
 import 'bootstrap/dist/css/bootstrap.min.css' // Only one import of Bootstrap CSS
 import './globals.css' // Import your global styles
+import { Toaster } from 'react-hot-toast' // Import the Toaster component
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
                 <link rel="icon" href="/favicon.ico" />
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
+                <Toaster position='top-right' /> {/* Add the Toaster here */}
                 {children}
             </body>
         </html>

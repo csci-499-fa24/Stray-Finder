@@ -171,7 +171,7 @@ const ReportAnimal = () => {
         uploadData.append('collar', formData.collar);
         uploadData.append('description', formData.description);
         // Create the location data in GeoJSON format
-        uploadData.append('reportedBy', user._id);
+        uploadData.append('reportedBy', user._id); //Add user ID
     
         const locationData = {
             address: formData.location || 'Unknown', // Default to 'Unknown' if no address is provided
@@ -183,8 +183,9 @@ const ReportAnimal = () => {
                 ], // Coordinates in GeoJSON format: [longitude, latitude]
             },
         };
-    
+        // Append location as a stringified JSON object
         uploadData.append('location', JSON.stringify(locationData));
+        // If an image file is selected, append it to the FormData
         if (file) {
             uploadData.append('image', file);
         }
@@ -208,8 +209,10 @@ const ReportAnimal = () => {
             const result = await response.json();
             console.log('Form submitted successfully:', result);
     
-            toast.success("Report submitted successfully!");
-    
+            toast.success("Report submitted successfully!", {
+                duration: 5000, // Toast will show for 5 seconds
+            });
+                
             router.push('/');
         } catch (error) {
             setError(error.message);
@@ -218,7 +221,7 @@ const ReportAnimal = () => {
             setLoading(false);
         }
     };
-    
+
     const handleMapClick = (event) => {
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
