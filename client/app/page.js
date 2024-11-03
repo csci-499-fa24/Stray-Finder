@@ -1,4 +1,3 @@
-// app/page.js
 'use client' // This should be at the top
 
 import Navbar from './components/layouts/Navbar/Navbar'
