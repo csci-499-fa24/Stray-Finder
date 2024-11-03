@@ -2,16 +2,16 @@
 import Link from 'next/link'
 import useAuth from '@/app/hooks/useAuth'
 import './Profile_Menu.css'
-import { useRouter } from 'next/navigation' // Update to use next/navigation
+import { useRouter } from 'next/navigation'
 
 const ProfileMenu = () => {
     const { isAuthenticated, user, setIsAuthenticated, setUser, handleLogout } = useAuth() 
-    const router = useRouter() // Initialize the router
+    const router = useRouter()
 
     const handleLogoutClick = async (event) => {
         event.preventDefault();
         await handleLogout(); 
-        router.push('/');
+        router.refresh()
     }
     
 

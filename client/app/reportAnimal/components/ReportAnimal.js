@@ -101,8 +101,8 @@ const ReportAnimal = () => {
     }, [isAuthenticated, locationAsked, router]);
 
     if (isAuthenticated === null) {
-        return <div class="spinner-border text-primary" role="status">
-        <span class="sr-only"> </span>
+        return <div className="spinner-border text-primary" role="status">
+        <span className="sr-only"> </span>
       </div>; // Show loading while auth status is unknown
     }
 

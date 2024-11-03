@@ -158,8 +158,8 @@ const MemoizedFilters = memo(Filters)
 
 const ReportList = ({ reports, loading }) => {
     if (loading) {
-        return <div class="spinner-border text-primary" role="status">
-        <span class="sr-only"></span>
+        return <div className="spinner-border text-primary" role="status">
+        <span className="sr-only"></span>
       </div>
     }
 
