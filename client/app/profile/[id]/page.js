@@ -1,20 +1,21 @@
-'use client'
+'use client';
 
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
-import AnimalReportProfile from "./components/AnimalReportProfile";
+import UserProfile from "./components/UserProfile";
 import Footer from "@/app/components/layouts/Footer";
-import { useParams } from "next/navigation";
+import { useParams } from 'next/navigation'; // Import useParams for unwrapping params
 
-const StrayDetailsPage = () => {
+const ProfilePage = () => {
     const params = useParams();
     const id = params.id;
+
     return (
         <div>
             <Navbar />
-            <AnimalReportProfile id={id} />
+            <UserProfile id ={id} />
             <Footer />
         </div>
     )
 }
 
-export default StrayDetailsPage;
+export default ProfilePage;

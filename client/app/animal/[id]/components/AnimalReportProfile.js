@@ -1,4 +1,3 @@
-'use client'
 import Link from 'next/link';
 import { GoogleMap, Marker, LoadScriptNext } from '@react-google-maps/api';
 import { useEffect, useState } from 'react';
@@ -47,8 +46,8 @@ const AnimalReportProfile = ({ id }) => {
     const closeModal = () => setIsModalOpen(false);
 
     if (loading) {
-        return <div class="spinner-border text-primary" role="status">
-        <span class="sr-only"></span>
+        return <div className="spinner-border text-primary" role="status">
+        <span className="sr-only"></span>
       </div>;
     }
 
@@ -79,7 +78,11 @@ const AnimalReportProfile = ({ id }) => {
                 </div>
                 <ul className={`${styles.listGroup} list-group list-group-flush`}>
                     <li className="list-group-item d-flex justify-content-between align-items-center">
-                        <span>Reported By: {reportProfile?.reportedBy?.username}</span>
+                        <span>Reported By: 
+                            <Link href={`/profile/${reportProfile?.reportedBy._id}`} style={{ textDecoration: 'none' }}>
+                                {` ${reportProfile?.reportedBy?.username}`}
+                            </Link>
+                        </span>
                         {isAuthenticated && user?._id !== reportProfile?.reportedBy._id && (
                             <button 
                                 className="btn btn-primary"
@@ -116,7 +119,7 @@ const AnimalReportProfile = ({ id }) => {
                         <LoadScriptNext
                             googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
                         >
-                            {mapLoading && <div class="spinner-border text-primary" role="status"> <span class="sr-only"></span>
+                            {mapLoading && <div className="spinner-border text-primary" role="status"> <span className="sr-only"></span>
                             </div>}
                             <GoogleMap
                                 mapContainerStyle={{ height: '400px', width: '100%' }} // Adjust height to make it smaller

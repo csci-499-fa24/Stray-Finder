@@ -1,3 +1,4 @@
+const animal = require('../models/animal')
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
@@ -11,6 +12,31 @@ const getUserProfile = async (req, res) => {
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json({ message: 'Server error' })
+    }
+}
+
+const updateUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(401).json({ message: 'User not found'});
+        }
+        
+        const fieldsToUpdate = [
+            'username',
+            'email',
+        ]
+        fieldsToUpdate.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                user[field] = req.body[field]
+            }
+        })
+        const updatedUser = await user.save();
+        res.status(200).json({ user: updatedUser });
+
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Failed to update user' })
     }
 }
 
@@ -32,12 +58,7 @@ const updateUserPassword = async (req, res) => {
                 .json({ message: 'Current password is incorrect' })
         }
 
-        // Hash the new password
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(newPassword, salt)
-
-        // Update the user's password
-        user.password = hashedPassword
+        user.password = newPassword;
         await user.save()
 
         res.status(200).json({ message: 'Password updated successfully' })
@@ -61,4 +82,18 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = { getUserProfile, updateUserPassword, deleteUser }
+// Get user profile by ID (this is not a protected route)
+const getUserById = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('username') // Exclude password
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+        res.status(200).json(user)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' })
+    }
+}
+
+module.exports = { getUserProfile, updateUser, updateUserPassword, deleteUser, getUserById }
