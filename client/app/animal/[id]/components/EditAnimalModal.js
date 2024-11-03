@@ -25,8 +25,8 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
 
     const [file, setFile] = useState(null); // Store the image file
     const [isOtherBreed, setIsOtherBreed] = useState(false);
+    const [otherBreed, setOtherBreed] = useState(reportData?.animal?.breed);
     const [commonBreeds, setCommonBreeds] = useState([]);
-    const [mapCenter, setMapCenter] = useState(formData.coordinates);
     const [loading, setLoading] = useState(false)
     const speciesOptions = [
         {
@@ -65,23 +65,8 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
         { value: 'Unknown', label: "I don't know", breeds: [] },
     ]
 
-
     useEffect(() => {
-        // set map mapCenter
-        setMapCenter(formData.coordinates);
-
-        // Set initial breeds based on the selected species
-        const selectedSpecies = speciesOptions.find(species => species.value === formData.species);
-        const newBreeds = selectedSpecies ? selectedSpecies.breeds : [];
-
-        // Only update commonBreeds if it has changed
-        setCommonBreeds((prevBreeds) => {
-            if (JSON.stringify(prevBreeds) !== JSON.stringify(newBreeds)) {
-                return newBreeds;
-            }
-            return prevBreeds;
-        });
-        // Disable scrolling on body when modal is open
+        // disable scrolling
         if (isOpen) {
             document.body.style.overflow = 'hidden';
         } else {
@@ -92,8 +77,29 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
         return () => {
             document.body.style.overflow = 'unset';
         };
+    }, [isOpen]);
 
-    }, [formData.coordinates, formData.species, speciesOptions, isOpen]);
+    useEffect(() => {
+        // Set initial breeds based on the selected species
+        const selectedSpecies = speciesOptions.find(species => species.value === formData.species);
+        const initialBreeds = selectedSpecies ? selectedSpecies.breeds : [];
+
+        // Only update commonBreeds if it has changed
+        setCommonBreeds((prevBreeds) => {
+            const updatedBreeds = [...initialBreeds];
+
+            // Add otherBreed if it's not already in the list
+            if (otherBreed && !updatedBreeds.includes(otherBreed)) {
+                updatedBreeds.push(otherBreed);
+            }
+
+            // Only update if there's a difference
+            if (JSON.stringify(prevBreeds) !== JSON.stringify(updatedBreeds)) {
+                return updatedBreeds;
+            }
+            return prevBreeds;
+        });
+    }, []);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target
@@ -328,8 +334,8 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                             <input
                                 type="text"
                                 className="form-control mt-2"
-                                placeholder="Please specify"
-                                value={formData.breed} // Use formData.breed for custom input
+                                placeholder={reportData?.breed}
+                                value={reportData?.breed} // Use formData.breed for custom input
                                 onChange={(e) =>
                                     setFormData({
                                         ...formData,
