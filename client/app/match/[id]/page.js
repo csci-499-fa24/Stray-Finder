@@ -26,10 +26,7 @@ const SpecificMatchPage = () => {
                     `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report/${id}`
                 )
                 const specificReportData = await specificReportResponse.json()
-
-                // Access the nested `report` property
                 const specificReport = specificReportData.report
-                console.log('Specific report fetched:', specificReport)
 
                 if (!specificReport || !specificReport.animal) {
                     console.log(`No report or animal data found for ID: ${id}`)
@@ -38,17 +35,12 @@ const SpecificMatchPage = () => {
                 }
 
                 setAnimalName(specificReport.animal.name)
-                console.log(
-                    'Specified report animal name:',
-                    specificReport.animal.name
-                )
 
                 // Fetch all other reports to compare with the specific report
                 const allReportsResponse = await fetch(
                     `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`
                 )
                 const { reports } = await allReportsResponse.json()
-                console.log('All reports fetched:', reports)
 
                 const matchResults = []
 
@@ -63,8 +55,8 @@ const SpecificMatchPage = () => {
                                     'Content-Type': 'application/json',
                                 },
                                 body: JSON.stringify({
-                                    report1: specificReport,
-                                    report2: report,
+                                    report1Id: specificReport._id,
+                                    report2Id: report._id,
                                 }),
                             }
                         )
@@ -81,7 +73,6 @@ const SpecificMatchPage = () => {
                 // Sort match results by score in descending order
                 matchResults.sort((a, b) => b.score - a.score)
                 setMatches(matchResults)
-                console.log('Sorted match results:', matchResults)
             } catch (error) {
                 console.error(`Error fetching matches for report ${id}:`, error)
             } finally {
