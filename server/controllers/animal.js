@@ -1,8 +1,8 @@
 const Animal = require('../models/animal')
-const FeatureVector = require('../models/featureVector')
+const FeatureVector = require('../models/FeatureVector')
 const uploadImage = require('../cloudinary/upload')
 const upload = require('../middleware/uploadMiddleware')
-const createOrUpdateFeatureVector = require('../utils/FeatureVectorUtils')
+const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
 
 // GET: Retrieve all animals based on query parameters
 const getAnimals = async (req, res) => {

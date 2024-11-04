@@ -1,5 +1,6 @@
 const { exec } = require('child_process')
 const path = require('path')
+const FeatureVector = require('../models/FeatureVector')
 
 const generateFeatureVector = (imageUrl) => {
     return new Promise((resolve, reject) => {

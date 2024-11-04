@@ -27,4 +27,6 @@ FeatureVectorSchema.pre('save', function (next) {
     next()
 })
 
-module.exports = mongoose.model('FeatureVector', FeatureVectorSchema)
+module.exports =
+    mongoose.models.FeatureVector ||
+    mongoose.model('FeatureVector', FeatureVectorSchema)

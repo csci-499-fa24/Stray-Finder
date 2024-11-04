@@ -1,10 +1,10 @@
 const AnimalReport = require('../models/animalReport')
 const Animal = require('../models/animal')
-const FeatureVector = require('../models/featureVector')
+const FeatureVector = require('../models/FeatureVector')
 const User = require('../models/user')
 const uploadImage = require('../cloudinary/upload')
 const upload = require('../middleware/uploadMiddleware')
-const createOrUpdateFeatureVector = require('../utils/FeatureVectorUtils')
+const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
 
 /**
  * @get     : Retrieves list of animal reports
@@ -141,26 +141,39 @@ const updateAnimalReport = async (req, res) => {
 // DELETE: Deletes an animal report by ID
 const deleteAnimalReport = async (req, res) => {
     try {
-        const { id } = req.params
-        const deletedReport = await AnimalReport.findByIdAndDelete(id)
+        const { id } = req.params;
+        
+        // Find the report to be deleted
+        const deletedReport = await AnimalReport.findByIdAndDelete(id);
+        
+        if (!deletedReport) {
+            return res.status(404).json({ message: 'Animal report not found' });
+        }
 
-        if (!deletedReport)
-            return res.status(404).json({ message: 'Animal report not found' })
+        const animalId = deletedReport.animal;
 
-        await FeatureVector.findOneAndDelete({
-            animalId: deletedReport.animal._id,
-        })
+        // Check if this animal is referenced in any other reports
+        const otherReports = await AnimalReport.find({ animal: animalId });
+        
+        // If there are no other reports referencing this animal, delete the animal
+        if (otherReports.length === 0) {
+            await Animal.findByIdAndDelete(animalId);
+            await FeatureVector.findOneAndDelete({ animalId });
+        }
+
         res.status(200).json({
             message: 'Animal report deleted successfully',
             report: deletedReport,
-        })
+        });
     } catch (error) {
+        console.error('Error deleting animal report:', error.message);
         res.status(500).json({
             message: 'Failed to delete animal report',
             error: error.message,
-        })
+        });
     }
-}
+};
+
 
 module.exports = {
     getAnimalReports,
