@@ -34,7 +34,6 @@ const createOrUpdateFeatureVector = async (animalId, imageUrl) => {
             // Update existing feature vector
             existingVector.vector = vectorData
             await existingVector.save()
-            console.log(`Updated feature vector for animal ID: ${animalId}`)
         } else {
             // Create a new feature vector
             const newVector = new FeatureVector({
@@ -42,7 +41,6 @@ const createOrUpdateFeatureVector = async (animalId, imageUrl) => {
                 vector: vectorData,
             })
             await newVector.save()
-            console.log(`Created feature vector for animal ID: ${animalId}`)
         }
     } catch (error) {
         console.error('Error creating/updating feature vector:', error.message)

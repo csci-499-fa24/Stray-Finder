@@ -8,29 +8,21 @@ const featureCache = new Map()
 
 // Function to retrieve or generate feature vector for an animal
 const getCachedFeatures = async (imageUrl, animalId) => {
-    console.log('Image URL:', imageUrl, 'Animal ID:', animalId)
-
     if (!imageUrl) {
-        console.log('No image URL provided, returning default score of 0.5')
         return null
     }
 
     if (featureCache.has(imageUrl)) {
-        console.log('Feature vector found in cache.')
         return featureCache.get(imageUrl)
     }
 
     try {
         const featureVectorDoc = await FeatureVector.findOne({ animalId })
         if (featureVectorDoc && featureVectorDoc.vector.length) {
-            console.log(
-                `Feature vector retrieved from database for animal ID: ${animalId}`
-            )
             featureCache.set(imageUrl, featureVectorDoc.vector)
             return featureVectorDoc.vector
         }
 
-        console.log('Generating new feature vector...')
         const featureVector = await generateFeatureVector(imageUrl)
         featureCache.set(imageUrl, featureVector)
 
@@ -40,9 +32,6 @@ const getCachedFeatures = async (imageUrl, animalId) => {
             { upsert: true, new: true }
         )
 
-        console.log(
-            `Feature vector saved to database for animal ID: ${animalId}`
-        )
         return featureVector
     } catch (error) {
         console.error('Error generating or saving feature vector:', error)
@@ -75,13 +64,8 @@ const cosineSimilarity = (vectorA, vectorB) => {
 // Main function to compare two images by their feature vectors
 const compareImage = async (imageUrl1, animalId1, imageUrl2, animalId2) => {
     try {
-        console.log('Comparing images with IDs:', animalId1, animalId2)
-
         // Return a default similarity score if either image URL is missing
         if (!imageUrl1 || !imageUrl2) {
-            console.log(
-                'One or both images are missing, returning default score of 0.5'
-            )
             return 0.5
         }
 
