@@ -14,7 +14,15 @@ weights_path = os.path.join(os.path.dirname(__file__), "checkpoints", "resnet50-
 # Load ResNet50 model with local weights
 model = models.resnet50()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.load_state_dict(torch.load(weights_path))
+
+# Load the model weights with weights_only=True to address security warning
+# Note: This feature is experimental; verify functionality after using it
+try:
+    model.load_state_dict(torch.load(weights_path, weights_only=True))
+except TypeError:
+    # If weights_only=True is not supported, load weights without it
+    model.load_state_dict(torch.load(weights_path))
+model = model.to(device)
 model.eval()
 
 # Define the transformation for the model
@@ -38,9 +46,9 @@ def get_image_from_url(url):
 # Extract features from an image URL
 def get_features_from_url(url):
     image = get_image_from_url(url)
-    image = transform(image).unsqueeze(0)
+    image = transform(image).unsqueeze(0).to(device)  # Move to device
     with torch.no_grad():
-        features = model(image).numpy()
+        features = model(image).cpu().numpy()  # Move back to CPU before converting to NumPy
     return features
 
 # Run the script from the command line
