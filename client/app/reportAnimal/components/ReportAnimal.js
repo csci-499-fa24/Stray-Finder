@@ -154,12 +154,30 @@ const ReportAnimal = () => {
         setFile(e.target.files[0]); // Store the selected file
     };
 
+    const MAX_DISTANCE_MILES = 10;
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
-        // Prepare FormData for the image and other form data
     
+        // Calculate and check the distance before submitting (Newly Added Code)
+        const userLat = userLocation.lat;
+        const userLng = userLocation.lng;
+        const reportLat = formData.coordinates.lat;
+        const reportLng = formData.coordinates.lng;
+    
+        const distance = calculateDistance(userLat, userLng, reportLat, reportLng); // Newly Added Line
+    
+        if (distance > MAX_DISTANCE_MILES) {
+            const errorMessage = `Reports are only allowed within ${MAX_DISTANCE_MILES} miles of your location.`;
+            setError(errorMessage);
+            toast.error(errorMessage); // Toast notification for error
+            setLoading(false);
+            return;
+        }
+    
+        // Prepare FormData for the image and other form data
         const uploadData = new FormData();
         uploadData.append('reportType', formData.reportType);
         uploadData.append('name', formData.name);
@@ -170,9 +188,9 @@ const ReportAnimal = () => {
         uploadData.append('fixed', formData.fixed);
         uploadData.append('collar', formData.collar);
         uploadData.append('description', formData.description);
-        // Create the location data in GeoJSON format
-        uploadData.append('reportedBy', user._id); //Add user ID
+        uploadData.append('reportedBy', user._id); // Add user ID
     
+        // Create the location data in GeoJSON format
         const locationData = {
             address: formData.location || 'Unknown', // Default to 'Unknown' if no address is provided
             coordinates: {
@@ -183,8 +201,10 @@ const ReportAnimal = () => {
                 ], // Coordinates in GeoJSON format: [longitude, latitude]
             },
         };
+    
         // Append location as a stringified JSON object
         uploadData.append('location', JSON.stringify(locationData));
+    
         // If an image file is selected, append it to the FormData
         if (file) {
             uploadData.append('image', file);
@@ -201,26 +221,36 @@ const ReportAnimal = () => {
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`,
                 requestOptions
             );
-    
+            
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`);
             }
     
             const result = await response.json();
             console.log('Form submitted successfully:', result);
-    
-            toast.success("Report submitted successfully!", {
-                duration: 5000, // Toast will show for 5 seconds
-            });
-                
             router.push('/');
         } catch (error) {
             setError(error.message);
-            toast.error("An error occurred while submitting the report.");
         } finally {
             setLoading(false);
         }
     };
+
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 3959; // Radius of the Earth in miles
+        const dLat = ((lat2 - lat1) * Math.PI) / 180;
+        const dLon = ((lon2 - lon1) * Math.PI) / 180;
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos((lat1 * Math.PI) / 180) *
+                Math.cos((lat2 * Math.PI) / 180) *
+                Math.sin(dLon / 2) *
+                Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c; // Distance in miles
+        return distance;
+    };
+    
 
     const handleMapClick = (event) => {
         const lat = event.latLng.lat();
