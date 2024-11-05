@@ -120,7 +120,10 @@ const Map = () => {
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
-    if (!isLoaded || loading) return <div>Loading reports and map...</div>;
+    // Show a loading message until the reports are fetched
+    if (!isLoaded || loading) return <div className="spinner-border text-primary" role="status">
+    <span className="sr-only"></span>
+    </div>
 
     return (
         <>

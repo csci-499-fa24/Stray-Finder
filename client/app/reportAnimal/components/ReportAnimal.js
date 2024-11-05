@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import useAuth from '@/app/hooks/useAuth';
 import toast from 'react-hot-toast';
 
-
 const ReportAnimal = () => {
     const router = useRouter();
     const { isAuthenticated, user } = useAuth(); // Get user and authentication status from useAuth
@@ -101,9 +100,16 @@ const ReportAnimal = () => {
     }, [isAuthenticated, locationAsked, router]);
 
     if (isAuthenticated === null) {
-        return <div className="spinner-border text-primary" role="status">
-        <span className="sr-only"> </span>
-      </div>; // Show loading while auth status is unknown
+        return (
+            <div
+                className="d-flex justify-content-center align-items-center vh-100"
+                style={{ marginTop: "-50px" }} // Adjust as needed for vertical alignment
+            >
+                <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only"></span>
+                </div>
+            </div>
+        );
     }
 
     if (isAuthenticated === false) {
@@ -261,7 +267,7 @@ const ReportAnimal = () => {
             location: `Lat: ${lat}, Lng: ${lng}`,
         }));
     };
-
+    
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
     return (
@@ -295,23 +301,24 @@ const ReportAnimal = () => {
                                     <option value="">Select report type</option>
                                     <option value="Lost">Lost</option>
                                     <option value="Stray">Stray</option>
+                                    <option value="Found">Found</option> {/* Added new option */}
                                 </select>
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="name" className="form-label">
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="name"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
+                                <div className="mb-3">
+                                    <label htmlFor="name" className="form-label">
+                                        Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="name"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            
                             <div className="mb-3">
                                 <label htmlFor="species" className="form-label">
                                     Species
@@ -326,16 +333,12 @@ const ReportAnimal = () => {
                                 >
                                     <option value="">Select species</option>
                                     {speciesOptions.map((species) => (
-                                        <option
-                                            key={species.value}
-                                            value={species.value}
-                                        >
+                                        <option key={species.value} value={species.value}>
                                             {species.label}
                                         </option>
                                     ))}
                                 </select>
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="breed" className="form-label">
                                     Breed
@@ -344,14 +347,9 @@ const ReportAnimal = () => {
                                     className="form-select"
                                     id="breed"
                                     name="breed"
-                                    value={
-                                        isOtherBreed
-                                            ? 'Other'
-                                            : formData.breed
-                                    } // Set to 'Other' if isOtherBreed is true
+                                    value={formData.breed}
                                     onChange={handleChange}
                                     required
-                                    disabled={formData.species === 'Unknown'}
                                 >
                                     <option value="">Select breed</option>
                                     {commonBreeds.map((breed) => (
@@ -359,23 +357,19 @@ const ReportAnimal = () => {
                                             {breed}
                                         </option>
                                     ))}
+                                    <option value="Other">Other</option>
                                 </select>
                                 {isOtherBreed && (
                                     <input
                                         type="text"
                                         className="form-control mt-2"
-                                        placeholder="Please specify"
-                                        value={formData.breed} // Use formData.breed for custom input
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                breed: e.target.value, // Update breed directly from input
-                                            })
-                                        }
+                                        placeholder="Please specify other breed"
+                                        value={formData.breed}
+                                        onChange={handleChange}
+                                        name="breed" // Ensure the breed name is consistent
                                     />
                                 )}
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="color" className="form-label">
                                     Color
@@ -390,7 +384,6 @@ const ReportAnimal = () => {
                                     required
                                 />
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="gender" className="form-label">
                                     Gender
@@ -401,17 +394,15 @@ const ReportAnimal = () => {
                                     name="gender"
                                     value={formData.gender}
                                     onChange={handleChange}
-                                    required
                                 >
                                     <option value="Unknown">Unknown</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="fixed" className="form-label">
-                                    Is it fixed?
+                                    Is the animal fixed?
                                 </label>
                                 <select
                                     className="form-select"
@@ -419,34 +410,24 @@ const ReportAnimal = () => {
                                     name="fixed"
                                     value={formData.fixed}
                                     onChange={handleChange}
-                                    required
                                 >
                                     <option value="Unknown">Unknown</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="collar" className="form-label">
-                                    Does it have a collar?
+                                    Does the animal have a collar?
                                 </label>
                                 <input
                                     type="checkbox"
-                                    className="form-check-input"
                                     id="collar"
                                     name="collar"
                                     checked={formData.collar}
                                     onChange={handleChange}
                                 />
-                                <label
-                                    className="form-check-label"
-                                    htmlFor="collar"
-                                >
-                                    Yes
-                                </label>
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="description" className="form-label">
                                     Description
@@ -461,7 +442,6 @@ const ReportAnimal = () => {
                                     required
                                 ></textarea>
                             </div>
-
                             <div className="mb-3">
                                 <label htmlFor="location" className="form-label">
                                     Location
@@ -476,7 +456,18 @@ const ReportAnimal = () => {
                                     required
                                 />
                             </div>
-
+                            <div className="mb-3">
+                                <LoadScriptNext googleMapsApiKey={apiKey}>
+                                    <GoogleMap
+                                        mapContainerStyle={{ height: '400px', width: '100%' }}
+                                        center={formData.coordinates}
+                                        zoom={12}
+                                        onClick={handleMapClick}
+                                    >
+                                        <Marker position={formData.coordinates} />
+                                    </GoogleMap>
+                                </LoadScriptNext>
+                            </div>
                             <div className="mb-3">
                                 <label htmlFor="file" className="form-label">
                                     Upload Image (optional)
@@ -486,33 +477,10 @@ const ReportAnimal = () => {
                                     className="form-control"
                                     id="file"
                                     name="file"
+                                    accept="image/*"
                                     onChange={handleFileChange}
                                 />
                             </div>
-
-                            <div className="mb-3">
-                                <label htmlFor="map" className="form-label">
-                                    Select Location on Map
-                                </label>
-                                <LoadScriptNext
-                                    googleMapsApiKey={apiKey}
-                                >
-                                    <GoogleMap
-                                        onClick={handleMapClick}
-                                        mapContainerStyle={{
-                                            height: '300px',
-                                            width: '100%',
-                                        }}
-                                        center={formData.coordinates}
-                                        zoom={15}
-                                    >
-                                        <Marker
-                                            position={formData.coordinates}
-                                        />
-                                    </GoogleMap>
-                                </LoadScriptNext>
-                            </div>
-
                             <button
                                 type="submit"
                                 className="btn btn-primary"

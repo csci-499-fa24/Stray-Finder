@@ -1,6 +1,6 @@
 import React from "react";
-import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import "./Slideshow.css";
+import Link from "next/link";
 
 const Slideshow = () => {
   return (
@@ -9,7 +9,7 @@ const Slideshow = () => {
       className="carousel slide"
       data-bs-ride="carousel"
       style={{
-        width: "100vw",
+        width: "40%",
         margin: "0 auto", // Center the slideshow horizontally
       }}
     >
@@ -40,34 +40,37 @@ const Slideshow = () => {
       {/* Slideshow content */}
       <div className="carousel-inner">
         {/* Slide 1 */}
-        <div className="carousel-item active">
+          <div className="carousel-item active">
           <img src="/stray6.jpeg" className="d-block w-100" alt="First Slide" />
-          <div className="carousel-caption d-none d-md-block">
-            <h5>Welcome to Stray Finder</h5>
-            <p>Helping you reunite with your furry friends!</p>
-            <button className="btn btn-primary">Learn More</button>
-          </div>
-        </div>
-        {/* Slide 2 */}
-        <div className="carousel-item">
-          <img
-            src="/stray5.webp"
-            className="d-block w-100"
-            alt="Second Slide"
-          />
-          <div className="carousel-caption d-none d-md-block">
-            <h5>Report a Lost Pet</h5>
-            <p>Let others know if you've lost your pet.</p>
-            <button className="btn btn-secondary">Report Now</button>
-          </div>
-        </div>
+        <div className="carousel-caption d-none d-md-block">
+          <h5>Welcome to Stray Finder</h5>
+          <p>Helping you reunite with your furry friends!</p>
+        <Link href="/about">
+          <button className="btn btn-primary">Learn More</button>
+        </Link>
+    </div>
+  </div>
+    {/* Slide 2 */}
+      <div className="carousel-item">
+        <img src="/stray5.webp" className="d-block w-100" alt="Second Slide" />
+        <div className="carousel-caption d-none d-md-block">
+          <h5>Report a Lost Pet</h5>
+          <p>Let others know if you've lost your pet.</p>
+        <Link href="/reportAnimal">
+          <button className="btn btn-secondary">Report Now</button>
+        </Link>
+      </div>
+  </div>
+
         {/* Slide 3 */}
         <div className="carousel-item">
           <img src="/stray4.webp" className="d-block w-100" alt="Third Slide" />
           <div className="carousel-caption d-none d-md-block">
             <h5>Found a Stray?</h5>
             <p>Help bring pets home by reporting them.</p>
+            <Link href="/FoundPets">
             <button className="btn btn-success">Report Found Pet</button>
+            </Link>
           </div>
         </div>
       </div>
