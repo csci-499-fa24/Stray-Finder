@@ -2,22 +2,21 @@ const compareLocation = require('./comparisons/compareLocation')
 const compareDescription = require('./comparisons/compareDescription')
 const compareDateReported = require('./comparisons/compareDateReported')
 const compareAnimal = require('./comparisons/compareAnimal')
-const compareImage = require('./comparisons/compareImage')
+// const compareImage = require('./comparisons/compareImage') // Commented out
 
 // Helper function to aggregate individual scores into a final match score
 const aggregateScores = (scores) => {
+    // Redistributed weights without imageScore
     const weights = {
-        locationScore: 0.35,
-        animalScore: 0.3,
-        imageScore: 0.2,
-        descriptionScore: 0.05,
-        dateReportedScore: 0.1,
+        locationScore: 0.4375, // 0.35 + (0.2 * 0.35)
+        animalScore: 0.375, // 0.3 + (0.2 * 0.3)
+        descriptionScore: 0.0625, // 0.05 + (0.2 * 0.05)
+        dateReportedScore: 0.125, // 0.1 + (0.2 * 0.1)
     }
 
     return (
         scores.locationScore * weights.locationScore +
         scores.animalScore * weights.animalScore +
-        scores.imageScore * weights.imageScore +
         scores.descriptionScore * weights.descriptionScore +
         scores.dateReportedScore * weights.dateReportedScore
     )
@@ -40,19 +39,10 @@ const calculateMatchScore = async (report1, report2) => {
         throw new Error('Animal data is missing in one of the reports')
     }
 
-    // Calculate image score by comparing the feature vectors of each animal's image
-    const imageScore = await compareImage(
-        report1.animal.imageUrl,
-        report1.animal._id,
-        report2.animal.imageUrl,
-        report2.animal._id
-    )
-
-    // Aggregate all scores, including imageScore
+    // Aggregate all scores, excluding imageScore
     return aggregateScores({
         locationScore,
         animalScore,
-        imageScore,
         descriptionScore,
         dateReportedScore,
     })
