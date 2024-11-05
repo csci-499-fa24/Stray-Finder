@@ -1,6 +1,6 @@
 const { exec } = require('child_process')
 const path = require('path')
-const FeatureVector = require('../../../models/featureVector')
+const FeatureVector = require('../../../models/FeatureVector')
 const { generateFeatureVector } = require('../../FeatureVectorUtils')
 
 // In-memory cache for feature vectors
