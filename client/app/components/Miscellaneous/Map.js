@@ -128,7 +128,7 @@ const Map = () => {
     return (
         <>
             <div className="filter-container">
-                <h3>Filter Reports</h3>
+                <h3>Filter Reports:</h3>
                 
                 <select
                     name="gender"
