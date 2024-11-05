@@ -1,7 +1,7 @@
 import { useEffect, useState, memo } from 'react'
 import AnimalCard from './AnimalCard'
 
-const FeaturedStrays = () => {
+const Strays = () => {
     const [reports, setReports] = useState([]) // State to hold the fetched animals
     const [loading, setLoading] = useState(false) // State to track loading
     const [filters, setFilters] = useState({
@@ -72,7 +72,7 @@ const FeaturedStrays = () => {
 
     return (
         <div className="container text-end">
-            <div className="text-center h2 p-3">Animal Reports in Your Area</div>
+            <div className="text-center h2 p-3"> Stray Registry</div>
             <hr />
 
             {/* Render the filters */}
@@ -187,4 +187,4 @@ const ReportList = ({ reports, loading }) => {
     )
 }
 
-export default FeaturedStrays
+export default Strays;

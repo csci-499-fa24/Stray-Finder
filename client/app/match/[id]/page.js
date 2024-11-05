@@ -83,7 +83,9 @@ const SpecificMatchPage = () => {
         fetchSpecificMatches()
     }, [id])
 
-    if (loading) return <p>Loading matches...</p>
+    if (loading) return <div className="spinner-border text-primary" role="status">
+    <span className="sr-only"> </span>
+  </div>;
 
     return (
         <div>

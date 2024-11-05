@@ -12,28 +12,31 @@
     0.494
   ); /* setting a semi-transparent black background for better text visibility */
   border: 2px solid white; /* giving it a white border to make it stand out */
-  padding: 20px 60px; /* adding some padding inside the box for spacing */
+  padding: 15px 35x; /* adding some padding inside the box for spacing */
   color: white; /* setting the text color to white for contrast */
   text-align: center; /* aligning the text to the center */
-  width: fit-content; /* making the width just enough to fit the text */
+  width: 60%; /* making the width just enough to fit the text */
+  max-width: 300px;
   border-radius: 10px; /* softening the edges with rounded corners */
 }
 
 .carousel-caption h5 {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
 }
 
 .carousel-caption p {
-  font-size: 1.25rem;
-  margin: 10px 0 15px;
+  font-size: 1rem;
+  margin: 5px 0 10px;
 }
 
 .carousel-caption button {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 .carousel-item img {
-  max-width: 80%;
+  max-width: 100%; /* Ensures image does not exceed container width */
+  max-height: 500px; /* Limits the height for a smaller display */
+  width: auto; /* Auto width to maintain aspect ratio */
   height: auto;
   margin: 0 auto;
 }

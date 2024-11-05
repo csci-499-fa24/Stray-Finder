@@ -58,8 +58,15 @@ const createAnimalReport = async (req, res) => {
     try {
         const { name, species, breed, color, gender, fixed, collar, description, location, reportType, reportedBy } = req.body;
 
-        if (!name || !species || !location || !reportType || !reportedBy) {
+        if (!species || !location || !reportType || !reportedBy) {
             return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        let parsedLocation;
+        try {
+            parsedLocation = JSON.parse(location);
+        } catch (jsonError) {
+            return res.status(400).json({ message: 'Invalid location format', error: jsonError.message });
         }
 
         let imageUrl = null;
@@ -67,9 +74,20 @@ const createAnimalReport = async (req, res) => {
             imageUrl = await uploadImage(req.file);
         }
 
-        const animalData = { name, species, breed, color, gender, fixed, collar, description, imageUrl };
-        const animal = new Animal(animalData);
-        await animal.save();
+        let animal;
+        if (reportType === 'Found') {
+            animal = await Animal.findOne({ species, breed, color, gender });
+            console.log('Searching for existing animal with:', { species, breed, color, gender });
+            if (!animal) {
+                const animalData = { name, species, breed, color, gender, fixed, collar, description, imageUrl };
+                animal = new Animal(animalData);
+                await animal.save();
+            }
+        } else {
+            const animalData = { name, species, breed, color, gender, fixed, collar, description, imageUrl };
+            animal = new Animal(animalData);
+            await animal.save();
+        }
 
         if (imageUrl) {
             await createOrUpdateFeatureVector(animal._id, imageUrl);
@@ -77,7 +95,7 @@ const createAnimalReport = async (req, res) => {
 
         const reportData = {
             animal: animal._id,
-            location: JSON.parse(location),
+            location: parsedLocation,
             reportType,
             description,
             reportedBy,
@@ -87,8 +105,8 @@ const createAnimalReport = async (req, res) => {
 
         res.status(201).json({ message: 'Animal report created successfully', report: animalReport });
     } catch (error) {
-        console.error('Error creating animal report:', error.message);
-        res.status(500).json({ message: 'Failed to create animal report', error: error.message });
+        console.error('Error creating animal report:', error);
+        res.status(500).json({ message: 'Failed to create animal report', error });
     }
 };
 

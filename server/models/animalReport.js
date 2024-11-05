@@ -28,7 +28,7 @@ const AnimalReportSchema = new mongoose.Schema({
     },
     reportType: {
         type: String,
-        enum: ['Stray', 'Lost'],
+        enum: ['Stray', 'Lost', 'Found'],
         required: true,
     },
     description: {
