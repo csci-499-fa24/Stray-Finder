@@ -178,6 +178,7 @@ const ReportAnimal = () => {
         uploadData.append('description', formData.description);
         uploadData.append('reportedBy', user._id); // Add user ID
     
+        // Prepare location data
         const locationData = {
             address: formData.location || 'Unknown', // Default to 'Unknown' if no address is provided
             coordinates: {
@@ -189,10 +190,8 @@ const ReportAnimal = () => {
             },
         };
     
-        // Only include location if not reporting found
-        if (formData.reportType !== 'Found') {
-            uploadData.append('location', JSON.stringify(locationData));
-        }
+        // Append location to FormData
+        uploadData.append('location', JSON.stringify(locationData)); // Ensure location is stringified
     
         // If an image file is selected, append it to the FormData
         if (file) {
@@ -207,7 +206,7 @@ const ReportAnimal = () => {
             };
     
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`, // Corrected backtick usage for template literal
                 requestOptions
             );
     
@@ -230,7 +229,7 @@ const ReportAnimal = () => {
             setLoading(false);
         }
     };
-
+    
     const handleMapClick = (event) => {
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();

@@ -43,6 +43,13 @@ const createAnimalReport = async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
+        let parsedLocation;
+        try {
+            parsedLocation = JSON.parse(location);
+        } catch (jsonError) {
+            return res.status(400).json({ message: 'Invalid location format', error: jsonError.message });
+        }
+
         let imageUrl = null;
         if (req.file) {
             imageUrl = await uploadImage(req.file);
@@ -50,16 +57,14 @@ const createAnimalReport = async (req, res) => {
 
         let animal;
         if (reportType === 'Found') {
-            // For found reports, look for existing animal based on its characteristics
             animal = await Animal.findOne({ species, breed, color, gender });
+            console.log('Searching for existing animal with:', { species, breed, color, gender });
             if (!animal) {
-                // If no existing animal is found, create a new one
-                const animalData = { name: name, species, breed, color, gender, fixed, collar, description, imageUrl };
+                const animalData = { name, species, breed, color, gender, fixed, collar, description, imageUrl };
                 animal = new Animal(animalData);
                 await animal.save();
             }
         } else {
-            // For Lost or Stray reports, create a new animal with the provided name
             const animalData = { name, species, breed, color, gender, fixed, collar, description, imageUrl };
             animal = new Animal(animalData);
             await animal.save();
@@ -71,7 +76,7 @@ const createAnimalReport = async (req, res) => {
 
         const reportData = {
             animal: animal._id,
-            location: JSON.parse(location),
+            location: parsedLocation,
             reportType,
             description,
             reportedBy,
@@ -81,8 +86,8 @@ const createAnimalReport = async (req, res) => {
 
         res.status(201).json({ message: 'Animal report created successfully', report: animalReport });
     } catch (error) {
-        console.error('Error creating animal report:', error.message);
-        res.status(500).json({ message: 'Failed to create animal report', error: error.message });
+        console.error('Error creating animal report:', error);
+        res.status(500).json({ message: 'Failed to create animal report', error });
     }
 };
 
