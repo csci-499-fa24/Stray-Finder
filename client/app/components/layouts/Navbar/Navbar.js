@@ -74,43 +74,43 @@ const Navbar = () => {
                                   Match
                               </Link>
                           </li>
-                          <li className="nav-item dropdown">
+                          <li className="nav-item ">
                               <Link
-                                  className="nav-link nav-link-custom dropdown-toggle"
-                                  href="#"
-                                  role="button"
-                                  data-bs-toggle="dropdown"
-                                  aria-expanded="false"
+                                  className="nav-link nav-link-custom"
+                                  href="/reportAnimal"
                               >
-                                  Actions
+                                  Report
                               </Link>
-                              <ul className="dropdown-menu">
-                                  <li>
-                                      <Link
-                                          className="dropdown-item"
-                                          href="/reportAnimal"
-                                      >
-                                          Report Lost
-                                      </Link>
-                                  </li>
-                                  <li>
-                                      <Link
-                                          className="dropdown-item"
-                                          href="/report-found"
-                                      >
-                                          Report Found
-                                      </Link>
-                                  </li>
-                                  <li>
-                                      <Link
-                                          className="dropdown-item"
-                                          href="/reportAnimal"
-                                      >
-                                          Report Stray
-                                      </Link>
-                                  </li>
-                              </ul>
-                          </li>
+                              </li>
+                      {/* Registry Dropdown */}
+              <li className="nav-item dropdown">
+                <Link
+                  className="nav-link nav-link-custom dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Registry
+                </Link>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link className="dropdown-item" href="/Strays">
+                      Strays
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" href="/LostPets">
+                      Lost Pets
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" href="/FoundPets">
+                      Found Pets
+                    </Link>
+                  </li>
+                </ul>
+              </li>
                       </div>
                   </ul>
               </div>

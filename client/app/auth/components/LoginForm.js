@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loginUser } from '@/app/utils/api'
+import toast from 'react-hot-toast';
 
 const LoginForm = () => {
     const router = useRouter()
@@ -18,6 +19,10 @@ const LoginForm = () => {
             // Set the error message if the loginUser function returns an error
             setErrorMessage(result.message)
         } else {
+            
+            toast.success("Login successful!", {
+                duration: 2000, // Toast will show for 5 seconds
+            });
             // Login successful, redirect
             router.push(redirect)
         }

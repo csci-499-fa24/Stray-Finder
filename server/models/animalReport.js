@@ -14,7 +14,7 @@ const AnimalReportSchema = new mongoose.Schema({
             type: {
                 type: String,
                 enum: ['Point'], // 'Point' for GeoJSON
-                required: true,
+                required: false,
             },
             coordinates: {
                 type: [Number], // Array of numbers [lng, lat]
@@ -28,7 +28,7 @@ const AnimalReportSchema = new mongoose.Schema({
     },
     reportType: {
         type: String,
-        enum: ['Stray', 'Lost'],
+        enum: ['Stray', 'Lost', 'Found'],
         required: true,
     },
     description: {

@@ -15,8 +15,8 @@ export default function Home() {
             {/*<Breadcrumb />*/}
             <Slideshow />
             <Map />
-            <SpottedStrayCard />
             <FeaturedStrays />
+            <SpottedStrayCard />
             <Footer />
         </div>
     )

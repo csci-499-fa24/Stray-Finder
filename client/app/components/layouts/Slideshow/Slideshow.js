@@ -9,7 +9,7 @@ const Slideshow = () => {
       className="carousel slide"
       data-bs-ride="carousel"
       style={{
-        width: "100vw",
+        width: "45%",
         margin: "0 auto", // Center the slideshow horizontally
       }}
     >
@@ -68,7 +68,9 @@ const Slideshow = () => {
           <div className="carousel-caption d-none d-md-block">
             <h5>Found a Stray?</h5>
             <p>Help bring pets home by reporting them.</p>
+            <Link href="/FoundPets">
             <button className="btn btn-success">Report Found Pet</button>
+            </Link>
           </div>
         </div>
       </div>

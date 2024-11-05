@@ -39,7 +39,7 @@ const createAnimalReport = async (req, res) => {
     try {
         const { name, species, breed, color, gender, fixed, collar, description, location, reportType, reportedBy } = req.body;
 
-        if (!name || !species || !location || !reportType || !reportedBy) {
+        if (!species || !location || !reportType || !reportedBy) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
@@ -48,9 +48,22 @@ const createAnimalReport = async (req, res) => {
             imageUrl = await uploadImage(req.file);
         }
 
-        const animalData = { name, species, breed, color, gender, fixed, collar, description, imageUrl };
-        const animal = new Animal(animalData);
-        await animal.save();
+        let animal;
+        if (reportType === 'Found') {
+            // For found reports, look for existing animal based on its characteristics
+            animal = await Animal.findOne({ species, breed, color, gender });
+            if (!animal) {
+                // If no existing animal is found, create a new one
+                const animalData = { name: name, species, breed, color, gender, fixed, collar, description, imageUrl };
+                animal = new Animal(animalData);
+                await animal.save();
+            }
+        } else {
+            // For Lost or Stray reports, create a new animal with the provided name
+            const animalData = { name, species, breed, color, gender, fixed, collar, description, imageUrl };
+            animal = new Animal(animalData);
+            await animal.save();
+        }
 
         if (imageUrl) {
             await createOrUpdateFeatureVector(animal._id, imageUrl);
