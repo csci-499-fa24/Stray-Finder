@@ -9,7 +9,7 @@ const Slideshow = () => {
       className="carousel slide"
       data-bs-ride="carousel"
       style={{
-        width: "45%",
+        width: "40%",
         margin: "0 auto", // Center the slideshow horizontally
       }}
     >

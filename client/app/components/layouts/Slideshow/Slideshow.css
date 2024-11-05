@@ -15,7 +15,7 @@
   padding: 15px 35x; /* adding some padding inside the box for spacing */
   color: white; /* setting the text color to white for contrast */
   text-align: center; /* aligning the text to the center */
-  width: 70%; /* making the width just enough to fit the text */
+  width: 60%; /* making the width just enough to fit the text */
   max-width: 300px;
   border-radius: 10px; /* softening the edges with rounded corners */
 }
