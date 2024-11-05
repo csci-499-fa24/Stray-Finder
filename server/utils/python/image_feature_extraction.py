@@ -9,27 +9,30 @@ import json
 import os
 
 # Define the path to the local weights file
-weights_path = os.path.join(os.path.dirname(__file__), "checkpoints", "resnet50-0676ba61.pth")
+weights_path = os.path.join(os.path.dirname(__file__), "checkpoints", "mobilenet_v2-b0353104.pth")
 
-# Load ResNet50 model with half precision
+# Load a lightweight MobileNetV2 model instead of ResNet50
 def load_model():
-    model = models.resnet50()
-    model = model.half()  # Set model to half precision
+    model = models.mobilenet_v2()
+    model = model.half()  # Use half precision to save memory
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     try:
         model.load_state_dict(torch.load(weights_path, map_location=device))
     except TypeError:
-        # If weights_only=True is not supported, load weights without it
         model.load_state_dict(torch.load(weights_path, map_location=device))
     model = model.to(device)
     model.eval()
     return model, device
 
-# Define the transformation for the model
+# Set optimized PyTorch settings if CUDA is available
+torch.backends.cudnn.benchmark = True
+torch.backends.cudnn.deterministic = True
+
+# Define a smaller transformation
 transform = transforms.Compose([
-    transforms.Resize((224, 224)),
+    transforms.Resize((160, 160)),  # Reduced image size
     transforms.ToTensor(),
-    transforms.Lambda(lambda x: x.half())  # Use half precision for input
+    transforms.Lambda(lambda x: x.half())  # Half precision
 ])
 
 # Function to load image from a URL
@@ -37,23 +40,20 @@ def get_image_from_url(url):
     response = requests.get(url, stream=True)
     response.raise_for_status()  # Check for download errors
     image = Image.open(io.BytesIO(response.content))
-
-    # Convert to RGB if the image has an alpha channel or is not in RGB mode
     if image.mode != 'RGB':
         image = image.convert('RGB')
-
     return image
 
 # Extract features from an image URL
 def get_features_from_url(url):
     model, device = load_model()
     image = get_image_from_url(url)
-    image = transform(image).unsqueeze(0).to(device)  # Move to device
+    image = transform(image).unsqueeze(0).to(device)
     with torch.inference_mode():
-        features = model(image).cpu().numpy()  # Move back to CPU before converting to NumPy
+        features = model(image).cpu().numpy()
     # Clean up model to free memory
     del model
-    torch.cuda.empty_cache()  # Clear GPU memory if using CUDA
+    torch.cuda.empty_cache()
     return features
 
 # Run the script from the command line
