@@ -2,24 +2,52 @@ const AnimalReport = require('../models/animalReport')
 const Animal = require('../models/animal')
 const uploadImage = require('../cloudinary/upload')
 const upload = require('../middleware/uploadMiddleware')
-// const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
+const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
 
-// GET: Retrieve list of animal reports
-const getAnimalReports = async (req, res) => {
-    try {
-        const { reportType, gender, species } = req.query
-        let query = {}
+/**
+ * @get     : Retrieves list of animal reports
+ * @route   : GET /api/animal-report
+ * @access  : public
+ * @description : 
+    to use filter, go to server/api/animal-reports?key=value&key=value
+    question mark to filter
+    keys are animal, reportType, reportedBy
+    if there are spaces in a value, use '+' as separator
 
-        if (reportType) query.reportType = reportType
-
-        let animalQuery = {}
-        if (gender) animalQuery.gender = gender
-        if (species) animalQuery.species = species
-
-        if (Object.keys(animalQuery).length > 0) {
-            const animals = await Animal.find(animalQuery).select('_id')
-            const animalIds = animals.map((animal) => animal._id)
-            query.animal = { $in: animalIds }
+ * @example /api/animal-reports?reportType=Lost&animal=634ebd8fdfad7fbc9c918b4a
+ */
+    
+    // Function to retrieve animal reports with filtering for gender, species, and report type
+    const getAnimalReports = async (req, res) => {
+        try {
+            const { reportType, gender, species, reportedBy } = req.query;
+            let query = {};
+    
+            // Filter by reportType (e.g., "Stray" or "Lost")
+            if (reportType) query.reportType = reportType;
+            if (reportedBy) query.reportedBy = reportedBy;
+    
+            // Animal-specific filters
+            let animalQuery = {};
+            if (gender) animalQuery.gender = gender;
+            if (species) animalQuery.species = species;
+    
+            // If there are animal-specific filters, find matching animal IDs
+            if (Object.keys(animalQuery).length > 0) {
+                const animals = await Animal.find(animalQuery).select('_id');
+                const animalIds = animals.map((animal) => animal._id);
+                query.animal = { $in: animalIds };
+            }
+    
+            // Execute the query with filters and populate animal and user references
+            const reports = await AnimalReport.find(query)
+                .populate('animal')
+                .populate('reportedBy')
+                .exec();
+    
+            res.status(200).json({ reports });
+        } catch (error) {
+            res.status(500).json({ message: 'Failed to fetch animal reports', error: error.message });
         }
 
         const reports = await AnimalReport.find(query)
