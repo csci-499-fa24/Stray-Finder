@@ -1,4 +1,3 @@
-import "./Map.css"
 import React, { useState, useEffect } from 'react';
 import {
     GoogleMap,
@@ -17,6 +16,49 @@ const center = {
     lng: -73.964,
 };
 
+// Helper function to create a circular icon with a fallback color if the image fails
+const createCircularIcon = (imageUrl, fallbackColor, callback) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = imageUrl;
+
+    img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const size = 60; // Adjusted size for better visibility
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        // Create a circular clip for the icon
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.clip();
+
+        // Draw the image within the circular region
+        ctx.drawImage(img, 0, 0, size, size);
+
+        callback(canvas.toDataURL());
+    };
+
+    img.onerror = () => {
+        // Draw a colored circle as a fallback if the image fails to load
+        const canvas = document.createElement('canvas');
+        const size = 60;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.fillStyle = fallbackColor;
+        ctx.fill();
+
+        callback(canvas.toDataURL());
+    };
+};
+
 const Map = () => {
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
@@ -25,22 +67,39 @@ const Map = () => {
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedReport, setSelectedReport] = useState(null);
+    const [iconUrls, setIconUrls] = useState({});
     const [filters, setFilters] = useState({
         gender: '',
         species: '',
         reportType: ''
     });
 
-    // Function to fetch reports with selected filters
     const fetchReports = async () => {
         try {
-            // Construct query string based on selected filters
             const queryParams = new URLSearchParams(filters);
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?${queryParams}`
             );
             const data = await response.json();
-            setReports(data.reports);
+
+            const strayReports = data.reports.filter(
+                (report) => report.reportType === 'Stray' || !filters.reportType
+            );
+
+            setReports(strayReports);
+
+            strayReports.forEach((report) => {
+                const fallbackColor = report.reportType === 'Stray' ? '#ff8c00' : '#ff0000'; // Orange for Stray, Red for Lost
+                createCircularIcon(report.animal.imageUrl, fallbackColor, (iconUrl) => {
+                    if (iconUrl) {
+                        setIconUrls((prev) => ({
+                            ...prev,
+                            [report._id]: iconUrl,
+                        }));
+                    }
+                });
+            });
+
             setLoading(false);
         } catch (error) {
             console.error('Failed to fetch reports', error);
@@ -48,7 +107,6 @@ const Map = () => {
         }
     };
 
-    // Fetch reports on initial load and when filters change
     useEffect(() => {
         fetchReports();
     }, [filters]);
@@ -62,51 +120,79 @@ const Map = () => {
 
     return (
         <>
-            {/* Filter Form */}
-            <div>
+            <div className="filter-container">
                 <h3>Filter Reports</h3>
                 
-                <select name="gender" value={filters.gender} onChange={handleFilterChange}>
+                <select
+                    name="gender"
+                    className="filter-dropdown"
+                    value={filters.gender}
+                    onChange={handleFilterChange}
+                >
                     <option value="">All Genders</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                 </select>
 
-                <select name="species" value={filters.species} onChange={handleFilterChange}>
+                <select
+                    name="species"
+                    className="filter-dropdown"
+                    value={filters.species}
+                    onChange={handleFilterChange}
+                >
                     <option value="">All Species</option>
                     <option value="Dog">Dog</option>
                     <option value="Cat">Cat</option>
-                    {/* Add more species options as needed */}
                 </select>
 
-                <select name="reportType" value={filters.reportType} onChange={handleFilterChange}>
+                <select
+                    name="reportType"
+                    className="filter-dropdown"
+                    value={filters.reportType}
+                    onChange={handleFilterChange}
+                >
                     <option value="">All Reports</option>
                     <option value="Stray">Stray</option>
                     <option value="Lost">Lost</option>
                 </select>
-                
             </div>
 
             <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
-                {reports.map((report) => {
-                    const { location } = report;
+                {Array.isArray(reports) && reports.length > 0 ? (
+                    reports.map((report) => {
+                        const { location } = report;
 
-                    if (location && location.coordinates && Array.isArray(location.coordinates.coordinates)) {
-                        const [lng, lat] = location.coordinates.coordinates;
+                        if (
+                            location &&
+                            location.coordinates &&
+                            Array.isArray(location.coordinates.coordinates) &&
+                            location.coordinates.coordinates.length === 2
+                        ) {
+                            const [lng, lat] = location.coordinates.coordinates;
+                            const iconUrl = iconUrls[report._id];
 
-                        return (
-                            <Marker
-                                key={report._id}
-                                position={{
-                                    lat: lat,
-                                    lng: lng,
-                                }}
-                                onClick={() => setSelectedReport(report)}
-                            />
-                        );
-                    }
-                    return null;
-                })}
+                            // Configure marker icon
+                            const iconConfig = iconUrl
+                                ? {
+                                      url: iconUrl,
+                                      scaledSize: new window.google.maps.Size(50, 50),
+                                  }
+                                : undefined;
+
+                            return (
+                                <Marker
+                                    key={report._id}
+                                    position={{ lat, lng }}
+                                    icon={iconConfig}
+                                    onClick={() => setSelectedReport(report)}
+                                />
+                            );
+                        }
+                        return null;
+                    })
+                ) : (
+                    <p>No stray reports available</p>
+                )}
 
                 {selectedReport && (
                     <InfoWindow
@@ -116,9 +202,17 @@ const Map = () => {
                         }}
                         onCloseClick={() => setSelectedReport(null)}
                     >
-                        <div>
+                        <div className="info-window">
                             <h3>{selectedReport.animal.name} ({selectedReport.animal.species})</h3>
-                            <img src={selectedReport.animal.imageUrl} alt={selectedReport.animal.name} style={{ width: '150px', height: '150px', borderRadius: '50%' }} />
+                            <img
+                                src={selectedReport.animal.imageUrl}
+                                alt={selectedReport.animal.name}
+                                style={{
+                                    width: '150px',
+                                    height: '150px',
+                                    borderRadius: '50%',
+                                }}
+                            />
                             <p>Breed: {selectedReport.animal.breed}</p>
                             <p>Color: {selectedReport.animal.color}</p>
                             <p>Gender: {selectedReport.animal.gender}</p>
