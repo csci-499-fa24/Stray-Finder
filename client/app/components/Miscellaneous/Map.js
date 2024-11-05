@@ -16,7 +16,7 @@ const center = {
     lng: -73.964,
 };
 
-// Helper function to create a circular icon with a fallback color if the image fails
+// Function to create a circular icon, with fallback color if the image fails to load
 const createCircularIcon = (imageUrl, fallbackColor, callback) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -24,7 +24,7 @@ const createCircularIcon = (imageUrl, fallbackColor, callback) => {
 
     img.onload = () => {
         const canvas = document.createElement('canvas');
-        const size = 60; // Adjusted size for better visibility
+        const size = 50; 
         canvas.width = size;
         canvas.height = size;
         const ctx = canvas.getContext('2d');
@@ -44,7 +44,7 @@ const createCircularIcon = (imageUrl, fallbackColor, callback) => {
     img.onerror = () => {
         // Draw a colored circle as a fallback if the image fails to load
         const canvas = document.createElement('canvas');
-        const size = 60;
+        const size = 50;
         canvas.width = size;
         canvas.height = size;
         const ctx = canvas.getContext('2d');
@@ -81,15 +81,27 @@ const Map = () => {
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?${queryParams}`
             );
             const data = await response.json();
+            setReports(data.reports);
+            setLoading(false);
+        } catch (error) {
+            console.error('Failed to fetch reports', error);
+            setLoading(false);
+        }
+    };
 
-            const strayReports = data.reports.filter(
-                (report) => report.reportType === 'Stray' || !filters.reportType
-            );
+    // Fetch reports on initial load and when filters change
+    useEffect(() => {
+        fetchReports();
+    }, [filters]);
 
-            setReports(strayReports);
-
-            strayReports.forEach((report) => {
-                const fallbackColor = report.reportType === 'Stray' ? '#ff8c00' : '#ff0000'; // Orange for Stray, Red for Lost
+    // Loop through reports and create icons when reports are fetched
+    useEffect(() => {
+        if (reports.length > 0) {
+            reports.forEach((report) => {
+                // Define fallback color based on report type
+                const fallbackColor = report.reportType === 'Stray' ? '#00ff00' : '#ff0000'; // Green for Stray, Red for Lost
+                
+                // Create the circular icon using the fallback color
                 createCircularIcon(report.animal.imageUrl, fallbackColor, (iconUrl) => {
                     if (iconUrl) {
                         setIconUrls((prev) => ({
@@ -99,17 +111,8 @@ const Map = () => {
                     }
                 });
             });
-
-            setLoading(false);
-        } catch (error) {
-            console.error('Failed to fetch reports', error);
-            setLoading(false);
         }
-    };
-
-    useEffect(() => {
-        fetchReports();
-    }, [filters]);
+    }, [reports]);
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -171,7 +174,6 @@ const Map = () => {
                             const [lng, lat] = location.coordinates.coordinates;
                             const iconUrl = iconUrls[report._id];
 
-                            // Configure marker icon
                             const iconConfig = iconUrl
                                 ? {
                                       url: iconUrl,

@@ -18,21 +18,40 @@ const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
 
  * @example /api/animal-reports?reportType=Lost&animal=634ebd8fdfad7fbc9c918b4a
  */
-const getAnimalReports = async (req, res) => {
-    try {
-        const { animal, reportType, reportedBy } = req.query;
-        let query = {};
-        const fields = { animal, reportType, reportedBy };
-        Object.keys(fields).forEach((key) => {
-            if (fields[key]) query[key] = fields[key].trim();
-        });
-
-        const reports = await AnimalReport.find(query).populate('animal').populate('reportedBy').exec();
-        res.status(200).json({ reports });
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to fetch animal reports', error: error.message });
-    }
-};
+    
+    // Function to retrieve animal reports with filtering for gender, species, and report type
+    const getAnimalReports = async (req, res) => {
+        try {
+            const { reportType, gender, species } = req.query;
+            let query = {};
+    
+            // Filter by reportType (e.g., "Stray" or "Lost")
+            if (reportType) query.reportType = reportType;
+    
+            // Animal-specific filters
+            let animalQuery = {};
+            if (gender) animalQuery.gender = gender;
+            if (species) animalQuery.species = species;
+    
+            // If there are animal-specific filters, find matching animal IDs
+            if (Object.keys(animalQuery).length > 0) {
+                const animals = await Animal.find(animalQuery).select('_id');
+                const animalIds = animals.map((animal) => animal._id);
+                query.animal = { $in: animalIds };
+            }
+    
+            // Execute the query with filters and populate animal and user references
+            const reports = await AnimalReport.find(query)
+                .populate('animal')
+                .populate('reportedBy')
+                .exec();
+    
+            res.status(200).json({ reports });
+        } catch (error) {
+            res.status(500).json({ message: 'Failed to fetch animal reports', error: error.message });
+        }
+    };
+    
 
 // POST: Creates a new animal report
 const createAnimalReport = async (req, res) => {
