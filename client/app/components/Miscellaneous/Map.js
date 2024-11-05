@@ -1,3 +1,4 @@
+import "./Map.css"
 import React, { useState, useEffect } from 'react';
 import {
     GoogleMap,
@@ -84,7 +85,6 @@ const Map = () => {
                     <option value="Lost">Lost</option>
                 </select>
                 
-                <button onClick={fetchReports}>Apply Filters</button>
             </div>
 
             <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
