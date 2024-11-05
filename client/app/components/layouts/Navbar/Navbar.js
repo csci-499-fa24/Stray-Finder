@@ -88,7 +88,7 @@ const Navbar = () => {
                                   <li>
                                       <Link
                                           className="dropdown-item"
-                                          href="/report-lost"
+                                          href="/reportAnimal"
                                       >
                                           Report Lost
                                       </Link>
@@ -104,7 +104,7 @@ const Navbar = () => {
                                   <li>
                                       <Link
                                           className="dropdown-item"
-                                          href="/report-stray"
+                                          href="/reportAnimal"
                                       >
                                           Report Stray
                                       </Link>

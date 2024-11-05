@@ -101,9 +101,16 @@ const ReportAnimal = () => {
     }, [isAuthenticated, locationAsked, router]);
 
     if (isAuthenticated === null) {
-        return <div className="spinner-border text-primary" role="status">
-        <span className="sr-only"> </span>
-      </div>; // Show loading while auth status is unknown
+        return (
+            <div
+                className="d-flex justify-content-center align-items-center vh-100"
+                style={{ marginTop: "-50px" }} // Adjust as needed for vertical alignment
+            >
+                <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only"></span>
+                </div>
+            </div>
+        );
     }
 
     if (isAuthenticated === false) {
