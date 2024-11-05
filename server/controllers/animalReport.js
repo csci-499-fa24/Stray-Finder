@@ -1,7 +1,5 @@
 const AnimalReport = require('../models/animalReport')
 const Animal = require('../models/animal')
-const FeatureVector = require('../models/FeatureVector')
-const User = require('../models/user')
 const uploadImage = require('../cloudinary/upload')
 const upload = require('../middleware/uploadMiddleware')
 const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
@@ -51,48 +49,96 @@ const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
         } catch (error) {
             res.status(500).json({ message: 'Failed to fetch animal reports', error: error.message });
         }
-    };
-    
+
+        const reports = await AnimalReport.find(query)
+            .populate('animal')
+            .populate('reportedBy')
+            .exec()
+
+        res.status(200).json({ reports })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Failed to fetch animal reports',
+            error: error.message,
+        })
+    }
+}
 
 // POST: Creates a new animal report
 const createAnimalReport = async (req, res) => {
     try {
-        const { name, species, breed, color, gender, fixed, collar, description, location, reportType, reportedBy } = req.body;
+        const {
+            name,
+            species,
+            breed,
+            color,
+            gender,
+            fixed,
+            collar,
+            description,
+            location,
+            reportType,
+            reportedBy,
+        } = req.body
 
         if (!species || !location || !reportType || !reportedBy) {
-            return res.status(400).json({ message: 'Missing required fields' });
+            return res.status(400).json({ message: 'Missing required fields' })
         }
 
-        let parsedLocation;
+        let parsedLocation
         try {
-            parsedLocation = JSON.parse(location);
+            parsedLocation = JSON.parse(location)
         } catch (jsonError) {
-            return res.status(400).json({ message: 'Invalid location format', error: jsonError.message });
+            return res
+                .status(400)
+                .json({
+                    message: 'Invalid location format',
+                    error: jsonError.message,
+                })
         }
 
-        let imageUrl = null;
+        let imageUrl = null
         if (req.file) {
-            imageUrl = await uploadImage(req.file);
+            imageUrl = await uploadImage(req.file)
         }
 
-        let animal;
+        let animal
         if (reportType === 'Found') {
-            animal = await Animal.findOne({ species, breed, color, gender });
-            console.log('Searching for existing animal with:', { species, breed, color, gender });
+            animal = await Animal.findOne({ species, breed, color, gender })
             if (!animal) {
-                const animalData = { name, species, breed, color, gender, fixed, collar, description, imageUrl };
-                animal = new Animal(animalData);
-                await animal.save();
+                const animalData = {
+                    name,
+                    species,
+                    breed,
+                    color,
+                    gender,
+                    fixed,
+                    collar,
+                    description,
+                    imageUrl,
+                }
+                animal = new Animal(animalData)
+                await animal.save()
             }
         } else {
-            const animalData = { name, species, breed, color, gender, fixed, collar, description, imageUrl };
-            animal = new Animal(animalData);
-            await animal.save();
+            const animalData = {
+                name,
+                species,
+                breed,
+                color,
+                gender,
+                fixed,
+                collar,
+                description,
+                imageUrl,
+            }
+            animal = new Animal(animalData)
+            await animal.save()
         }
 
-        if (imageUrl) {
-            await createOrUpdateFeatureVector(animal._id, imageUrl);
-        }
+        // if (imageUrl) {
+        //     await createOrUpdateFeatureVector(animal._id, imageUrl);
+        // }
 
         const reportData = {
             animal: animal._id,
@@ -100,22 +146,24 @@ const createAnimalReport = async (req, res) => {
             reportType,
             description,
             reportedBy,
-        };
-        const animalReport = new AnimalReport(reportData);
-        await animalReport.save();
+        }
+        const animalReport = new AnimalReport(reportData)
+        await animalReport.save()
 
-        res.status(201).json({ message: 'Animal report created successfully', report: animalReport });
+        res.status(201).json({
+            message: 'Animal report created successfully',
+            report: animalReport,
+        })
     } catch (error) {
-        console.error('Error creating animal report:', error);
-        res.status(500).json({ message: 'Failed to create animal report', error });
+        console.error('Error creating animal report:', error)
+        res.status(500).json({
+            message: 'Failed to create animal report',
+            error,
+        })
     }
-};
+}
 
-/**
- * @get     : Retrieves a specific animal report by ID
- * @route   : GET /api/animal-report/:id
- * @access  : public
- */
+// GET: Retrieves a specific animal report by ID
 const getAnimalReportById = async (req, res) => {
     try {
         const { id } = req.params
@@ -137,11 +185,8 @@ const getAnimalReportById = async (req, res) => {
     }
 }
 
-/**
- * @put     : Updates an animal report by ID
- * @route   : PUT /api/animal-report/:id
- * @access  : public
- */
+
+// PUT: Updates an animal report by ID
 const updateAnimalReport = async (req, res) => {
     try {
         const { id } = req.params
@@ -156,10 +201,10 @@ const updateAnimalReport = async (req, res) => {
         if (!report)
             return res.status(404).json({ message: 'Animal report not found' })
 
-        if (imageUrl) {
-            await createOrUpdateFeatureVector(report.animal._id, imageUrl)
-            await Animal.findByIdAndUpdate(report.animal._id, { imageUrl })
-        }
+        // if (imageUrl) {
+        //     await createOrUpdateFeatureVector(report.animal._id, imageUrl)
+        //     await Animal.findByIdAndUpdate(report.animal._id, { imageUrl })
+        // }
 
         const updatedReport = await AnimalReport.findByIdAndUpdate(
             id,
@@ -179,39 +224,35 @@ const updateAnimalReport = async (req, res) => {
 // DELETE: Deletes an animal report by ID
 const deleteAnimalReport = async (req, res) => {
     try {
-        const { id } = req.params;
-        
-        // Find the report to be deleted
-        const deletedReport = await AnimalReport.findByIdAndDelete(id);
-        
+        const { id } = req.params
+
+        const deletedReport = await AnimalReport.findByIdAndDelete(id)
+
         if (!deletedReport) {
-            return res.status(404).json({ message: 'Animal report not found' });
+            return res.status(404).json({ message: 'Animal report not found' })
         }
 
-        const animalId = deletedReport.animal;
+        const animalId = deletedReport.animal
 
-        // Check if this animal is referenced in any other reports
-        const otherReports = await AnimalReport.find({ animal: animalId });
-        
-        // If there are no other reports referencing this animal, delete the animal
+        const otherReports = await AnimalReport.find({ animal: animalId })
+
         if (otherReports.length === 0) {
-            await Animal.findByIdAndDelete(animalId);
-            await FeatureVector.findOneAndDelete({ animalId });
+            await Animal.findByIdAndDelete(animalId)
+            // await FeatureVector.findOneAndDelete({ animalId });
         }
 
         res.status(200).json({
             message: 'Animal report deleted successfully',
             report: deletedReport,
-        });
+        })
     } catch (error) {
-        console.error('Error deleting animal report:', error.message);
+        console.error('Error deleting animal report:', error.message)
         res.status(500).json({
             message: 'Failed to delete animal report',
             error: error.message,
-        });
+        })
     }
-};
-
+}
 
 module.exports = {
     getAnimalReports,
