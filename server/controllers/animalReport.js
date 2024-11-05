@@ -22,11 +22,12 @@ const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
     // Function to retrieve animal reports with filtering for gender, species, and report type
     const getAnimalReports = async (req, res) => {
         try {
-            const { reportType, gender, species } = req.query;
+            const { reportType, gender, species, reportedBy } = req.query;
             let query = {};
     
             // Filter by reportType (e.g., "Stray" or "Lost")
             if (reportType) query.reportType = reportType;
+            if (reportedBy) query.reportedBy = reportedBy; // Add reportedBy back into query
     
             // Animal-specific filters
             let animalQuery = {};
@@ -51,6 +52,7 @@ const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
             res.status(500).json({ message: 'Failed to fetch animal reports', error: error.message });
         }
     };
+    
     
 
 // POST: Creates a new animal report
