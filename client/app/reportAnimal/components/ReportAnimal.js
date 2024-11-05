@@ -167,20 +167,23 @@ const ReportAnimal = () => {
         setLoading(true);
         setError('');
     
-        // Calculate and check the distance before submitting (Newly Added Code)
-        const userLat = userLocation.lat;
-        const userLng = userLocation.lng;
-        const reportLat = formData.coordinates.lat;
-        const reportLng = formData.coordinates.lng;
+        // Check if user's location is available before calculating distance
+        if (userLocation) {
+            const userLat = userLocation.lat;
+            const userLng = userLocation.lng;
+            const reportLat = formData.coordinates.lat;
+            const reportLng = formData.coordinates.lng;
     
-        const distance = calculateDistance(userLat, userLng, reportLat, reportLng); // Newly Added Line
+            const distance = calculateDistance(userLat, userLng, reportLat, reportLng);
     
-        if (distance > MAX_DISTANCE_MILES) {
-            const errorMessage = `Reports are only allowed within ${MAX_DISTANCE_MILES} miles of your location.`;
-            setError(errorMessage);
-            toast.error(errorMessage); // Toast notification for error
-            setLoading(false);
-            return;
+            // Only check distance if user location is available
+            if (distance > MAX_DISTANCE_MILES) {
+                const errorMessage = `Reports are only allowed within ${MAX_DISTANCE_MILES} miles of your location.`;
+                setError(errorMessage);
+                toast.error(errorMessage); // Toast notification for error
+                setLoading(false);
+                return;
+            }
         }
     
         // Prepare FormData for the image and other form data
@@ -241,7 +244,8 @@ const ReportAnimal = () => {
             setLoading(false);
         }
     };
-
+    
+    // Function to calculate distance between two coordinates
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
         const R = 3959; // Radius of the Earth in miles
         const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -256,6 +260,7 @@ const ReportAnimal = () => {
         const distance = R * c; // Distance in miles
         return distance;
     };
+    
     
 
     const handleMapClick = (event) => {
