@@ -17,6 +17,17 @@ const center = {
     lng: -73.964,
 };
 
+// Dog and Cat breed options
+const dogBreeds = [
+    "Labrador Retriever", "German Shepherd", "Golden Retriever", "Bulldog", 
+    "Beagle", "Poodle", "Rottweiler", "Yorkshire Terrier", "Dachshund", "Boxer"
+];
+const catBreeds = [
+    "Persian", "Maine Coon", "Siamese", "Ragdoll", "Bengal", 
+    "Sphynx", "British Shorthair"
+];
+
+
 // Function to create a circular icon, with fallback color if the image fails to load
 const createCircularIcon = (imageUrl, fallbackColor, callback) => {
     const img = new Image();
@@ -72,7 +83,10 @@ const Map = () => {
     const [filters, setFilters] = useState({
         gender: '',
         species: '',
-        reportType: ''
+        reportType: '',
+        fixed: '',
+        collar: '',
+        breed: ''
     });
 
     const fetchReports = async () => {
@@ -97,7 +111,7 @@ const Map = () => {
 
     // Loop through reports and create icons when reports are fetched
     useEffect(() => {
-        if (reports.length > 0) {
+        if (Array.isArray(reports) && reports.length > 0) { // Check if reports is an array and has items
             reports.forEach((report) => {
                 // Define fallback color based on report type
                 const fallbackColor = report.reportType === 'Stray' ? '#00ff00' : '#ff0000'; // Green for Stray, Red for Lost
@@ -120,48 +134,54 @@ const Map = () => {
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Show a loading message until the reports are fetched
-    if (!isLoaded || loading) return <div className="spinner-border text-primary" role="status">
-    <span className="sr-only"></span>
-    </div>
+    const breedOptions = filters.species === 'Dog' ? dogBreeds : filters.species === 'Cat' ? catBreeds : [];
+
+    if (!isLoaded || loading) return <div>Loading reports and map...</div>;
 
     return (
         <>
             <div className="filter-container">
                 <h3>Filter Reports:</h3>
                 
-                <select
-                    name="gender"
-                    className="filter-dropdown"
-                    value={filters.gender}
-                    onChange={handleFilterChange}
-                >
+                <select name="gender" className="filter-dropdown" value={filters.gender} onChange={handleFilterChange}>
                     <option value="">All Genders</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                 </select>
 
-                <select
-                    name="species"
-                    className="filter-dropdown"
-                    value={filters.species}
-                    onChange={handleFilterChange}
-                >
+                <select name="species" className="filter-dropdown" value={filters.species} onChange={handleFilterChange}>
                     <option value="">All Species</option>
                     <option value="Dog">Dog</option>
                     <option value="Cat">Cat</option>
                 </select>
 
-                <select
-                    name="reportType"
-                    className="filter-dropdown"
-                    value={filters.reportType}
-                    onChange={handleFilterChange}
-                >
+                <select name="reportType" className="filter-dropdown" value={filters.reportType} onChange={handleFilterChange}>
                     <option value="">All Reports</option>
                     <option value="Stray">Stray</option>
                     <option value="Lost">Lost</option>
                 </select>
+
+                <select name="fixed" className="filter-dropdown" value={filters.fixed} onChange={handleFilterChange}>
+                    <option value="">Fixed Status</option>
+                    <option value="Yes">Fixed</option>
+                    <option value="No">Not Fixed</option>
+                </select>
+
+                <select name="collar" className="filter-dropdown" value={filters.collar} onChange={handleFilterChange}>
+                    <option value="">Collar Status </option>
+                    <option value="true">Has Collar</option>
+                    <option value="false">Doesn't Have Collar</option>
+                </select>
+
+                {/* Render the breed dropdown only if species is selected */}
+                {filters.species && (
+                    <select name="breed" className="filter-dropdown" value={filters.breed} onChange={handleFilterChange}>
+                        <option value="">All Breeds</option>
+                        {breedOptions.map((breed) => (
+                            <option key={breed} value={breed}>{breed}</option>
+                        ))}
+                    </select>
+                )}
             </div>
 
             <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
@@ -223,6 +243,11 @@ const Map = () => {
                             <p>Color: {selectedReport.animal.color}</p>
                             <p>Gender: {selectedReport.animal.gender}</p>
                             <p>Report Type: {selectedReport.reportType}</p>
+
+                            <p>Fixed Status: {selectedReport.animal.fixed}</p>
+
+                            <p>Collar: {selectedReport.animal.collar ? "Yes" : "No"}</p> {/* Handle Boolean display */}
+
                             <p>Date Reported: {new Date(selectedReport.dateReported).toLocaleDateString()}</p>
                             <p>Address: {selectedReport.location.address || 'Address not provided'}</p>
                         </div>

@@ -22,17 +22,38 @@ const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
     // Function to retrieve animal reports with filtering for gender, species, and report type
     const getAnimalReports = async (req, res) => {
         try {
-            const { reportType, gender, species, reportedBy } = req.query;
+            const { reportType, gender, species, reportedBy, fixed, collar, breed } = req.query;
             let query = {};
     
             // Filter by reportType (e.g., "Stray" or "Lost")
             if (reportType) query.reportType = reportType;
-            if (reportedBy) query.reportedBy = reportedBy; // Add reportedBy back into query
+            if (reportedBy) query.reportedBy = reportedBy; // Include reportedBy filter
     
             // Animal-specific filters
             let animalQuery = {};
             if (gender) animalQuery.gender = gender;
             if (species) animalQuery.species = species;
+            if (fixed) animalQuery.fixed = fixed;
+            if (collar) animalQuery.collar = collar === 'true'; // Convert collar to boolean if passed as string
+    
+            // Filter by breed based on species
+            const dogBreeds = [
+                "Labrador Retriever", "German Shepherd", "Golden Retriever", "Bulldog", 
+                "Beagle", "Poodle", "Rottweiler", "Yorkshire Terrier", "Dachshund", "Boxer"
+            ];
+            const catBreeds = [
+                "Persian", "Maine Coon", "Siamese", "Ragdoll", "Bengal", 
+                "Sphynx", "British Shorthair"
+            ];
+            
+            // Check breed against specified options if species is set
+            if (breed) {
+                if (species === 'Dog' && dogBreeds.includes(breed)) {
+                    animalQuery.breed = breed;
+                } else if (species === 'Cat' && catBreeds.includes(breed)) {
+                    animalQuery.breed = breed;
+                }
+            }
     
             // If there are animal-specific filters, find matching animal IDs
             if (Object.keys(animalQuery).length > 0) {
@@ -52,7 +73,6 @@ const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
             res.status(500).json({ message: 'Failed to fetch animal reports', error: error.message });
         }
     };
-    
     
 
 // POST: Creates a new animal report

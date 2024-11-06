@@ -39,7 +39,7 @@ const FeaturedStrays = () => {
                 )
                 const data = await response.json()
 
-                const filteredReports = data.reports.filter((report) => {
+                /*const filteredReports = data.reports.filter((report) => {
                     const { species, gender, name } = debouncedFilters;
                     const animal = report.animal;
 
@@ -48,7 +48,25 @@ const FeaturedStrays = () => {
                         (!gender || animal.gender) &&
                         (!name || animal.name.toLowerCase().includes(name.toLowerCase()))
                     );
-                });
+                }); 
+                    This is the old filtered reports function, in case theres an issue and you want to simply put it back
+                */
+
+                const filteredReports = Array.isArray(data.reports)
+                    ? data.reports.filter((report) => {
+                          const { species, gender, name } = debouncedFilters;
+                          const animal = report.animal || {};
+
+                          return (
+                              (!species || animal.species === species) &&
+                              (!gender || animal.gender === gender) &&
+                              (!name ||
+                                  animal.name
+                                      ?.toLowerCase()
+                                      .includes(name.toLowerCase()))
+                          );
+                      })
+                    : [];
 
 
                 setReports(filteredReports || []) // Fallback to empty array if `animals` is undefined
