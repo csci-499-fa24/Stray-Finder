@@ -13,7 +13,7 @@ export default function Home() {
         <div>
             <Navbar />
             {/*<Breadcrumb />*/}
-            <Slideshow />
+            {/* <Slideshow /> */}
             <Map />
             <FeaturedStrays />
             <SpottedStrayCard />
