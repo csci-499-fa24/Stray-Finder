@@ -1,48 +1,80 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap");
-
-.navbar.custom-navbar {
-  background-color: #6a0dad;
-  width: 100vw;
+html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
-.custom-navbar .navbar-brand {
-  text-decoration: none;
-  padding: 0 1rem;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  min-width: max-content;
-}
-.brand-container {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-.custom-navbar .brand-text {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: white;
-  letter-spacing: 2px;
-}
-
-.custom-navbar .navbar-collapse {
+.custom-navbar {
+  background-color: #6a0dad;
+  padding: 10px;
+  color: white !important;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  box-sizing: border-box;
+  position: relative;
 }
 
-.custom-navbar .navbar-nav {
+.custom-navbar .navbar-brand {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  width: auto;
+  flex-grow: 1;
+}
+
+.brand-text {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.navbar-brand .me-2 {
+  width: 50px;
+  height: 50px;
+}
+
+@media (min-width: 768px) {
+  .brand-text {
+      font-size: 1.75rem;
+  }
+  .navbar-brand .me-2 {
+      width: 75px;
+      height: 75px;
+  }
+}
+
+@media (min-width: 992px) {
+  .brand-text {
+      font-size: 2rem;
+  } 
+  .navbar-brand .me-2 {
+      width: 100px;
+      height: 100px;
+  }
+}
+
+.login-button, .logout-button {
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: solid;
+  border-radius: 2px !important;
+  border-color: white;
+}
+
+.login-button:hover, .logout-button:hover {
+  background-color: #8a2be2;
+  color: white;
+  transform: scale(0.95);
+  border: solid;
+  border-radius: 2px !important;
+  border-color: white;
 }
 
 .custom-navbar .nav-link-custom {
@@ -57,6 +89,7 @@
   justify-content: center;
   white-space: nowrap;
 }
+
 .custom-navbar .nav-link-custom:hover,
 .custom-navbar .nav-link-custom:focus {
   background-color: #8a2be2;
@@ -64,102 +97,9 @@
   transform: scale(0.95);
 }
 
-.custom-navbar .dropdown-menu {
-  background-color: #6a0dad;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  z-index: 1000;
-}
-.custom-navbar .dropdown-item {
-  color: white;
-  font-family: "Montserrat", sans-serif;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-size: 1.1rem;
-  text-align: center;
-}
-.custom-navbar .dropdown-item:hover,
-.custom-navbar .dropdown-item:focus {
-  background-color: #8a2be2;
-  color: white;
-  transform: scale(0.95);
-}
-
-.profile .dropdown-menu {
-  background-color: white;
-  position: absolute;
-  left: -30px;
-  top: 100%;
-  min-width: 150px;
-  max-width: 200px;
-  border: 1px solid rgba(106, 13, 173, 0.1);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-.profile .dropdown-item {
-  color: #6a0dad;
-  font-size: 0.9rem;
-  text-align: left;
-  background-color: white;
-}
-.profile .dropdown-item:hover,
-.profile .dropdown-item:focus {
-  background-color: #f8f4ff;
-  color: #6a0dad;
-  transform: none;
-}
-
-.nav-item.dropdown .dropdown-menu {
-  background-color: white;
-  position: absolute;
-  min-width: 150px;
-  max-width: 200px;
-  border: 1px solid rgba(106, 13, 173, 0.1);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-.nav-item.dropdown .dropdown-item {
-  color: #6a0dad;
-  font-size: 0.9rem;
-  text-align: left;
-  background-color: white;
-}
-.nav-item.dropdown .dropdown-item:hover,
-.nav-item.dropdown .dropdown-item:focus {
-  background-color: #f8f4ff;
-  color: #6a0dad;
-  transform: none;
-}
-
-.custom-navbar .login-button {
-  color: white;
-  font-family: "Montserrat", sans-serif;
-  text-decoration: none;
-  border: 2px solid white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 25px;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  font-size: 1.1rem;
-  white-space: nowrap;
-  margin-right: 1rem;
-}
-.custom-navbar .login-button:hover {
-  background-color: white;
-  color: #6a0dad;
-}
-.custom-navbar .navbar-toggler {
-  border-color: white;
-  margin-right: 1rem;
-}
-.custom-navbar .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-.center-item {
+.navbar-collapse {
   display: flex;
-  margin-right: 200px;
-}
-.login,
-.profile {
-  margin-right: 30px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
