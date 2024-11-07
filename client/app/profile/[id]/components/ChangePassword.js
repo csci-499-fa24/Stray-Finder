@@ -36,32 +36,41 @@ const ChangePassword = ({isOpen, onClose}) => {
         
         if (formData.newPassword !== formData.verifyNewPassword) {
             setErrorMessage("New passwords do not match.");
+            setSuccessMessage(''); // Clear success message
             return;
         }
+
+        if(formData.currentPassword == formData.newPassword){
+            setErrorMessage("New passwords and Old password cannot be the same.");
+            setSuccessMessage(''); // Clear success message
+            return;
+        }
+        
         try {
             const requestOptions = {
                 method: 'PUT',
                 body: JSON.stringify(formData),
                 headers: {
-                    'Content-Type': 'application/json', // Set content type
+                    'Content-Type': 'application/json',
                 },
                 credentials: 'include',
             };
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user`,
-                requestOptions
-            );
-            setSuccessMessage(response.data.message);
-            setErrorMessage('');
-
-            alert("Profile updated successfully");
-            window.location.reload();
-        } catch (error) {
-            // Handle error
-            if (error.response && error.response.data) {
-                setErrorMessage(error.response.data.message);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user`, requestOptions);
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                setSuccessMessage(data.message || "Profile updated successfully.");
+                setErrorMessage('');
+                // alert("Profile updated successfully");
+                window.location.reload();
             } else {
-                setErrorMessage("An error occurred while updating the password.");
+                setErrorMessage(data.message || "An error occurred.");
+                setSuccessMessage(''); // Clear success message
             }
+        } catch (error) {
+            setErrorMessage("An error occurred while updating the password.");
+            setSuccessMessage(''); // Clear success message
         }
     };
 
@@ -115,6 +124,8 @@ const ChangePassword = ({isOpen, onClose}) => {
                         </div>
                     </form>
                 </div>
+                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             </Modal>
         </div>
     );
