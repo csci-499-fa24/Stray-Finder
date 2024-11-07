@@ -8,6 +8,7 @@ const {
     getAnimalReportById,
     updateAnimalReport,
     deleteAnimalReport,
+    getAnimalReportByUserId,
 } = require('../controllers/animalReport')
 
 router
@@ -20,5 +21,9 @@ router
     .get(getAnimalReportById)
     .put(authenticate, upload.single('image'), updateAnimalReport)
     .delete(authenticate, deleteAnimalReport)
+
+// router
+//     .route('/UserID/:id')
+//     .get(getAnimalReportByUserId)
 
 module.exports = router

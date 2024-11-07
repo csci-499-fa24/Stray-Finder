@@ -24,7 +24,8 @@ const UserProfile = ({ id }) => {
                 if (!response1.ok) {
                     throw new Error('User not found');
                 }
-                const response2 = await fetch (`${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?reportedBy=${id}`)
+                const response2 = await fetch (`${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?userId=${id}`)
+                console.log("Owner ID: ", id);
                 const reports = await response2.json();
                 if (!response2.ok) {
                     throw new Error('error fetching animal reports');

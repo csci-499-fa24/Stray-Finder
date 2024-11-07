@@ -2,16 +2,24 @@ const AnimalReport = require('../models/animalReport')
 const Animal = require('../models/animal')
 const uploadImage = require('../cloudinary/upload')
 const upload = require('../middleware/uploadMiddleware')
+const User = require('../models/User');
 // const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
 
 // GET: Retrieve list of animal reports
 const getAnimalReports = async (req, res) => {
     try {
-        const { reportType, gender, species } = req.query
+        const { reportType, gender, species, userId } = req.query
         let query = {}
 
+        // Filter by report type if provided
         if (reportType) query.reportType = reportType
 
+        // Search for the user by username and get their ID
+        if (userId) {
+            query.reportedBy = userId
+        }
+
+        // Animal query for filtering by gender and species
         let animalQuery = {}
         if (gender) animalQuery.gender = gender
         if (species) animalQuery.species = species
@@ -22,6 +30,7 @@ const getAnimalReports = async (req, res) => {
             query.animal = { $in: animalIds }
         }
 
+        // Fetch and populate the reports
         const reports = await AnimalReport.find(query)
             .populate('animal')
             .populate('reportedBy')
@@ -37,26 +46,26 @@ const getAnimalReports = async (req, res) => {
 }
 
 // GET: Retrieves a specific animal report by ID
-const getAnimalReportById = async (req, res) => {
-    try {
-        const { id } = req.params
-        const report = await AnimalReport.findById(id)
-            .populate('animal')
-            .populate('reportedBy')
-            .exec()
+    const getAnimalReportById = async (req, res) => {
+        try {
+            const { id } = req.params
+            const report = await AnimalReport.findById(id)
+                .populate('animal')
+                .populate('reportedBy')
+                .exec()
 
-        if (!report) {
-            return res.status(404).json({ message: 'Animal report not found' })
+            if (!report) {
+                return res.status(404).json({ message: 'Animal report not found' })
+            }
+
+            res.status(200).json({ report })
+        } catch (error) {
+            res.status(500).json({
+                message: 'Failed to fetch animal report',
+                error: error.message,
+            })
         }
-
-        res.status(200).json({ report })
-    } catch (error) {
-        res.status(500).json({
-            message: 'Failed to fetch animal report',
-            error: error.message,
-        })
     }
-}
 
 
 // POST: Creates a new animal report
@@ -226,10 +235,33 @@ const deleteAnimalReport = async (req, res) => {
     }
 }
 
+//GET: Retrieves all animal reports by the owner ID
+const getAnimalReportByUserId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const reports = await AnimalReport.find({ reportedBy: id })
+            .populate('animal')
+            .populate('reportedBy')
+            .exec();
+
+        if (reports.length === 0) {
+            return res.status(404).json({ message: 'No reports found for this user.' });
+        }
+
+        res.status(200).json({ reports });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch reports' });
+    }
+};
+
+
 module.exports = {
     getAnimalReports,
     createAnimalReport,
     getAnimalReportById,
     updateAnimalReport,
     deleteAnimalReport,
+    getAnimalReportByUserId,
 }
