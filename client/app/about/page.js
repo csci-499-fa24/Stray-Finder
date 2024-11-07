@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import Navbar from "../components/layouts/Navbar/Navbar";
-import Footer from "../components/layouts/Footer";
+import Footer from "../components/layouts/Footer/Footer";
 import styles from "./about.module.css";
 
 export default function AboutPage() {

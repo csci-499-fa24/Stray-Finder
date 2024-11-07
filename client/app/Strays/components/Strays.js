@@ -1,5 +1,6 @@
 import { useEffect, useState, memo } from 'react'
 import AnimalCard from './AnimalCard'
+import './Strays.css';
 
 const Strays = () => {
     const [reports, setReports] = useState([]) // State to hold the fetched animals
@@ -72,9 +73,6 @@ const Strays = () => {
 
     return (
         <div className="container text-end">
-            <div className="text-center h2 p-3"> Stray Registry</div>
-            <hr />
-
             {/* Render the filters */}
             <MemoizedFilters
                 filters={filters}

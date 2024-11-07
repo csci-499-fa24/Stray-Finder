@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import Footer from '../components/layouts/Footer';
+import Footer from '../components/layouts/Footer/Footer';
 import Navbar from '../components/layouts/Navbar/Navbar'; 
 import useAuth from '@/app/hooks/useAuth';
 

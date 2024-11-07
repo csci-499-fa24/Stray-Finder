@@ -2,7 +2,7 @@
 
 import ReportAnimal from './components/ReportAnimal'
 import Navbar from '../components/layouts/Navbar/Navbar'
-import Footer from '../components/layouts/Footer'
+import Footer from '../components/layouts/Footer/Footer'
 
 const ReportAnimalPage = () => {
     return (

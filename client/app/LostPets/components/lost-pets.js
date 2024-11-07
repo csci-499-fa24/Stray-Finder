@@ -58,8 +58,6 @@ const LostPets = () => {
 
     return (
         <div className="container text-end">
-            <div className="text-center h2 p-3">Lost Pet Registry</div>
-            <hr />
             <MemoizedFilters filters={filters} handleFilterChange={handleFilterChange} />
             <ReportList reports={reports} loading={loading} />
         </div>
