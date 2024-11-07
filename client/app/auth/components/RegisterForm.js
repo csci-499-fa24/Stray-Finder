@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { registerUser } from '@/app/utils/api'
+import { loginUser } from '@/app/utils/api';
 
 const RegisterForm = () => {
     const router = useRouter()
@@ -15,13 +16,22 @@ const RegisterForm = () => {
         e.preventDefault()
         setErrorMessage('') // Reset error message on new attempt
 
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+
         if (password !== repeatPassword) {
             setErrorMessage('Passwords do not match')
             return
-            }
+        }
+
+        // Check if password meets the criteria
+        if (!passwordRegex.test(password)) {
+            setErrorMessage('Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one special character.');
+            return;
+        }
 
         try {
             await registerUser(username, email, password);
+            await loginUser(username, password);
             router.push(redirect);
         } catch (error) {
             setErrorMessage(error.message || 'Registration failed');
