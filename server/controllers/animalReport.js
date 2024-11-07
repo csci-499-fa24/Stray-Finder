@@ -7,34 +7,39 @@ const upload = require('../middleware/uploadMiddleware')
 // GET: Retrieve list of animal reports
 const getAnimalReports = async (req, res) => {
     try {
-        const { reportType, gender, species } = req.query
-        let query = {}
+        const { reportType, gender, species, reportedBy } = req.query;
+        let query = {};
 
-        if (reportType) query.reportType = reportType
+        if (reportType) query.reportType = reportType;
 
-        let animalQuery = {}
-        if (gender) animalQuery.gender = gender
-        if (species) animalQuery.species = species
+        if (reportedBy) {
+            query.reportedBy = reportedBy; // Ensure this is included for filtering
+        }
+
+        let animalQuery = {};
+        if (gender) animalQuery.gender = gender;
+        if (species) animalQuery.species = species;
 
         if (Object.keys(animalQuery).length > 0) {
-            const animals = await Animal.find(animalQuery).select('_id')
-            const animalIds = animals.map((animal) => animal._id)
-            query.animal = { $in: animalIds }
+            const animals = await Animal.find(animalQuery).select('_id');
+            const animalIds = animals.map((animal) => animal._id);
+            query.animal = { $in: animalIds };
         }
 
         const reports = await AnimalReport.find(query)
             .populate('animal')
             .populate('reportedBy')
-            .exec()
+            .exec();
 
-        res.status(200).json({ reports })
+        res.status(200).json({ reports });
     } catch (error) {
         res.status(500).json({
             message: 'Failed to fetch animal reports',
             error: error.message,
-        })
+        });
     }
-}
+};
+
 
 // GET: Retrieves a specific animal report by ID
 const getAnimalReportById = async (req, res) => {
