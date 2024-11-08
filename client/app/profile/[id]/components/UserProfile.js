@@ -5,6 +5,7 @@ import EditProfile from './EditProfile';
 import PenIcon from './PenIcon';
 import styles from './profile.module.css'
 import ChangePassword from './ChangePassword';
+import AnimalCard from '../../../components/cards/AnimalCard.js';
 
 const UserProfile = ({ id }) => {
     const { isAuthenticated, user } = useAuth();
@@ -15,16 +16,16 @@ const UserProfile = ({ id }) => {
     const [selfProfile, setSelfProfile] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isChangePassword, setIsChangePassword] = useState(false);
-    
+
     useEffect(() => {
-        const fetchUser = async () => {      
+        const fetchUser = async () => {
             try {
-                const response1 = await fetch (`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${id}`);
+                const response1 = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${id}`);
                 const userInfo = await response1.json();
                 if (!response1.ok) {
                     throw new Error('User not found');
                 }
-                const response2 = await fetch (`${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?reportedBy=${id}`)
+                const response2 = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?reportedBy=${id}`)
                 const reports = await response2.json();
                 if (!response2.ok) {
                     throw new Error('error fetching animal reports');
@@ -45,30 +46,30 @@ const UserProfile = ({ id }) => {
         };
         if (id)
             fetchUser();
-    }, [id, user]); 
+    }, [id, user]);
 
     if (loading) {
         return <div className="spinner-border text-primary" role="status">
-        <span className="sr-only"></span>
-      </div>;
+            <span className="sr-only"></span>
+        </div>;
     }
-    if(!userFound) {
-        return ( <div><h1>No user exist</h1></div>)
+    if (!userFound) {
+        return (<div><h1>No user exist</h1></div>)
     }
     return (
         <div>
-            <div>   
+            <div>
                 {isAuthenticated && selfProfile ? (
                     <div className={styles.namecontainer}>
                         <h1 className={`${styles.h1} ${styles.userName}`}>{userData.username}'s Profile</h1>
                         <div className={styles.buttonContainer}>
                             <button className={`${styles.button34}`} onClick={() => setIsEdit(true)}>
                                 Edit Account Details
-                                <PenIcon length={30}/>
+                                <PenIcon length={30} />
                             </button>
                             <button className={`${styles.button34}`} onClick={() => setIsChangePassword(true)}>
                                 Change Password
-                                <PenIcon length={30}/>
+                                <PenIcon length={30} />
                             </button>
                         </div>
                     </div>
@@ -84,23 +85,21 @@ const UserProfile = ({ id }) => {
                 ) : (
                     <h2 className={styles.userReportsTitle}>{userData.username}'s Reports</h2>
                 )}
-                <ul className={styles.ul}>
+                <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center p-2 text-start">
                     {userReports.map((report) => (
-                        <li className={styles.li} key={report._id}>
-                            <div >
-                                <Link href={`/animal/${report._id}`}>
-                                    <img 
-                                        src={report.animal.imageUrl} 
-                                        className={styles.imagestyle}
-                                        alt={report.animal.name} 
-                                    />
-                                </Link>
-                                <Link href={`/animal/${report._id}`} className={styles.dt}>{report.animal.name}</Link>
-                                <p className={styles.dd}>Report Type: {report.reportType}</p>
-                            </div>
-                        </li>
+                        <AnimalCard
+                            key={report?.animal?._id}  // Unique key
+                            report_id={report?._id}
+                            animal_id={report?.animal?._id}
+                            name={report?.animal?.name}
+                            image={report?.animal?.imageUrl}
+                            species={report?.animal?.species}
+                            gender={report?.animal?.gender}
+                            state="Unknown"  // Replace with actual state if available
+                            description={report?.animal?.description}
+                        />
                     ))}
-                </ul>
+                </div>
             </div>
             <EditProfile user={user} isOpen={isEdit} onClose={() => setIsEdit(false)}>
                 <button onClick={() => setIsEdit(false)}></button>
