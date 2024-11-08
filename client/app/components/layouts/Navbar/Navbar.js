@@ -24,17 +24,31 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg custom-navbar">
       <div className="container-fluid d-flex justify-content-between align-items-center">
+
+        {/* Toggle button for collapsible navbar on small screens - added */}
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
         {/* Logo and Site Name */}
         <Link href="/" className="navbar-brand d-flex align-items-center">
           <Image src={pawIcon} alt="Stray Finder Logo" width={60} height={50} priority />
           <span className="brand-text ms-3">STRAY FINDER</span>
         </Link>
 
-        {/* Links */}
+        {/* Collapsible Links */}
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link href="/" className={`nav-link ${isActive("/HomeTest") ? "active" : ""}`}>
+              <Link href="/" className={`nav-link ${isActive("/") ? "active" : ""}`}>
                 Home
               </Link>
             </li>
