@@ -1,7 +1,7 @@
 'use client'
 import Matches from './components/matches'
 import Navbar from '@/app/components/layouts/Navbar/Navbar'
-import Footer from '@/app/components/layouts/Footer'
+import Footer from '@/app/components/layouts/Footer/Footer'
 import { useEffect, useState } from 'react'
 
 const AllMatchesPage = () => {

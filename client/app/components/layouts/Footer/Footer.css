@@ -1,0 +1,52 @@
+/* Footer.css */
+
+.custom-footer {
+    background-color: rgba(90, 57, 13, 0.9);
+    padding: 20px;
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    color: #4a4a4a;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  
+  .footer-links {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .footer-link {
+    text-decoration: none;
+    color: #fca311; /* Accent color for links */
+    font-weight: bold;
+    transition: color 0.3s, transform 0.3s;
+    position: relative;
+  }
+  
+  .footer-link::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #fca311;
+    transition: width 0.3s;
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+  }
+  
+  .footer-link:hover {
+    color: #ff9800;
+    transform: translateY(-2px); /* Hover lift effect */
+  }
+  
+  .footer-link:hover::after {
+    width: 100%; /* Expand underline on hover */
+  }
+  
+  .footer-copyright {
+    color: #303030;
+    margin-top: 10px;
+  }
+  

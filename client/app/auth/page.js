@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
-import Footer from '../components/layouts/Footer'
+import Footer from '../components/layouts/Footer/Footer'
 import Navbar from '../components/layouts/Navbar/Navbar'
 
 const Login = () => {
@@ -16,9 +16,12 @@ const Login = () => {
     return (
         <div>
             <Navbar/>
-            <h2 className="main-prp d-flex justify-content-center align-items-center pt-5 pb-0">
-                Login or Register
-            </h2>
+            <div className="header-container">
+                <h2 className="main-prp d-flex justify-content-center align-items-center pt-5 pb-0">
+                    Login or Register
+                </h2>
+            </div>
+
 
             <div className="d-flex justify-content-center align-items-start vh-100 bg-light">
                 <div
