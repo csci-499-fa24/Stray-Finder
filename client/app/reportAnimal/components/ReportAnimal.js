@@ -246,7 +246,7 @@ const ReportAnimal = () => {
         <div className="container my-4">
             <div className="row justify-content-center">
                 <div className="col-md-8">
-                    <div className="border border-purple rounded p-4">
+                    <div className="border border-purple rounded p-4 report-form-container">
                         <h2 className="text-center">Report an Animal</h2>
                         {error && (
                             <div className="alert alert-danger">{error}</div>

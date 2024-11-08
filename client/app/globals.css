@@ -275,3 +275,12 @@ body {
     background-color: #fafafa; /* Replace with the color that matches the rest of the page */
     padding: 20px; /* Optional: Add padding to give it a bit of space */
 }
+
+.report-form-container {
+    background-image: url('/card-b3.jpg'); /* Adjust the path to your image */
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}

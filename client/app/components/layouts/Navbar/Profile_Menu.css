@@ -2,7 +2,7 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background-color: #fca311;
+    background-color: #4e3606;
     color: white;
     display: flex;
     align-items: center;
@@ -13,7 +13,7 @@
 }
 
 .avatar-circle:hover {
-    border: 3px solid rgba(0, 0, 0, 0.3); /* Thicker border for more prominence */
+    border: 3px solid rgb(222, 118, 20); /* Thicker border for more prominence */
     transform: scale(1.1); /* Slight scale up for extra emphasis */
 }
 
