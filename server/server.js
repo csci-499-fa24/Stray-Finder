@@ -10,6 +10,7 @@ const auth = require('./routes/auth')
 const message = require('./routes/message');
 const report = require('./routes/report');
 const match = require('./routes/match')
+const email = require('./routes/email')
 const { exec } = require('child_process')
 // const socketSetUp = require('./socket/socket');
 
@@ -52,6 +53,7 @@ app.use('/api/message/', message);
 app.use('/api/report/', report);
 app.use('/api/user/', user)
 app.use('/api/match/', match)
+app.use('/api/email/', email)
 ///////////////////////////////////////////////////////////////////////////
 
 // Create HTTP server with app
