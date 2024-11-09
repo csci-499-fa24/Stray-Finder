@@ -80,3 +80,25 @@
   text-align: center;
   color: #4b0082;
 }
+
+.sentMessage {
+  background-color: #d1e7dd;
+  text-align: right;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.receivedMessage {
+  background-color: #f8d7da;
+  text-align: left;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.timestamp {
+  display: block;
+  font-size: 0.8em;
+  color: #6c757d;
+}

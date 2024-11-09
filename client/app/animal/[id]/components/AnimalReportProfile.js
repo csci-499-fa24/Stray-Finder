@@ -205,6 +205,7 @@ const AnimalReportProfile = ({ id }) => {
               </button>
               <MessagingInterface
                 recipientId={reportProfile?.reportedBy?._id}
+                senderId={user?._id}
               />
             </div>
           </div>
