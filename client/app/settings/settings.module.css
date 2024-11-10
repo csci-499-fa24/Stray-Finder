@@ -1,0 +1,36 @@
+.settingsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.header {
+    font-size: 2.5rem; /* Adjust size if needed */
+    font-weight: bold;
+    color: #2c3e50; /* Ensure it matches the color used in MyListings */
+    text-align: center;
+    margin-bottom: 1rem;
+    font-family: 'YourFont', sans-serif; /* Ensure this font is loaded in your global styles or imported */
+}
+
+.button {
+    padding: 0.5rem 1rem;
+    background-color: #fca311; /* Customize color */
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #ad700d; /* Darker shade on hover */
+}
+
+.profileBackground {
+    background: linear-gradient(to bottom, #FFEBEB, #fad9e1); /* Light peach to soft lavender */
+    min-height: 100vh; /* Ensures it covers the full viewport */
+}

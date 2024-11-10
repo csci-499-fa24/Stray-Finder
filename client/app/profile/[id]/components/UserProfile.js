@@ -1,114 +1,105 @@
 import useAuth from '@/app/hooks/useAuth';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import EditProfile from './EditProfile';
-import PenIcon from './PenIcon';
-import styles from './profile.module.css'
-import ChangePassword from './ChangePassword';
-import AnimalCard from '../../../components/cards/AnimalCard.js';
+import styles from './profile.module.css';
 
 const UserProfile = ({ id }) => {
     const { isAuthenticated, user } = useAuth();
-    const [loading, setLoading] = useState(true); // State for loading
+    const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState([]);
     const [userFound, setUserFound] = useState(false);
-    const [userReports, setUserReports] = useState([]);
     const [selfProfile, setSelfProfile] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [isChangePassword, setIsChangePassword] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response1 = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${id}`);
-                const userInfo = await response1.json();
-                if (!response1.ok) {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${id}`);
+                const userInfo = await response.json();
+                if (!response.ok) {
                     throw new Error('User not found');
                 }
-                const response2 = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?reportedBy=${id}`)
-                const reports = await response2.json();
-                if (!response2.ok) {
-                    throw new Error('error fetching animal reports');
-                }
-
                 setUserFound(true);
                 setUserData(userInfo);
-                setUserReports(reports.reports);
                 if (user) {
                     setSelfProfile(user._id === id);
                 }
             } catch (error) {
-                console.log('error fetching userbyid,', error)
+                console.log('Error fetching user:', error);
                 setUserFound(false);
             } finally {
                 setLoading(false);
             }
         };
-        if (id)
-            fetchUser();
+
+        if (id) fetchUser();
     }, [id, user]);
 
     if (loading) {
-        return <div className="spinner-border text-primary" role="status">
-            <span className="sr-only"></span>
-        </div>;
+        return (
+            <div className="spinner-border text-primary" role="status">
+                <span className="sr-only"></span>
+            </div>
+        );
     }
+
     if (!userFound) {
-        return (<div><h1>No user exist</h1></div>)
-    }
-    return (
-        <div>
+        return (
             <div>
-                {isAuthenticated && selfProfile ? (
-                    <div className={styles.namecontainer}>
-                        <h1 className={`${styles.h1} ${styles.userName}`}>{userData.username}'s Profile</h1>
-                        <div className={styles.buttonContainer}>
-                            <button className={`${styles.button34}`} onClick={() => setIsEdit(true)}>
-                                Edit Account Details
-                                <PenIcon length={30} />
-                            </button>
-                            <button className={`${styles.button34}`} onClick={() => setIsChangePassword(true)}>
-                                Change Password
-                                <PenIcon length={30} />
-                            </button>
+                <h1>No user exists</h1>
+            </div>
+        );
+    }
+
+    return (
+        <div className={styles.profileBackground}> {/* New background wrapper */}
+            <div className={styles.profileContainer}>
+                {/* Full-width banner */}
+                <div className={styles.profileBanner}></div>
+
+                {/* Profile Image and Username */}
+                <div className={styles.profileHeader}>
+                    <img
+                        src={userData.profileImage || '/backgrounds-stray9.jpg'}
+                        alt={`${userData.username}'s profile`}
+                        className={styles.profileImage}
+                    />
+                    <h2 className={styles.userName}>{userData.username}</h2>
+                </div>
+                
+                {/* Profile Details (About Me, Achievements, and Stats) */}
+                <div className={styles.profileDetails}>
+                    {/* About Me Section */}
+                    <div className={styles.card}>
+                        <h2 className={styles.cardTitle}>About Me</h2>
+                        <p className={styles.cardText}>{userData.bio || "Add a bio to tell others about yourself!"}</p>
+                    </div>
+
+                    {/* Achievements Section */}
+                    <div className={styles.card}>
+                        <h2 className={styles.cardTitle}>Achievements</h2>
+                        <div className={styles.badges}>
+                            <span className={styles.badge}><i className={styles.badgeIcon}>★</i> Newbie</span>
+                            <span className={styles.badge}><i className={styles.badgeIcon}>🐾</i> Helper</span>
                         </div>
                     </div>
-                ) : (
-                    <div className={styles.namecontainer}>
-                        <h1 className={`${styles.h1} ${styles.userName}`}>{userData.username}'s Profile</h1>
+
+                    {/* Profile Stats Section */}
+                    <div className={styles.card}>
+                        <h2 className={styles.cardTitle}>Profile Stats</h2>
+                        <div className={styles.stats}>
+                            <div className={styles.statItem}>
+                                <span className={styles.statNumber}>5</span>
+                                <span className={styles.statLabel}>Strays Found</span>
+                            </div>
+                            <div className={styles.statItem}>
+                                <span className={styles.statNumber}>80%</span>
+                                <span className={styles.statLabel}>Profile Completion</span>
+                            </div>
+                        </div>
                     </div>
-                )}
-            </div>
-            <div className={styles.dl}>
-                {isAuthenticated && selfProfile ? (
-                    <h2 className={styles.userReportsTitle}>Your Reports</h2>
-                ) : (
-                    <h2 className={styles.userReportsTitle}>{userData.username}'s Reports</h2>
-                )}
-                <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center p-2 text-start">
-                    {userReports.map((report) => (
-                        <AnimalCard
-                            key={report?.animal?._id}  // Unique key
-                            report_id={report?._id}
-                            animal_id={report?.animal?._id}
-                            name={report?.animal?.name}
-                            image={report?.animal?.imageUrl}
-                            species={report?.animal?.species}
-                            gender={report?.animal?.gender}
-                            state="Unknown"  // Replace with actual state if available
-                            description={report?.animal?.description}
-                        />
-                    ))}
                 </div>
             </div>
-            <EditProfile user={user} isOpen={isEdit} onClose={() => setIsEdit(false)}>
-                <button onClick={() => setIsEdit(false)}></button>
-            </EditProfile>
-
-            <ChangePassword isOpen={isChangePassword} onClose={() => setIsChangePassword(false)}>
-                <button onClick={() => setIsChangePassword(false)}></button>
-            </ChangePassword>
         </div>
     );
 };
+
 export default UserProfile;
