@@ -54,3 +54,6 @@ venv/
 # Python bytecode files
 *.pyc
 __pycache__/
+
+###Node Modules
+/node_modules/
