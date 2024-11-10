@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "./Map.css"
+import "./Map.css";
 import {
     GoogleMap,
     Marker,
@@ -25,7 +25,7 @@ const createCircularIcon = (imageUrl, fallbackColor, callback) => {
 
     img.onload = () => {
         const canvas = document.createElement('canvas');
-        const size = 50; 
+        const size = 50;
         canvas.width = size;
         canvas.height = size;
         const ctx = canvas.getContext('2d');
@@ -74,6 +74,7 @@ const Map = () => {
         species: '',
         reportType: ''
     });
+    const [radius, setRadius] = useState(50); // Add radius state (in miles)
 
     const fetchReports = async () => {
         try {
@@ -120,10 +121,36 @@ const Map = () => {
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
+    // Function to calculate distance between two points (Haversine formula)
+    const calculateDistance = (lat1, lng1, lat2, lng2) => {
+        const R = 3961; // Radius of the Earth in miles
+        const dLat = (lat2 - lat1) * (Math.PI / 180);
+        const dLng = (lng2 - lng1) * (Math.PI / 180);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * (Math.PI / 180)) *
+                Math.cos(lat2 * (Math.PI / 180)) *
+                Math.sin(dLng / 2) *
+                Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Distance in miles
+    };
+
+    // Filter reports based on the distance from the center point
+    const filteredReports = reports.filter((report) => {
+        const { location } = report;
+        if (location && location.coordinates) {
+            const [lng, lat] = location.coordinates.coordinates;
+            const distance = calculateDistance(center.lat, center.lng, lat, lng);
+            return distance <= radius; // Check if the report is within the radius
+        }
+        return false;
+    });
+
     // Show a loading message until the reports are fetched
     if (!isLoaded || loading) return <div className="spinner-border text-primary" role="status">
     <span className="sr-only"></span>
-    </div>
+    </div>;
 
     return (
         <>
@@ -162,11 +189,21 @@ const Map = () => {
                     <option value="Stray">Stray</option>
                     <option value="Lost">Lost</option>
                 </select>
+
+                {/* Slider to adjust the radius */}
+                <input
+                    type="range"
+                    min="1"
+                    max="100"
+                    value={radius}
+                    onChange={(e) => setRadius(e.target.value)}
+                />
+                <p>{radius} miles radius</p>
             </div>
 
             <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
-                {Array.isArray(reports) && reports.length > 0 ? (
-                    reports.map((report) => {
+                {Array.isArray(filteredReports) && filteredReports.length > 0 ? (
+                    filteredReports.map((report) => {
                         const { location } = report;
 
                         if (
@@ -197,7 +234,7 @@ const Map = () => {
                         return null;
                     })
                 ) : (
-                    <p>No stray reports available</p>
+                    <p>No reports available within the selected radius</p>
                 )}
 
                 {selectedReport && (

@@ -42,26 +42,26 @@ const getAnimalReports = async (req, res) => {
 
 
 // GET: Retrieves a specific animal report by ID
-const getAnimalReportById = async (req, res) => {
-    try {
-        const { id } = req.params
-        const report = await AnimalReport.findById(id)
-            .populate('animal')
-            .populate('reportedBy')
-            .exec()
+    const getAnimalReportById = async (req, res) => {
+        try {
+            const { id } = req.params
+            const report = await AnimalReport.findById(id)
+                .populate('animal')
+                .populate('reportedBy')
+                .exec()
 
-        if (!report) {
-            return res.status(404).json({ message: 'Animal report not found' })
+            if (!report) {
+                return res.status(404).json({ message: 'Animal report not found' })
+            }
+
+            res.status(200).json({ report })
+        } catch (error) {
+            res.status(500).json({
+                message: 'Failed to fetch animal report',
+                error: error.message,
+            })
         }
-
-        res.status(200).json({ report })
-    } catch (error) {
-        res.status(500).json({
-            message: 'Failed to fetch animal report',
-            error: error.message,
-        })
     }
-}
 
 
 // POST: Creates a new animal report
