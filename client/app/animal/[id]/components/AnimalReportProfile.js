@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { GoogleMap, Marker, LoadScriptNext } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import styles from "../AnimalReportProfile.module.css";
@@ -7,6 +8,9 @@ import useAuth from "@/app/hooks/useAuth";
 import MessagingInterface from "../../../message/components/MessagingInterface";
 
 const AnimalReportProfile = ({ id }) => {
+  const searchParams = useSearchParams();  // Initialize useSearchParams
+  const from = searchParams.get("from");   // Get the 'from' parameter
+
   const { isAuthenticated, user } = useAuth();
   const [reportProfile, setReportProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,7 +74,7 @@ const AnimalReportProfile = ({ id }) => {
 
           <p className={styles.description}>{reportProfile?.description}</p>
 
-          <Link href="/" className={styles.btn}>
+          <Link href={from || "/"} className={styles.btn}>
             Go Back
           </Link>
 
