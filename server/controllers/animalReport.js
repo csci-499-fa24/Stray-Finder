@@ -237,5 +237,4 @@ module.exports = {
     getAnimalReportById,
     updateAnimalReport,
     deleteAnimalReport,
-    getAnimalReportByUserId,
 }
