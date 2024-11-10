@@ -2,7 +2,6 @@ const AnimalReport = require('../models/animalReport')
 const Animal = require('../models/animal')
 const uploadImage = require('../cloudinary/upload')
 const upload = require('../middleware/uploadMiddleware')
-const User = require('../models/User');
 // const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
 
 // GET: Retrieve list of animal reports
@@ -27,7 +26,6 @@ const getAnimalReports = async (req, res) => {
             query.animal = { $in: animalIds };
         }
 
-        // Fetch and populate the reports
         const reports = await AnimalReport.find(query)
             .populate('animal')
             .populate('reportedBy')
@@ -232,28 +230,6 @@ const deleteAnimalReport = async (req, res) => {
         })
     }
 }
-
-//GET: Retrieves all animal reports by the owner ID
-const getAnimalReportByUserId = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const reports = await AnimalReport.find({ reportedBy: id })
-            .populate('animal')
-            .populate('reportedBy')
-            .exec();
-
-        if (reports.length === 0) {
-            return res.status(404).json({ message: 'No reports found for this user.' });
-        }
-
-        res.status(200).json({ reports });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to fetch reports' });
-    }
-};
-
 
 module.exports = {
     getAnimalReports,
