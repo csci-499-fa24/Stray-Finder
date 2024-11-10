@@ -8,7 +8,7 @@
     --purple-4: hsl(270, 50%, 25%);
     --purple-5: hsl(270, 50%, 30%);
     --purple-6: hsl(270, 50%, 35%);
-    --purple-7: hsl(270, 50%, 40%);
+    --purple-7: hsl(36, 52%, 32%);
     --purple-8: hsl(270, 50%, 45%);
     --purple-9: hsl(270, 50%, 50%);
     --purple-10: hsl(270, 50%, 55%);
@@ -271,4 +271,16 @@ body {
     color: var(--purple-7);
 }
 
+.header-container {
+    background-color: #fafafa; /* Replace with the color that matches the rest of the page */
+    padding: 20px; /* Optional: Add padding to give it a bit of space */
+}
 
+.report-form-container {
+    background-image: url('/card-b3.jpg'); /* Adjust the path to your image */
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}

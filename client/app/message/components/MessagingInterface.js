@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import styles from "./MessagingInterface.module.css";
 
-const MessagingInterface = () => {
+const MessagingInterface = ( { recipientId, senderId } ) => {
   const [content, setContent] = useState("");
-  const [recipientId, setRecipientId] = useState("");
   const [messages, setMessages] = useState([]);
 
   const sendMessage = async () => {
@@ -20,13 +19,15 @@ const MessagingInterface = () => {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ content }),
+          body: JSON.stringify({ content, senderId }),
         }
       );
       const data = await response.json();
 
       if (response.ok) {
-        alert("Message sent successfully");
+        //alert("Message sent successfully");
+        setMessages((prevMessages) => [...prevMessages, { content, senderId, timestamp: new Date().toISOString() }]);
+        setContent("");
       } else {
         console.error("Failed to send message:", data.message);
       }
@@ -37,26 +38,25 @@ const MessagingInterface = () => {
 
   const getMessages = async () => {
     try {
-      const otherUserId = recipientId;
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/message/${otherUserId}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/message/${recipientId}`,
         {
-          method: "GET",
-          credentials: "include",
+          credentials: "include"
         }
       );
-
       const data = await response.json();
-
+      console.log(data);
       if (response.ok) {
-        setMessages(data);
+        setMessages(data); // Update state with fetched messages from the server
       } else {
-        console.error("Failed to get messages:", data.message);
+        console.error("Failed to fetch messages:", data.message);
       }
     } catch (error) {
-      console.error("Error getting messages:", error);
+      console.error("Error fetching messages:", error);
     }
   };
+  
+  
 
   return (
     <div className={styles.container}>
@@ -95,9 +95,16 @@ const MessagingInterface = () => {
         <h2 className={styles.subHeading}>Messages</h2>
         {messages.length > 0 ? (
           <ul className={styles.messageList}>
-            {messages.map((message) => (
-              <li key={message._id} className={styles.messageItem}>
-                <strong>{message.senderId}</strong>: {message.content}
+            {messages.map((message, index) => (
+              <li key={message._id || index} className={
+                message.senderId === senderId
+                  ? styles.sentMessage
+                  : styles.receivedMessage
+              }>
+                <strong>{message.senderId === senderId ? "You" : "Recipient"}</strong>: {message.content}
+                <span className={styles.timestamp}>
+                  {new Date(message.timestamp).toLocaleString()}
+                </span>
               </li>
             ))}
           </ul>

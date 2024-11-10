@@ -25,7 +25,7 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
     const { otherUserId } = req.params;
-
+    
     try {
         const messages = await Message.find({
             $or: [

@@ -25,6 +25,7 @@ const useAuth = () => {
             await logoutUser();  
             setIsAuthenticated(false);  
             setUser(null);    
+            window.location.reload();
         } catch (error) {
             console.error("Logout failed", error);  
         }

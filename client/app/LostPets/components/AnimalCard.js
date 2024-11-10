@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state, description }) => {
+    const currentPath = usePathname();
+
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedReason, setSelectedReason] = useState('');
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);  // New state for login modal
@@ -73,7 +76,7 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                     <li className="list-group-item">State: {state}</li>
                 </ul>
                 <div className="card-body">
-                    <Link href={`/animal/${report_id}`} className="card-link">
+                    <Link href={`/animal/${report_id}?from=${currentPath}`} className="card-link">
                         Read More
                     </Link>
                     <button className="report-btn" onClick={handleReportClick}>

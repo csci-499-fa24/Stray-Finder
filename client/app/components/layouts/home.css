@@ -1,0 +1,79 @@
+/* HomeTest/HomeTest.css */
+
+body, .homeTest {
+  margin: 0;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+  background-color: #fdf2e9;
+}
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #5a4a42;
+  padding: 80px 20px;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-image: url("/background-stray5.jpg");
+  transition: background-image 1s ease-in-out;
+  position: relative;
+  margin-top: -70px; /* Pulls the hero section up */
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+}
+
+.hero-section h1, .hero-section p, .cta-buttons {
+  position: relative; /* Ensures text and buttons stay above the overlay */
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  color: #f8f1eb;
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards 0.5s;
+}
+
+.hero-section p {
+  font-size: 1.3rem;
+  color: #f8e4d9;
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards 0.7s;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.cta-button {
+  background-color: #fca311;
+  color: #3d2e27;
+  padding: 15px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.cta-button:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(252, 163, 17, 0.5);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

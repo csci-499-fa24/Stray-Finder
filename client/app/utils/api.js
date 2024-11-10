@@ -97,8 +97,8 @@ export const logoutUser = async () => {
             throw new Error('Failed to logout');
         }
         
-        localStorage.removeItem('token');
-        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        // localStorage.removeItem('token');
+        // document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     } catch (error) {
         console.error('Error logging out:', error);
     }

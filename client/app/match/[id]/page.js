@@ -2,7 +2,7 @@
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Navbar from '@/app/components/layouts/Navbar/Navbar'
-import Footer from '@/app/components/layouts/Footer'
+import Footer from '@/app/components/layouts/Footer/Footer'
 import Matches from '../components/matches'
 
 const SpecificMatchPage = () => {

@@ -2,7 +2,7 @@
 
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import AnimalReportProfile from "./components/AnimalReportProfile";
-import Footer from "@/app/components/layouts/Footer";
+import Footer from "@/app/components/layouts/Footer/Footer";
 import { useParams } from "next/navigation";
 
 const StrayDetailsPage = () => {

@@ -4,14 +4,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #fef4e8;
 }
 
 .card {
-  border: 1px solid #e2d9f3;
+  border: 1px solid #ddd7c0;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 6px 12px rgba(123, 75, 164, 0.1);
-  background-color: #ffffff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Deeper shadow for depth */
+  background: linear-gradient(135deg, #fefaf2 0%, #f5e9dc 100%); /* Light gradient */
+  background-image: url('/paw-pattern.jpg');
+  padding: 2rem;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -35,8 +38,9 @@
 }
 
 .cardTitle {
-  font-size: 2.5rem;
-  color: #7b4ba4;
+  font-size: 2.8rem;
+  color: #5a4a34;
+  font-family: 'Georgia', serif; /* Classic serif for warmth */
   font-weight: bold;
   text-align: center;
   margin: 0;
@@ -56,9 +60,9 @@
   color: #4a4a4a;
   text-align: center;
   padding: 1rem;
-  background-color: #f8f5ff;
+  background-color: #fdf8f3; /* Light sand/cream */
   border-radius: 10px;
-  border: 1px solid #e2d9f3;
+  border: 1px solid #ddd7c0;
 }
 
 .listGroup {
@@ -72,44 +76,59 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: #f8f5ff;
-  border: 1px solid #e2d9f3;
+  background-color: #fdf8f3;
+  border: 1px solid #ddd7c0;
+  border-top: 3px solid #e0cab1; /* Thin border on top for separation */
   border-radius: 8px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
 }
 
 .listGroupItem:hover {
-  background-color: #f0e6ff;
+  background-color: #f7eee4;
+  box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1); /* Enhanced inner shadow on hover */
 }
 
 .label {
-  font-size: 0.875rem;
-  color: #666;
+  font-size: 0.9rem;
+  color: #6e5d48;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+}
+
+.label::before {
+  content: '•'; /* Add bullet point or replace with icon */
+  margin-right: 0.5rem;
+  color: #e0cab1; /* Subtle sand color for icon */
+  font-size: 1.2rem;
 }
 
 .value {
-  font-size: 1rem;
-  color: #333;
+  font-size: 1.1rem;
+  color: #3a3a3a;
+  font-weight: 500;
 }
 
+/* .statusBadge */
 .statusBadge {
-  background-color: #ef4444;
+  background: linear-gradient(135deg, #ffaf91, #f97b1a); /* Soft salmon gradient */
   color: white;
   padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
+  border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 600;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Light shadow for pop */
 }
 
 .btn {
-  background-color: #7b4ba4;
+  background: linear-gradient(135deg, #ffaf91, #e69778);
   color: white;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -119,13 +138,14 @@
   text-align: center;
   width: 30%;
   margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(230, 151, 120, 0.2);
   right: 100%;
 }
 
 .btn:hover {
-  background-color: #6a3c8c;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(123, 75, 164, 0.2);
+  background: #e69778;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(230, 151, 120, 0.3); /* Enhanced shadow on hover */
 }
 
 .editBtn {
@@ -152,10 +172,10 @@
 }
 
 .messageBtn {
-  background-color: #7b4ba4;
+  background: linear-gradient(135deg, #df542a, #d11f0b);
   color: white;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   font-size: 15px;
@@ -164,7 +184,7 @@
 }
 
 .messageBtn:hover {
-  background-color: #6a3c8c;
+  background: #e3a8a2;
   transform: translateY(-1px);
 }
 
@@ -213,13 +233,10 @@
 }
 
 .closeButton {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background-color: #7b4ba4;
+  background: #ffaf91;
   color: white;
   padding: 0.3rem 0.6rem;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   font-weight: 600;
@@ -228,6 +245,13 @@
 }
 
 .closeButton:hover {
-  background-color: #6a3c8c;
+  background: #e69778;
   transform: translateY(-1px);
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #e0cab1;
+  margin: 1rem 0;
 }

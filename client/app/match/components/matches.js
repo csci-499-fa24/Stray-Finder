@@ -1,6 +1,10 @@
 import AnimalCard from '@/app/components/cards/AnimalCard'
 
-const Matches = ({ matches }) => {
+const Matches = ({ matches = [] }) => {
+    if (!matches || matches.length === 0) {
+        return <p>No matches found.</p>;
+    }
+
     return (
         <div className="container my-4">
             <div className="row justify-content-center">
@@ -43,7 +47,7 @@ const Matches = ({ matches }) => {
                 ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Matches

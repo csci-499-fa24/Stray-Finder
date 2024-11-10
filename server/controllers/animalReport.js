@@ -8,42 +8,40 @@ const User = require('../models/User');
 // GET: Retrieve list of animal reports
 const getAnimalReports = async (req, res) => {
     try {
-        const { reportType, gender, species, userId } = req.query
-        let query = {}
+        const { reportType, gender, species, reportedBy } = req.query;
+        let query = {};
 
-        // Filter by report type if provided
-        if (reportType) query.reportType = reportType
+        if (reportType) query.reportType = reportType;
 
-        // Search for the user by username and get their ID
-        if (userId) {
-            query.reportedBy = userId
+        if (reportedBy) {
+            query.reportedBy = reportedBy; // Ensure this is included for filtering
         }
 
-        // Animal query for filtering by gender and species
-        let animalQuery = {}
-        if (gender) animalQuery.gender = gender
-        if (species) animalQuery.species = species
+        let animalQuery = {};
+        if (gender) animalQuery.gender = gender;
+        if (species) animalQuery.species = species;
 
         if (Object.keys(animalQuery).length > 0) {
-            const animals = await Animal.find(animalQuery).select('_id')
-            const animalIds = animals.map((animal) => animal._id)
-            query.animal = { $in: animalIds }
+            const animals = await Animal.find(animalQuery).select('_id');
+            const animalIds = animals.map((animal) => animal._id);
+            query.animal = { $in: animalIds };
         }
 
         // Fetch and populate the reports
         const reports = await AnimalReport.find(query)
             .populate('animal')
             .populate('reportedBy')
-            .exec()
+            .exec();
 
-        res.status(200).json({ reports })
+        res.status(200).json({ reports });
     } catch (error) {
         res.status(500).json({
             message: 'Failed to fetch animal reports',
             error: error.message,
-        })
+        });
     }
-}
+};
+
 
 // GET: Retrieves a specific animal report by ID
     const getAnimalReportById = async (req, res) => {
