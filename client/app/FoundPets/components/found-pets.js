@@ -58,7 +58,7 @@ const FoundPets = () => {
 
     return (
         <div className="container text-end">
-            <div className="text-center h2 p-3">Found Pet Registry</div>
+            <div className="text-center h2 p-3">Welcome Home!</div>
             <hr />
             <MemoizedFilters filters={filters} handleFilterChange={handleFilterChange} />
             <ReportList reports={reports} loading={loading} />
