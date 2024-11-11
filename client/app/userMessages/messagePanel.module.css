@@ -1,26 +1,58 @@
-.message {
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 10px;
-  max-width: 80%;
-  word-wrap: break-word;
-  color: #333;
+.messageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  max-width: 70%;
 }
 
 .sent {
-  background-color: #d4f8d4;
-  align-self: flex-end;
-  border-radius: 12px 12px 0 12px;
+  align-items: flex-end;
+  margin-left: auto;
+  justify-content: flex-end;
+  display: flex;
 }
 
 .received {
+  align-items: flex-start;
+  margin-right: auto;
+  justify-content: flex-start;
+  display: flex;
+}
+
+.senderLabel {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 2px;
+}
+
+.messageBubble {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
+  width: fit-content;
+}
+
+.sent .messageBubble {
+  background-color: #d4f8d4;
+}
+
+.received .messageBubble {
   background-color: #e0e0e0;
-  align-self: flex-start;
-  border-radius: 12px 12px 12px 0;
 }
 
 .messageContent {
   margin: 0;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 5px;
+  text-align: right;
+  width: 100%;
 }
 
 .messagePanel {
@@ -87,4 +119,20 @@
 .selectUserPrompt {
   font-style: italic;
   color: #555;
+}
+
+.waitingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    height: 100%;
+}
+
+.waitingImage {
+    width: 150px; /* Set a maximum width */
+    height: auto; /* Maintain aspect ratio */
+    max-width: 100%; /* Ensure it doesn't exceed the container */
+    margin-bottom: 20px; /* Add some space below the image */
 }
