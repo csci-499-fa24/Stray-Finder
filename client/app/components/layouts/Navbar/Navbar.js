@@ -67,11 +67,6 @@ const Navbar = () => {
                 Report
               </Link>
             </li>
-            <li className="nav-item">
-              <Link href="/userMessages" className={`nav-link ${isActive("/userMessages") ? "active" : ""}`}>
-                Messages
-              </Link>
-            </li>
           </ul>
         </div>
 

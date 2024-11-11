@@ -30,6 +30,7 @@ const ProfileMenu = () => {
             <ul className="dropdown-menu dropdown-menu-right">
                 <li><Link className="dropdown-item" href={`/profile/${user._id}`}>Profile</Link></li>
                 <li><Link className="dropdown-item" href="/my-listings">My Listings</Link></li>
+                <li><Link className="dropdown-item" href="/userMessages">Messages</Link></li>
                 <li><Link className="dropdown-item" href="/settings">Settings</Link></li>
                 <li><Link className="dropdown-item" href="/auth" onClick={handleLogoutClick}>Logout</Link></li>
             </ul>
