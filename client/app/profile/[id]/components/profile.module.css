@@ -5,7 +5,7 @@
     align-items: center; /* Center items vertically */
 	position: relative;           /* Allow for absolute positioning */
 	height: 70px;
-	background-color: #f9f9f9; /* Light background color for contrast */
+	background-color: linear-gradient(to bottom, #FFEBEB, #fad9e1); /* Light background color for contrast */
 }
 
 .reportcontainer {
@@ -51,7 +51,7 @@
 
 .dl {
     padding: 1em; /* Padding around the list */
-    background-color: #f9f9f9; /* Light background color for contrast */
+    background-color: linear-gradient(to bottom, #FFEBEB, #fad9e1); /* Light background color for contrast */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
@@ -136,4 +136,126 @@
     height: 100px;
     object-fit: cover; /* This will ensure the image covers the area without distortion */
     margin-right: 10px;
+}
+
+.profileBackground {
+    background: linear-gradient(to bottom, #FFEBEB, #fad9e1); /* Light peach to soft lavender */
+    min-height: 100vh; /* Ensures it covers the full viewport */
+}
+
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profileBanner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 100vw;
+    height: 350px;
+    background: url('/background-stray5.jpg') no-repeat center/cover;
+    background-position: center 47%;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: -70px;
+    margin-bottom: 3rem;
+    color: white;
+}
+
+.profileImage {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    left: 46%;
+    border: 4px solid white;
+    position: absolute;
+    top: 230px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.userName {
+    margin-top: 4rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #34495e;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.profileDetails {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.cardTitle {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cardText {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.badges {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    background-color: #6A5ACD;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.badgeIcon {
+    margin-right: 5px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.statNumber {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #6A5ACD;
+}
+
+.statLabel {
+    font-size: 0.9rem;
+    color: #555;
 }
