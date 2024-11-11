@@ -1,27 +1,34 @@
-.messaging-layout {
+.messagingLayout {
     display: flex;
-    height: 100vh;
-}
-
-.user-list {
+    height: 90vh;
+    background-color: #fafaff;
+  }
+  
+  .userList {
     width: 25%;
     background-color: #f4f4f4;
     border-right: 1px solid #ddd;
     padding: 10px;
     overflow-y: auto;
-}
-
-.user-list-item {
+    border-radius: 8px 0 0 8px;
+  }
+  
+  .userListItem {
     padding: 10px;
     margin-bottom: 5px;
     cursor: pointer;
-    border-radius: 5px;
-}
-
-.user-list-item:hover {
+    border-radius: 6px;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .userListItem:hover {
     background-color: #ddd;
-}
-
-.user-list-item.active {
+    transform: scale(1.02);
+  }
+  
+  .userListItem.active {
     background-color: #bbb;
-}
+    font-weight: bold;
+  }
+  

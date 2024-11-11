@@ -20,7 +20,7 @@
 /* Dropdown menu adjustments for alignment */
 .dropdown-menu {
     background-color: white;
-    border: 1px solid #67347a;
+    border: 1px solid #fdf2e9;
     min-width: 100px;
     padding: 5px 0;
     text-align: center;
@@ -29,13 +29,13 @@
 
 .dropdown-item {
     padding: 8px;
-    color: #67347a;
+    color: #e6babc;
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
 }
 
 .dropdown-item:hover {
-    background-color: #67347a;
-    color: white;
+    background-color: #472805;
+    color: #e6babc;
 }

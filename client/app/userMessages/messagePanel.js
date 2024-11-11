@@ -52,41 +52,11 @@ export default function MessagePanel({ selectedUser, user }) {
         }
     };
 
-    // return (
-    //     <div className="message-panel">
-    //         {selectedUser ? (
-    //             <>
-    //                 <h2>Chat with {selectedUser.name}</h2>
-    //                 <div className="message-history">
-    //                     {messages.map((msg, index) => (
-    //                         <div key={index} className={`message ${msg.sender === 'You' ? 'sent' : 'received'}`}>
-    //                             <p>{msg.content}</p>
-    //                         </div>
-    //                     ))}
-    //                 </div>
-    //                 <div className="message-input">
-    //                     <input
-    //                         type="text"
-    //                         value={newMessage}
-    //                         onChange={(e) => setNewMessage(e.target.value)}
-    //                         placeholder="Type a message..."
-    //                     />
-    //                     <button onClick={handleSendMessage}>Send</button>
-    //                 </div>
-    //             </>
-    //         ) : (
-    //             <p>Select a user to start a conversation</p>
-    //         )}
-    //     </div>
-    // );
-
-    // components/MessagePanel.js
-
     return (
         <div className={styles.messagePanel}>
             {selectedUser ? (
                 <>
-                    <h2 className={styles.panelHeader}>Chat with {selectedUser.name}</h2>
+                    <h2 className={styles.panelHeader}>Chat with {selectedUser.username || "User"}</h2>
                     <div className={styles.messageHistory}>
                         {messages.map((msg, index) => (
                             <div
