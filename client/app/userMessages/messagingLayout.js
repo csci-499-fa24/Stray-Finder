@@ -34,7 +34,7 @@ export default function MessagingLayout() {
 
     return (
         <div className={styles.messagingLayout}>
-            <UserList users={users} onUserSelect={setSelectedUser} />
+            <UserList users={users} onUserSelect={setSelectedUser} selectedUser={selectedUser}/>
             <MessagePanel selectedUser={selectedUser} user={user}/>
         </div>
     );

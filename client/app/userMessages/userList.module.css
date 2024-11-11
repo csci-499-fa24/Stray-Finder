@@ -30,7 +30,9 @@
   }
   
   .userListItemSelected {
-    background-color: #d0d0f0;
+    background-color: #d0d0f0; /* Adjust color to your preference */
     font-weight: bold;
-  }
+    border: 1px solid #4b0082; /* Optional: add border for more emphasis */
+}
+
   

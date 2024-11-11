@@ -31,7 +31,6 @@ export default function MessagePanel({ selectedUser, user }) {
         console.log(messages);
         if (newMessage.trim() && selectedUser) {
             try {
-                console.log(selectedUser);
                 const senderId = selectedUser.id;
                 const content = newMessage;
                 await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/message/${senderId}`, 
@@ -57,7 +56,7 @@ export default function MessagePanel({ selectedUser, user }) {
         <div className={styles.messagePanel}>
             {selectedUser ? (
                 <>
-                    <h2 className={styles.panelHeader}>Chat with {selectedUser.name || "User"}</h2>
+                    <h2 className={styles.panelHeader}>Chat with {selectedUser.username || "User"}</h2>
                     <div className={styles.messageHistory}>
                         {messages.map((msg, index) => (
                             <div
