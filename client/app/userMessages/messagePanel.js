@@ -16,7 +16,6 @@ export default function MessagePanel({ selectedUser, user }) {
                         }
                     );
                     const data = await response.json();
-                    console.log("Raw message data from server:", data); // Log entire response from server
                     
                     // Ensure messages is an array before setting it in state
                     setMessages(Array.isArray(data) ? data : []);
@@ -45,7 +44,6 @@ export default function MessagePanel({ selectedUser, user }) {
                         body: JSON.stringify({ content, senderId }),
                     }
                 );
-                console.log("Sent message:", content); // Log to check message sent
                 setMessages([...messages, { content: newMessage, senderId: user._id, timestamp: new Date().toISOString() }]);
                 setNewMessage("");
             } catch (error) {
@@ -66,7 +64,7 @@ export default function MessagePanel({ selectedUser, user }) {
 
                             // Handle undefined senderId with a default label
                             const senderLabel = msg.senderId 
-                                ? (isSentByCurrentUser ? "You" : "Recipient") 
+                                ? (isSentByCurrentUser ? "You" : selectedUser.username) 
                                 : "Unknown";
 
                             return (
