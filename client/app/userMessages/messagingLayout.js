@@ -29,6 +29,20 @@ export default function MessagingLayout() {
                 }
             }
             fetchUsers();
+
+            async function fetchUsersWithLastMessage() {
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/message/last-messages`, {
+                        credentials: 'include'
+                    });
+                    const data = await response.json();
+                    setUsers(Array.isArray(data) ? data : []);
+                } catch (error) {
+                    console.error('Error fetching users with last messages:', error);
+                    setUsers([]);
+                }
+            }
+            fetchUsersWithLastMessage();
         }
     }, [isAuthenticated]);
 

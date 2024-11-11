@@ -4,9 +4,20 @@ import styles from './messagePanel.module.css';
 export default function MessagePanel({ selectedUser, user }) {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+    const loadingDelay = 300; // Delay in milliseconds before showing loading state
 
     useEffect(() => {
+        let loadingTimeout;
+
         if (selectedUser) {
+            setMessages([]);
+            
+            // Set a timeout to show loading only if it takes longer than the delay
+            loadingTimeout = setTimeout(() => {
+                setLoading(true);
+            }, loadingDelay);
+
             async function fetchMessages() {
                 try {
                     const response = await fetch(
@@ -16,16 +27,22 @@ export default function MessagePanel({ selectedUser, user }) {
                         }
                     );
                     const data = await response.json();
-                    
-                    // Ensure messages is an array before setting it in state
+
+                    // Clear the loading timeout if fetch completes quickly
+                    clearTimeout(loadingTimeout);
                     setMessages(Array.isArray(data) ? data : []);
                 } catch (error) {
                     console.error('Error fetching messages:', error);
                     setMessages([]); // Set messages to an empty array if there's an error
+                } finally {
+                    setLoading(false); // End loading state
                 }
             }
             fetchMessages();
         }
+
+        // Cleanup function to clear the timeout if component unmounts or selectedUser changes
+        return () => clearTimeout(loadingTimeout);
     }, [selectedUser]);
 
     const handleSendMessage = async () => {
@@ -58,27 +75,29 @@ export default function MessagePanel({ selectedUser, user }) {
                 <>
                     <h2 className={styles.panelHeader}>Chat with {selectedUser.username}</h2>
                     <div className={styles.messageHistory}>
-                        {messages.map((msg, index) => {
-                            console.log("Message senderId:", msg.senderId, "Current user id:", user._id); // Log senderId and user ID for verification
-                            const isSentByCurrentUser = msg.senderId === user._id;
+                        {loading ? (
+                            <p>Loading...</p>
+                        ) : (
+                            messages.map((msg, index) => {
+                                const isSentByCurrentUser = msg.senderId === user._id;
 
-                            // Handle undefined senderId with a default label
-                            const senderLabel = msg.senderId 
-                                ? (isSentByCurrentUser ? "You" : selectedUser.username) 
-                                : "Unknown";
+                                const senderLabel = msg.senderId 
+                                    ? (isSentByCurrentUser ? "You" : selectedUser.username) 
+                                    : "Unknown";
 
-                            return (
-                                <div key={index} className={`${styles.messageWrapper} ${isSentByCurrentUser ? styles.sent : styles.received}`}>
-                                    <p className={styles.senderLabel}>{senderLabel}</p>
-                                    <div className={styles.messageBubble}>
-                                        <p className={styles.messageContent}>{msg.content}</p>
+                                return (
+                                    <div key={index} className={`${styles.messageWrapper} ${isSentByCurrentUser ? styles.sent : styles.received}`}>
+                                        <p className={styles.senderLabel}>{senderLabel}</p>
+                                        <div className={styles.messageBubble}>
+                                            <p className={styles.messageContent}>{msg.content}</p>
+                                        </div>
+                                        <span className={styles.timestamp}>
+                                            {new Date(msg.timestamp).toLocaleString()}
+                                        </span>
                                     </div>
-                                    <span className={styles.timestamp}>
-                                        {new Date(msg.timestamp).toLocaleString()}
-                                    </span>
-                                </div>
-                            );
-                        })}
+                                );
+                            })
+                        )}
                     </div>
                     <div className={styles.messageInputContainer}>
                         <input
