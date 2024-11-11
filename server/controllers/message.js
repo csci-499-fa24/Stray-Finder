@@ -78,8 +78,57 @@ const retrieveAllUsers = async (req, res) => {
     }
 };
 
+const getLastMessages = async (req, res) => {
+    const currentUserId = req.user._id;
+
+    try {
+        // Find users the current user has messaged
+        const messages = await Message.aggregate([
+            {
+                $match: {
+                    $or: [
+                        { senderId: currentUserId },
+                        { recipientId: currentUserId }
+                    ]
+                }
+            },
+            {
+                $sort: { timestamp: -1 }
+            },
+            {
+                $group: {
+                    _id: {
+                        $cond: {
+                            if: { $eq: ["$senderId", currentUserId] },
+                            then: "$recipientId",
+                            else: "$senderId"
+                        }
+                    },
+                    lastMessage: { $first: "$content" },
+                    timestamp: { $first: "$timestamp" }
+                }
+            }
+        ]);
+
+        // Fetch usernames for each conversation
+        const users = await User.find({ _id: { $in: messages.map(m => m._id) } }, 'username');
+        const userMessages = users.map(user => ({
+            id: user._id,
+            username: user.username,
+            lastMessage: messages.find(m => m._id.equals(user._id)).lastMessage,
+            timestamp: messages.find(m => m._id.equals(user._id)).timestamp
+        }));
+
+        res.status(200).json(userMessages);
+    } catch (error) {
+        console.error('Error fetching last messages:', error);
+        res.status(500).json({ message: 'Error retrieving last messages' });
+    }
+};
+
 module.exports = {
     sendMessage,
     getMessages,
-    retrieveAllUsers
+    retrieveAllUsers,
+    getLastMessages
 };
