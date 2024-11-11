@@ -47,27 +47,32 @@ const getMessages = async (req, res) => {
 const retrieveAllUsers = async (req, res) => {
     try {
         const currentUserId = req.user._id;
+        
         // Step 1: Find all messages where the current user is the sender or recipient
         const messages = await Message.find({
             $or: [{ senderId: currentUserId }, { recipientId: currentUserId }]
+        }).sort({ timestamp: -1 }); // Sort messages by timestamp in descending order
+
+        // Step 2: Collect the latest message content for each unique user ID involved in the messages (excluding the current user)
+        const userMessages = {};
+        messages.forEach((message) => {
+            const otherUserId = message.senderId.toString() === currentUserId.toString()
+                ? message.recipientId.toString()
+                : message.senderId.toString();
+            
+            // Only store the first (latest) message per user
+            if (!userMessages[otherUserId]) {
+                userMessages[otherUserId] = message.content;
+            }
         });
 
-        // Step 2: Collect the unique user IDs involved in the messages (excluding the current user)
-        const userIds = new Set();
-        messages.forEach(message => {
-            if (message.senderId.toString() !== currentUserId.toString()) {
-                userIds.add(message.senderId.toString());
-            }
-            if (message.recipientId.toString() !== currentUserId.toString()) {
-                userIds.add(message.recipientId.toString());
-            }
-        });
-
-        // Step 3: Retrieve the user information (id and username) for these user IDs
-        const users = await User.find({ _id: { $in: Array.from(userIds) } }, 'username');
+        // Step 3: Retrieve the user information (id, username, and last message) for these user IDs
+        const userIds = Object.keys(userMessages);
+        const users = await User.find({ _id: { $in: userIds } }, 'username');
         const userInfo = users.map(user => ({
             id: user._id,
-            username: user.username
+            username: user.username,
+            lastMessage: userMessages[user._id.toString()]
         }));
 
         // Return the list of userInfo objects

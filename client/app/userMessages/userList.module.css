@@ -8,31 +8,48 @@
 }
 
 .userList {
-    width: 40%;
-    padding: 10px;
-    background-color: #f7f7f7;
-    border-right: 1px solid #ccc;
-    overflow-y: auto;
-    border-radius: 8px 0 0 8px;
-  }
-  
-  .userListItem {
-    padding: 10px 15px;
-    margin: 8px 0;
-    cursor: pointer;
-    border-radius: 8px;
-    background-color: #e0e0e0;
-    transition: background-color 0.3s ease;
-  }
-  
-  .userListItem:hover {
-    background-color: #cfcfcf;
-  }
-  
-  .userListItemSelected {
-    background-color: #d0d0f0; /* Adjust color to your preference */
-    font-weight: bold;
-    border: 1px solid #4b0082; /* Optional: add border for more emphasis */
+  width: 40%;
+  padding: 15px;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  border-radius: 8px 0 0 8px;
 }
 
-  
+.userListItem {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: background-color 0.3s ease, box-shadow 0.2s ease;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.userListItem:hover {
+  background-color: #ececec;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.userListItemSelected {
+  background-color: #dfe4ff;
+  border-left: 4px solid #4b0082; /* Add a border for active items */
+}
+
+.username {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.lastMessage {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 4px;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
