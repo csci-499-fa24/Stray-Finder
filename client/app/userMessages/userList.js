@@ -10,8 +10,7 @@ export default function UserList({ users, onUserSelect, selectedUser }) {
                     className={`${styles.userListItem} ${selectedUser && selectedUser.id === user.id ? styles.userListItemSelected : ''}`}
                     onClick={() => onUserSelect(user)}
                 >
-                    <div className={styles.username}>{user.username}</div>
-                    <div className={styles.lastMessage}>{user.lastMessage}</div> {/* Display last message */}
+                    {user.username}
                 </div>
             ))}
         </div>
