@@ -1,0 +1,24 @@
+.userList {
+    width: 25%;
+    border-right: 1px solid #ccc;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.userListItem {
+    padding: 8px 12px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #f7f7f7;
+    transition: background-color 0.3s;
+}
+
+.userListItem:hover {
+    background-color: #e0e0e0;
+}
+
+.userListItemSelected {
+    background-color: #d0d0f0;
+    font-weight: bold;
+}

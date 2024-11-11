@@ -45,7 +45,6 @@ const MessagingInterface = ( { recipientId, senderId } ) => {
         }
       );
       const data = await response.json();
-      console.log(data);
       if (response.ok) {
         setMessages(data); // Update state with fetched messages from the server
       } else {
