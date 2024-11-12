@@ -2,6 +2,8 @@ const request = require('supertest')
 const mongoose = require('mongoose')
 const app = require('../server')
 const Animal = require('../models/animal')
+require('dotenv').config({ path: '.env.test' })
+
 
 // Mock uploadImage function
 jest.mock('../cloudinary/upload', () =>
@@ -17,7 +19,7 @@ describe('Animal API', () => {
 
     // Setup database connection before running tests
     beforeAll(async () => {
-        const url = process.env.test.
+        const url = process.env.MONGO_URI
         await mongoose.connect(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
