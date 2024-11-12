@@ -73,3 +73,6 @@ const start = async () => {
 }
 
 start()
+
+// Export app for testing
+module.exports = app;
