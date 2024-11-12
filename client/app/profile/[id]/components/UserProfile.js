@@ -18,6 +18,7 @@ const UserProfile = ({ id }) => {
                 if (!response.ok) {
                     throw new Error('User not found');
                 }
+                console.log("Fetched User Data:", userInfo); // Log fetched user data
                 setUserFound(true);
                 setUserData(userInfo);
                 if (user) {
@@ -39,20 +40,28 @@ const UserProfile = ({ id }) => {
         if (file) {
             const formData = new FormData();
             formData.append('image', file);
-    
+
             try {
+                console.log("Starting image upload..."); // Log upload start
                 const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/profile/upload-profile-image`, {
                     method: 'POST',
                     body: formData,
                     credentials: 'include',
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Failed to upload image');
                 }
-    
+
                 const result = await response.json();
-                setUserData((prevData) => ({ ...prevData, profileImage: result.profileImage }));
+                console.log("Full Response after Upload:", result);
+                console.log("Uploaded Image URL:", result.profileImage); // Log the uploaded image URL
+
+                setUserData((prevData) => {
+                    const updatedData = { ...prevData, profileImage: result.profileImage };
+                    console.log("Updated User Data with Profile Image:", updatedData); // Log updated user data with new image
+                    return updatedData;
+                });
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
