@@ -14,6 +14,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -35,4 +38,4 @@ jobs:
         uses: ArtiomTr/jest-coverage-report-action@v2.3.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          working-directory: ./server  # Specify the server directory
+          working-directory: ./server
