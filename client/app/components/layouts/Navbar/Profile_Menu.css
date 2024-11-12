@@ -9,12 +9,42 @@
     justify-content: center;
     font-size: 14px;
     font-weight: bold;
-    transition: border 0.3s ease, transform 0.3s ease; /* Added transform for subtle scaling */
+    transition: border 0.3s ease, transform 0.3s ease; 
+    position: relative;
+}
+
+.profile-avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .avatar-circle:hover {
-    border: 3px solid rgb(222, 118, 20); /* Thicker border for more prominence */
-    transform: scale(1.1); /* Slight scale up for extra emphasis */
+    border: 3px solid rgb(222, 118, 20); 
+    transform: scale(1.1); 
+}
+
+/* Dot for profile avatar */
+.unread-dot-profile {
+    width: 8px;
+    height: 8px;
+    background-color: #ff4b4b;
+    border-radius: 50%;
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    box-shadow: 0px 0px 4px rgba(255, 75, 75, 0.6);
+}
+
+/* Dot for Messages dropdown item */
+.unread-dot-dropdown {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #ff4b4b;
+    border-radius: 50%;
+    margin-left: 5px;
 }
 
 /* Dropdown menu adjustments for alignment */

@@ -165,15 +165,22 @@
     color: white;
 }
 
-.profileImage {
+.profileImageContainer {
+    position: absolute;
+    bottom: 430px; 
+    left: 50%;
+    transform: translateX(-50%); 
     width: 120px;
     height: 120px;
+}
+
+.profileImage {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    left: 46%;
     border: 4px solid white;
-    position: absolute;
-    top: 230px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 .userName {
@@ -259,3 +266,19 @@
     font-size: 0.9rem;
     color: #555;
 }
+
+.cameraIcon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cameraIcon:hover {
+    background-color: #f0f0f0;
+}
+

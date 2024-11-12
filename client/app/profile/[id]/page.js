@@ -5,6 +5,7 @@ import UserProfile from "./components/UserProfile";
 import Footer from "@/app/components/layouts/Footer/Footer";
 import { useParams, useRouter } from 'next/navigation';
 import useAuth from '@/app/hooks/useAuth';
+import { useEffect } from 'react';
 
 const ProfilePage = () => {
     const { isAuthenticated } = useAuth();
@@ -12,18 +13,23 @@ const ProfilePage = () => {
     const params = useParams();
     const id = params.id;
 
-    if (isAuthenticated === false) {
-        router.push('/auth');
-        return null;
+    useEffect(() => {
+        if (isAuthenticated === false) {
+            router.push('/auth');
+        }
+    }, [isAuthenticated, router]);
+
+    if (!isAuthenticated) {
+        return null; // Prevent rendering until authentication is verified
     }
 
     return (
         <div>
             <Navbar />
-            <UserProfile id ={id} />
+            <UserProfile id={id} />
             <Footer />
         </div>
-    )
+    );
 }
 
 export default ProfilePage;
