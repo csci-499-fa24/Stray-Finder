@@ -61,13 +61,13 @@
 .unreadDot {
   width: 10px;
   height: 10px;
-  background-color: #ff4b4b;
+  background-color: #e6babc;
   border-radius: 50%;
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  box-shadow: 0px 0px 6px rgba(255, 75, 75, 0.6); 
+  box-shadow: 0px 0px 6px rgba(255, 75, 144, 0.6); 
 }
 
 
