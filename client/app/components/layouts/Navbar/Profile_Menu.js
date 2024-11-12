@@ -24,7 +24,6 @@ const ProfileMenu = () => {
                         credentials: 'include'
                     });
                     const data = await response.json();
-                    // Check if any of the messages are unread
                     const unread = data.some(msg => msg.senderId !== user._id);
                     setHasUnreadMessages(unread);
                 } catch (error) {
@@ -44,8 +43,16 @@ const ProfileMenu = () => {
     return (
         <div className="user-avatar dropdown">
             <span className="avatar-circle" data-bs-toggle="dropdown" aria-expanded="false">
-                {user.username.charAt(0).toUpperCase()}
-                {hasUnreadMessages && <span className="unread-dot-profile"></span>} {/* Dot on profile image */}
+                {user.profileImage ? (
+                    <img
+                        src={user.profileImage}
+                        alt={`${user.username}'s profile`}
+                        className="profile-avatar-image"
+                    />
+                ) : (
+                    user.username.charAt(0).toUpperCase()
+                )}
+                {hasUnreadMessages && <span className="unread-dot-profile"></span>}
             </span>
             <ul className="dropdown-menu dropdown-menu-right">
                 <li>
@@ -56,7 +63,7 @@ const ProfileMenu = () => {
                 </li>
                 <li>
                     <Link className="dropdown-item" href="/userMessages">
-                        Messages {hasUnreadMessages && <span className="unread-dot-dropdown"></span>} {/* Dot next to Messages */}
+                        Messages {hasUnreadMessages && <span className="unread-dot-dropdown"></span>}
                     </Link>
                 </li>
                 <li>

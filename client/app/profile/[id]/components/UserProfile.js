@@ -1,39 +1,42 @@
 import useAuth from '@/app/hooks/useAuth';
 import { useEffect, useState } from 'react';
 import styles from './profile.module.css';
-import { FaCamera } from 'react-icons/fa'; // Import camera icon
+import { FaCamera } from 'react-icons/fa';
 
 const UserProfile = ({ id }) => {
-    const { isAuthenticated, user } = useAuth();
+    const { isAuthenticated, user, setUser } = useAuth(); // Added setUser here
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState([]);
     const [userFound, setUserFound] = useState(false);
     const [selfProfile, setSelfProfile] = useState(false);
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${id}`);
-                const userInfo = await response.json();
-                if (!response.ok) {
-                    throw new Error('User not found');
-                }
-                console.log("Fetched User Data:", userInfo); // Log fetched user data
-                setUserFound(true);
-                setUserData(userInfo);
-                if (user) {
-                    setSelfProfile(user._id === id);
-                }
-            } catch (error) {
-                console.log('Error fetching user:', error);
-                setUserFound(false);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (id) fetchUser();
+        if (user && user._id === id) {
+            setSelfProfile(true);
+            setUserFound(true);
+            setLoading(false);
+        } else {
+            fetchUser();
+        }
     }, [id, user]);
+
+    const fetchUser = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${id}`);
+            const userInfo = await response.json();
+            if (!response.ok) {
+                throw new Error('User not found');
+            }
+            console.log("Fetched User Data:", userInfo);
+            setUserFound(true);
+            setUserData(userInfo);
+        } catch (error) {
+            console.log('Error fetching user:', error);
+            setUserFound(false);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -42,7 +45,7 @@ const UserProfile = ({ id }) => {
             formData.append('image', file);
 
             try {
-                console.log("Starting image upload..."); // Log upload start
+                console.log("Starting image upload...");
                 const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/profile/upload-profile-image`, {
                     method: 'POST',
                     body: formData,
@@ -54,14 +57,19 @@ const UserProfile = ({ id }) => {
                 }
 
                 const result = await response.json();
-                console.log("Full Response after Upload:", result);
-                console.log("Uploaded Image URL:", result.profileImage); // Log the uploaded image URL
+                console.log("Uploaded Image URL:", result.profileImage);
 
-                setUserData((prevData) => {
-                    const updatedData = { ...prevData, profileImage: result.profileImage };
-                    console.log("Updated User Data with Profile Image:", updatedData); // Log updated user data with new image
-                    return updatedData;
-                });
+                // Update the user state in useAuth to ensure the profile image persists
+                setUser((prevUser) => ({
+                    ...prevUser,
+                    profileImage: result.profileImage,
+                }));
+
+                // Update local userData for immediate effect
+                setUserData((prevData) => ({
+                    ...prevData,
+                    profileImage: result.profileImage,
+                }));
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
@@ -92,8 +100,8 @@ const UserProfile = ({ id }) => {
                 {/* Profile Image and Camera Icon */}
                 <div className={styles.profileImageContainer}>
                     <img
-                        src={userData.profileImage || '/backgrounds-stray9.jpg'}
-                        alt={`${userData.username}'s profile`}
+                        src={(selfProfile ? user.profileImage : userData.profileImage) || '/backgrounds-stray9.jpg'}
+                        alt={`${userData.username || user.username}'s profile`}
                         className={styles.profileImage}
                     />
                     {selfProfile && (
@@ -112,7 +120,7 @@ const UserProfile = ({ id }) => {
                 />
 
                 {/* Username */}
-                <h2 className={styles.userName}>{userData.username}</h2>
+                <h2 className={styles.userName}>{userData.username || user.username}</h2>
 
                 {/* Profile Details (About Me, Achievements, and Stats) */}
                 <div className={styles.profileDetails}>

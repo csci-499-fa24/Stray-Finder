@@ -13,9 +13,16 @@
     position: relative;
 }
 
+.profile-avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 .avatar-circle:hover {
-    border: 3px solid rgb(222, 118, 20); /* Thicker border for more prominence */
-    transform: scale(1.1); /* Slight scale up for extra emphasis */
+    border: 3px solid rgb(222, 118, 20); 
+    transform: scale(1.1); 
 }
 
 /* Dot for profile avatar */
