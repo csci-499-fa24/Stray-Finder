@@ -1,10 +1,10 @@
 .header {
-    font-size: 2.5rem; /* Adjust size if needed */
-    font-weight: bold;
-    color: #2c3e50; /* Ensure it matches the color used in MyListings */
-    text-align: center;
-    margin-bottom: 1rem;
-    font-family: 'YourFont', sans-serif; /* Ensure this font is loaded in your global styles or imported */
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: 'YourFont', sans-serif;
 }
 
 .userList {
@@ -26,6 +26,7 @@
   background-color: #fff;
   transition: background-color 0.3s ease, box-shadow 0.2s ease;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .userListItem:hover {
@@ -35,12 +36,11 @@
 
 .userListItemSelected {
   background-color: #dfe4ff;
-  border-left: 4px solid #4b0082; /* Add a border for active items */
+  border-left: 4px solid #4b0082;
 }
 
 .username {
   font-size: 1.1rem;
-  font-weight: bold;
   color: #333;
 }
 
@@ -48,5 +48,40 @@
   font-size: 0.85rem;
   color: #888;
   margin-top: 5px;
+  font-style: italic;
 }
 
+/* Bold and change color for unread last messages */
+.unreadLastMessage {
+  font-weight: 700; /* Bold last message */
+  color: #333;
+  font-style: normal; /* Remove italic to enhance bold effect */
+}
+
+.unreadDot {
+  width: 10px;
+  height: 10px;
+  background-color: #e6babc;
+  border-radius: 50%;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0px 0px 6px rgba(255, 75, 144, 0.6); 
+}
+
+
+/* @keyframes pulse {
+  0% {
+      transform: scale(1) translateY(-50%);
+      opacity: 1;
+  }
+  50% {
+      transform: scale(1.4) translateY(-50%);
+      opacity: 0.7;
+  }
+  100% {
+      transform: scale(1) translateY(-50%);
+      opacity: 1;
+  }
+} */
