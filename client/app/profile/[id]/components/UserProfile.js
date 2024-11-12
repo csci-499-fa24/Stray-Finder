@@ -1,6 +1,7 @@
 import useAuth from '@/app/hooks/useAuth';
 import { useEffect, useState } from 'react';
 import styles from './profile.module.css';
+import { FaCamera } from 'react-icons/fa'; // Import camera icon
 
 const UserProfile = ({ id }) => {
     const { isAuthenticated, user } = useAuth();
@@ -33,6 +34,31 @@ const UserProfile = ({ id }) => {
         if (id) fetchUser();
     }, [id, user]);
 
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('image', file);
+    
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/profile/upload-profile-image`, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include',
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Failed to upload image');
+                }
+    
+                const result = await response.json();
+                setUserData((prevData) => ({ ...prevData, profileImage: result.profileImage }));
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+    };
+    
     if (loading) {
         return (
             <div className="spinner-border text-primary" role="status">
@@ -50,21 +76,35 @@ const UserProfile = ({ id }) => {
     }
 
     return (
-        <div className={styles.profileBackground}> {/* New background wrapper */}
+        <div className={styles.profileBackground}>
             <div className={styles.profileContainer}>
-                {/* Full-width banner */}
                 <div className={styles.profileBanner}></div>
 
-                {/* Profile Image and Username */}
-                <div className={styles.profileHeader}>
+                {/* Profile Image and Camera Icon */}
+                <div className={styles.profileImageContainer}>
                     <img
                         src={userData.profileImage || '/backgrounds-stray9.jpg'}
                         alt={`${userData.username}'s profile`}
                         className={styles.profileImage}
                     />
-                    <h2 className={styles.userName}>{userData.username}</h2>
+                    {selfProfile && (
+                        <div className={styles.cameraIcon} onClick={() => document.getElementById('fileInput').click()}>
+                            <FaCamera />
+                        </div>
+                    )}
                 </div>
                 
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                />
+
+                {/* Username */}
+                <h2 className={styles.userName}>{userData.username}</h2>
+
                 {/* Profile Details (About Me, Achievements, and Stats) */}
                 <div className={styles.profileDetails}>
                     {/* About Me Section */}
