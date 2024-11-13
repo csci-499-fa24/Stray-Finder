@@ -4,6 +4,8 @@ import MessagePanel from './messagePanel';
 import useAuth from '@/app/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import styles from './messagingLayout.module.css'; // Import CSS as styles
+import { useUnreadMessages } from '@/app/context/UnreadMessagesContext';
+
 
 export default function MessagingLayout() {
     const [selectedUser, setSelectedUser] = useState(null);
@@ -11,6 +13,7 @@ export default function MessagingLayout() {
     const [loading, setLoading] = useState(true); // New loading state
     const { isAuthenticated, user } = useAuth();
     const router = useRouter();
+    const { setHasUnreadMessages } = useUnreadMessages();
 
     useEffect(() => {
         console.log("Current user data:", user);
@@ -27,11 +30,16 @@ export default function MessagingLayout() {
                     });
                     const data = await response.json();
                     setUsers(Array.isArray(data) ? data : []);
+            
+                    // Update hasUnreadMessages in the context based on the fetched data
+                    const unread = data.some(msg => msg.senderId !== user._id && !msg.delivered);
+                    setHasUnreadMessages(unread);
                 } catch (error) {
                     console.error('Error fetching users with last messages:', error);
                     setUsers([]);
                 }
             }
+            
 
             fetchUsersWithLastMessage();
         }
@@ -41,8 +49,19 @@ export default function MessagingLayout() {
 
     return (
         <div className={styles.messagingLayout}>
-            <UserList users={users} onUserSelect={setSelectedUser} selectedUser={selectedUser} currentUser={user} />
-            <MessagePanel selectedUser={selectedUser} user={user} />
+            <UserList 
+                users={users} 
+                onUserSelect={setSelectedUser} 
+                selectedUser={selectedUser} 
+                currentUser={user} 
+            />
+            <MessagePanel 
+                selectedUser={selectedUser} 
+                user={user} 
+                setHasUnreadMessages={setHasUnreadMessages} 
+                users={users} 
+                setUsers={setUsers} 
+            />
         </div>
     );
 }

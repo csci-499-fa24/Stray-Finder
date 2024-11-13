@@ -5,6 +5,7 @@ import localFont from 'next/font/local'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './globals.css' // Import your global styles
 import { Toaster } from 'react-hot-toast' // Import the Toaster component
+import { UnreadMessagesProvider } from '@/app/context/UnreadMessagesContext';
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -41,7 +42,9 @@ export default function RootLayout({ children }) {
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 <Toaster position='top-right' /> {/* Add the Toaster here */}
-                {children}
+                <UnreadMessagesProvider>
+                    {children}
+                </UnreadMessagesProvider>
             </body>
         </html>
     )

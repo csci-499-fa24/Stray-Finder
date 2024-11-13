@@ -37,6 +37,12 @@ const getMessages = async (req, res) => {
                 { senderId: otherUserId, recipientId: req.user._id}
             ],
         }).sort({ timestamp: 1 });
+
+        await Message.updateMany(
+            { senderId: otherUserId, recipientId: req.user._id, delivered: false },
+            { $set: { delivered: true } }
+        );
+        
         return res.status(200).json(messages);
 
     } catch(error) {
@@ -105,7 +111,8 @@ const getLastMessages = async (req, res) => {
                     },
                     lastMessage: { $first: "$content" },
                     timestamp: { $first: "$timestamp" },
-                    senderId: { $first: "$senderId" }
+                    senderId: { $first: "$senderId" },
+                    delivered: { $first: "$delivered" } // Include delivered status
                 }
             }
         ]);
@@ -118,7 +125,8 @@ const getLastMessages = async (req, res) => {
                 username: user.username,
                 lastMessage: msg.lastMessage,
                 timestamp: msg.timestamp,
-                senderId: msg.senderId
+                senderId: msg.senderId,
+                delivered: msg.delivered // Return delivered status
             };
         });
 
@@ -129,10 +137,25 @@ const getLastMessages = async (req, res) => {
     }
 };
 
+const markMessagesAsRead = async (req, res) => {
+    const { recipientId } = req.params;
+    const currentUserId = req.user._id;
+
+    try {
+        await Message.updateMany(
+            { senderId: recipientId, recipientId: currentUserId, delivered: false },
+            { $set: { delivered: true } }
+        );
+        res.status(200).json({ message: 'Messages marked as read' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to mark messages as read', error: error.message });
+    }
+};
 
 module.exports = {
     sendMessage,
     getMessages,
     retrieveAllUsers,
-    getLastMessages
+    getLastMessages,
+    markMessagesAsRead
 };
