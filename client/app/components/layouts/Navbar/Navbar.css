@@ -58,3 +58,47 @@
 border-bottom: 2px solid orange;
 font-weight: bold;
 }
+
+
+/* Additional styles for screens 400px and below */
+@media (max-width: 400px) {
+  .custom-navbar {
+    padding: 10px 15px; /* Adjust padding to save space */
+    display: flex;
+    flex-direction: row; /* Ensure items are aligned horizontally */
+    justify-content: space-between; /* Space out the logo and login/profile button */
+    align-items: center; /* Align items vertically in the center */
+  }
+
+  .logo-container {
+    flex-grow: 1; /* Allow logo container to take up remaining space */
+    text-align: center; /* Keep logo centered */
+  }
+
+  .navbar-brand {
+    margin-right: -20px; /* Ensure no extra margin between logo and button */
+  }
+
+  .login-profile-container {
+    margin-left: auto; /* Ensure the login/profile button is on the far right */
+  }
+  .brand-text {
+  font-size: 1.4rem; /* Increase font size for emphasis */
+  color: #333333; /* Dark gray to distinguish from nav links */
+  font-weight: 700; /* Bolder weight to stand out */
+  margin-right: 20px;
+}
+
+/* Additional styles for screens 380px and below */
+@media (max-width: 380px) {
+  .brand-text {
+    font-size: 1.1rem;
+  }
+
+  .navbar-brand img, .logo-container img {
+    width: 50px; /* Set a smaller width for the logo */
+    transform: scale(0.8); /* Scale down the logo to 80% of its original size */
+
+  }
+}
+}
