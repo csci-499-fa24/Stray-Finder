@@ -23,9 +23,8 @@ export default function UserList({ users, onUserSelect, selectedUser, currentUse
                 .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
                 .map((user) => {
                     const isUnread = user.senderId !== currentUser._id && !user.delivered;
-                    const userProfileImage = user.profileImage || null;
 
-                    console.log('Username:', user.username, 'Profile Image:', userProfileImage);
+                    const userProfileImage = user.profileImage || null;
 
                     return (
                         <div 
