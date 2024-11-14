@@ -6,7 +6,9 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
     const [newMessage, setNewMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const loadingDelay = 300; // Delay in milliseconds before showing loading state
-    const messageEndRef = useRef(null); // Reference to the end of the message list
+
+    // Reference to the end of the messages
+    const endOfMessagesRef = useRef(null);
 
     useEffect(() => {
         let loadingTimeout;
@@ -58,10 +60,10 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
         return () => clearTimeout(loadingTimeout);
     }, [selectedUser]);
 
+    // Scroll to the latest message when messages are updated
     useEffect(() => {
-        // Scroll to the end of the message list when messages are updated
-        if (messageEndRef.current) {
-            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        if (endOfMessagesRef.current) {
+            endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     }, [messages]);
 
@@ -105,6 +107,7 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
 
                                 return (
                                     <div key={index} className={`${styles.messageWrapper} ${isSentByCurrentUser ? styles.sent : styles.received}`}>
+                                        {/* Profile image or initial next to the message bubble */}
                                         {!isSentByCurrentUser && (
                                             <div className={styles.profileIcon}>
                                                 {senderProfileImage ? (
@@ -126,7 +129,8 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
                                 );
                             })
                         )}
-                        <div ref={messageEndRef} /> {/* Scroll target */}
+                        {/* Dummy div for scrolling to the bottom */}
+                        <div ref={endOfMessagesRef} />
                     </div>
                     <div className={styles.messageInputContainer}>
                         <input
