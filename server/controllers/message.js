@@ -53,6 +53,7 @@ const getMessages = async (req, res) => {
 const retrieveAllUsers = async (req, res) => {
     try {
         const currentUserId = req.user._id;
+        
         // Step 1: Find all messages where the current user is the sender or recipient
         const messages = await Message.find({
             $or: [{ senderId: currentUserId }, { recipientId: currentUserId }]
@@ -69,11 +70,12 @@ const retrieveAllUsers = async (req, res) => {
             }
         });
 
-        // Step 3: Retrieve the user information (id and username) for these user IDs
-        const users = await User.find({ _id: { $in: Array.from(userIds) } }, 'username');
+        // Step 3: Retrieve the user information (id, username, and profileImage) for these user IDs
+        const users = await User.find({ _id: { $in: Array.from(userIds) } }, 'username profileImage');
         const userInfo = users.map(user => ({
             id: user._id,
-            username: user.username
+            username: user.username,
+            profileImage: user.profileImage || null // Ensures the profileImage is included
         }));
 
         // Return the list of userInfo objects
@@ -117,12 +119,13 @@ const getLastMessages = async (req, res) => {
             }
         ]);
 
-        const users = await User.find({ _id: { $in: messages.map(m => m._id) } }, 'username');
+        const users = await User.find({ _id: { $in: messages.map(m => m._id) } }, 'username profileImage');
         const userMessages = users.map(user => {
             const msg = messages.find(m => m._id.equals(user._id));
             return {
                 id: user._id,
                 username: user.username,
+                profileImage: user.profileImage || null, // Include profileImage
                 lastMessage: msg.lastMessage,
                 timestamp: msg.timestamp,
                 senderId: msg.senderId,

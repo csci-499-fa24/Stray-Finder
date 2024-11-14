@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './messagePanel.module.css';
 
 export default function MessagePanel({ selectedUser, user, setHasUnreadMessages, setUsers }) {
@@ -6,6 +6,9 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
     const [newMessage, setNewMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const loadingDelay = 300; // Delay in milliseconds before showing loading state
+
+    // Reference to the end of the messages
+    const endOfMessagesRef = useRef(null);
 
     useEffect(() => {
         let loadingTimeout;
@@ -56,6 +59,13 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
 
         return () => clearTimeout(loadingTimeout);
     }, [selectedUser]);
+
+    // Scroll to the latest message when messages are updated
+    useEffect(() => {
+        if (endOfMessagesRef.current) {
+            endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, [messages]);
 
     const handleSendMessage = async () => {
         if (newMessage.trim() && selectedUser) {
@@ -119,6 +129,8 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
                                 );
                             })
                         )}
+                        {/* Dummy div for scrolling to the bottom */}
+                        <div ref={endOfMessagesRef} />
                     </div>
                     <div className={styles.messageInputContainer}>
                         <input

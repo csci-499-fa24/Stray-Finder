@@ -22,7 +22,8 @@ export default function UserList({ users, onUserSelect, selectedUser, currentUse
                 .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
                 .map((user) => {
                     const isUnread = user.senderId !== currentUser._id && !user.delivered;
-                    const userProfileImage = user.profileImage || null; 
+
+                    const userProfileImage = user.profileImage || null;
 
                     return (
                         <div 
@@ -30,19 +31,23 @@ export default function UserList({ users, onUserSelect, selectedUser, currentUse
                             className={`${styles.userListItem} ${selectedUser && selectedUser.id === user.id ? styles.userListItemSelected : ''}`}
                             onClick={() => handleUserClick(user)}
                         >
-                            {/* Profile Image or Initials */}
-                            <div className={styles.profileIcon}>
-                                {userProfileImage ? (
-                                    <img src={userProfileImage} alt={`${user.username}'s profile`} className={styles.profileImage} />
-                                ) : (
-                                    <span className={styles.avatarCircle}>{user.username.charAt(0).toUpperCase()}</span>
-                                )}
-                            </div>
-                            <div className={styles.username}>
-                                {user.username}
-                            </div>
-                            <div className={`${styles.lastMessage} ${isUnread ? styles.unreadLastMessage : ''}`}>
-                                {user.lastMessage}
+                            <div className={styles.userInfo}>
+                                {/* Profile image and username are in the same row */}
+                                <div className={styles.profileColumn}>
+                                    <div className={styles.profileIcon}>
+                                        {userProfileImage ? (
+                                            <img src={userProfileImage} alt={`${user.username}'s profile`} className={styles.profileImage} />
+                                        ) : (
+                                            <span className={styles.avatarCircle}>{user.username.charAt(0).toUpperCase()}</span>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className={styles.textContainer}>
+                                    <div className={styles.username}>{user.username}</div>
+                                    <div className={`${styles.lastMessage} ${isUnread ? styles.unreadLastMessage : ''}`}>
+                                        {user.lastMessage}
+                                    </div>
+                                </div>
                             </div>
                             {isUnread && <span className={styles.unreadDot}></span>}
                         </div>
