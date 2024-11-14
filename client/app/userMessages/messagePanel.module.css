@@ -1,9 +1,19 @@
 .messageWrapper {
   display: flex;
-  flex-direction: column;
   align-items: flex-start;
   margin-bottom: 15px;
-  max-width: 70%;
+  max-width: 50%;
+  
+}
+
+.bubbleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sent .bubbleContainer {
+  align-items: flex-end;
 }
 
 .sent {
@@ -20,11 +30,14 @@
   display: flex;
 }
 
-.senderLabel {
-  font-size: 0.85rem;
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 2px;
+.profileIcon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .messageBubble {
@@ -50,9 +63,12 @@
 .timestamp {
   font-size: 0.75rem;
   color: #888;
-  margin-top: 5px;
+  margin-top: 2px;
+  text-align: left;
+}
+
+.sent .timestamp {
   text-align: right;
-  width: 100%;
 }
 
 .messagePanel {
@@ -131,8 +147,41 @@
 }
 
 .waitingImage {
-    width: 150px; /* Set a maximum width */
-    height: auto; /* Maintain aspect ratio */
-    max-width: 100%; /* Ensure it doesn't exceed the container */
-    margin-bottom: 20px; /* Add some space below the image */
+    width: 150px;
+    height: auto;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+.bubbleProfileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.bubbleInitial {
+    width: 30px;
+    height: 30px;
+    background-color: #4e3606;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 50%;
+}
+
+.avatarCircle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #4e3606;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
 }

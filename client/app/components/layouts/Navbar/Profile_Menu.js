@@ -4,10 +4,12 @@ import useAuth from '@/app/hooks/useAuth'
 import './Profile_Menu.css'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useUnreadMessages } from '@/app/context/UnreadMessagesContext';
+
 
 const ProfileMenu = () => {
     const { isAuthenticated, user, setIsAuthenticated, setUser, handleLogout } = useAuth()
-    const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+    const { hasUnreadMessages, setHasUnreadMessages } = useUnreadMessages();
     const router = useRouter()
 
     const handleLogoutClick = async (event) => {
@@ -17,6 +19,7 @@ const ProfileMenu = () => {
     }
 
     useEffect(() => {
+        // Fetch unread messages status on initial render if user is authenticated
         async function checkUnreadMessages() {
             if (isAuthenticated && user) {
                 try {
@@ -24,16 +27,17 @@ const ProfileMenu = () => {
                         credentials: 'include'
                     });
                     const data = await response.json();
-                    const unread = data.some(msg => msg.senderId !== user._id);
+                    const unread = data.some(msg => msg.senderId !== user._id && !msg.delivered);
                     setHasUnreadMessages(unread);
                 } catch (error) {
                     console.error('Error checking unread messages:', error);
                 }
             }
         }
-        checkUnreadMessages();
-    }, [isAuthenticated, user]);
 
+        checkUnreadMessages(); // Run the function on mount
+    }, [isAuthenticated, user]);
+    
     if (!isAuthenticated || !user) {
         return (
             <Link href="/auth" className="login-link" style={{ color: '#67347a' }}>Login</Link>

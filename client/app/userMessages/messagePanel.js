@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './messagePanel.module.css';
 
-export default function MessagePanel({ selectedUser, user }) {
+export default function MessagePanel({ selectedUser, user, setHasUnreadMessages, setUsers }) {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [loading, setLoading] = useState(false);
@@ -13,7 +13,6 @@ export default function MessagePanel({ selectedUser, user }) {
         if (selectedUser) {
             setMessages([]);
             
-            // Set a timeout to show loading only if it takes longer than the delay
             loadingTimeout = setTimeout(() => {
                 setLoading(true);
             }, loadingDelay);
@@ -28,9 +27,22 @@ export default function MessagePanel({ selectedUser, user }) {
                     );
                     const data = await response.json();
 
-                    // Clear the loading timeout if fetch completes quickly
                     clearTimeout(loadingTimeout);
                     setMessages(Array.isArray(data) ? data : []);
+
+                    // Mark messages as read immediately after fetching
+                    await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/message/mark-as-read/${selectedUser.id}`, {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
+
+                    // Update unread status in ProfileMenu and UserList
+                    setHasUnreadMessages(false);
+                    setUsers(prevUsers => 
+                        prevUsers.map(user => 
+                            user.id === selectedUser.id ? { ...user, delivered: true } : user
+                        )
+                    );
                 } catch (error) {
                     console.error('Error fetching messages:', error);
                     setMessages([]); // Set messages to an empty array if there's an error
@@ -38,10 +50,10 @@ export default function MessagePanel({ selectedUser, user }) {
                     setLoading(false); // End loading state
                 }
             }
+
             fetchMessages();
         }
 
-        // Cleanup function to clear the timeout if component unmounts or selectedUser changes
         return () => clearTimeout(loadingTimeout);
     }, [selectedUser]);
 
@@ -80,20 +92,29 @@ export default function MessagePanel({ selectedUser, user }) {
                         ) : (
                             messages.map((msg, index) => {
                                 const isSentByCurrentUser = msg.senderId === user._id;
-
-                                const senderLabel = msg.senderId 
-                                    ? (isSentByCurrentUser ? "You" : selectedUser.username) 
-                                    : "Unknown";
+                                const senderLabel = isSentByCurrentUser ? "You" : selectedUser.username;
+                                const senderProfileImage = isSentByCurrentUser ? user.profileImage : selectedUser.profileImage;
 
                                 return (
                                     <div key={index} className={`${styles.messageWrapper} ${isSentByCurrentUser ? styles.sent : styles.received}`}>
-                                        <p className={styles.senderLabel}>{senderLabel}</p>
-                                        <div className={styles.messageBubble}>
-                                            <p className={styles.messageContent}>{msg.content}</p>
+                                        {/* Profile image or initial next to the message bubble */}
+                                        {!isSentByCurrentUser && (
+                                            <div className={styles.profileIcon}>
+                                                {senderProfileImage ? (
+                                                    <img src={senderProfileImage} alt={`${senderLabel}'s profile`} className={styles.bubbleProfileImage} />
+                                                ) : (
+                                                    <span className={styles.bubbleInitial}>{senderLabel.charAt(0).toUpperCase()}</span>
+                                                )}
+                                            </div>
+                                        )}
+                                        <div className={styles.bubbleContainer}>
+                                            <div className={styles.messageBubble}>
+                                                <p className={styles.messageContent}>{msg.content}</p>
+                                            </div>
+                                            <span className={styles.timestamp}>
+                                                {new Date(msg.timestamp).toLocaleString()}
+                                            </span>
                                         </div>
-                                        <span className={styles.timestamp}>
-                                            {new Date(msg.timestamp).toLocaleString()}
-                                        </span>
                                     </div>
                                 );
                             })
