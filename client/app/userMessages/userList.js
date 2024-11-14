@@ -1,7 +1,6 @@
 import styles from './userList.module.css';
 
 export default function UserList({ users, onUserSelect, selectedUser, currentUser, setHasUnreadMessages }) {
-    console.log("All users data in UserList:", users);
     const handleUserClick = async (user) => {
         onUserSelect(user);
 
@@ -23,9 +22,8 @@ export default function UserList({ users, onUserSelect, selectedUser, currentUse
                 .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
                 .map((user) => {
                     const isUnread = user.senderId !== currentUser._id && !user.delivered;
-                    const userProfileImage = user.profileImage || null;
 
-                    console.log('Username:', user.username, 'Profile Image:', userProfileImage);
+                    const userProfileImage = user.profileImage || null;
 
                     return (
                         <div 
