@@ -74,9 +74,10 @@ const AnimalReportProfile = ({ id }) => {
 
           <p className={styles.description}>{reportProfile?.description}</p>
 
-          <Link href={from || "/"} className={styles.btn}>
-            Go Back
-          </Link>
+          <button onClick={() => window.history.back()} className={styles.btn}>
+              Go Back
+          </button>
+
 
           {isAuthenticated && user?._id === reportProfile?.reportedBy._id && (
             <button
@@ -210,6 +211,8 @@ const AnimalReportProfile = ({ id }) => {
               <MessagingInterface
                 recipientId={reportProfile?.reportedBy?._id}
                 senderId={user?._id}
+                animalReportId={id}
+                recipientName={reportProfile?.reportedBy?.username}
               />
             </div>
           </div>

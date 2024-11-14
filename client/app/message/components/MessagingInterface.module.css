@@ -70,6 +70,8 @@
   background-color: #f8f8fc;
   padding: 15px;
   border-radius: 8px;
+  max-height: 300px; /* Set max height for scrollable area */
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .messageList {
@@ -91,6 +93,7 @@
   margin-bottom: 5px;
   max-width: 70%;
   align-self: flex-end;
+  margin-left: auto;
 }
 
 .receivedMessage {
@@ -108,4 +111,22 @@
   font-size: 0.8em;
   color: #6c757d;
   margin-top: 5px;
+}
+
+.animalReportPreview {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.animalImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  object-fit: cover;
 }

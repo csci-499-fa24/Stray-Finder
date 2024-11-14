@@ -61,7 +61,7 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
             <div className="card m-3 p-0">
                 <div style={{ position: 'relative', width: '100%', paddingTop: '100%', overflow: 'hidden' }}>
                     <img
-                        src={image}
+                        src={image  || '/paw-pattern.jpg'}
                         alt={name}
                         style={{ position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', objectFit: 'cover' }}
                     />

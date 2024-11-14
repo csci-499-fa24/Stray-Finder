@@ -23,6 +23,11 @@ const messageSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    animalReportId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'AnimalReport', 
+        required: false 
+    },
 });
 
 module.exports = mongoose.model('Message', messageSchema);

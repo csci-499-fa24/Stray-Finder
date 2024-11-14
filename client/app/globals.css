@@ -185,7 +185,23 @@ body {
     bottom: 10px;
     right: 10px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+
+.report-btn:hover {
+    background-color: #c82333; /* Darker shade on hover */
+}
+
+.card-link {
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.card-link:hover {
+    text-decoration: underline;
+}
+
 
 /* Modal Styling */
 .modal {
@@ -283,4 +299,28 @@ body {
     border-radius: 15px;
     padding: 2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.card {
+    width: 100%;
+    max-width: 300px; /* Define a max width for consistency */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft shadow for lift */
+    overflow: hidden; /* Ensures no overflow on rounded corners */
+    background-color: white;
+    margin: 1rem auto; /* Center the card with some margin */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #ddd;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+.card-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #2c3e50;
 }

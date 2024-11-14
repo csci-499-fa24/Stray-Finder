@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import styles from './messagePanel.module.css';
 
 export default function MessagePanel({ selectedUser, user, setHasUnreadMessages, setUsers }) {
@@ -80,7 +81,7 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
                             'Content-Type': 'application/json',
                         },
                         credentials: "include",
-                        body: JSON.stringify({ content, senderId }),
+                        body: JSON.stringify({ content, senderId, animalReportId: null }), // Pass animalReportId if needed
                     }
                 );
                 setMessages([...messages, { content: newMessage, senderId: user._id, timestamp: new Date().toISOString() }]);
@@ -120,6 +121,23 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
                                         <div className={styles.bubbleContainer}>
                                             <div className={styles.messageBubble}>
                                                 <p className={styles.messageContent}>{msg.content}</p>
+
+                                                {/* Display animal report preview if available */}
+                                                {msg.animalReportId && msg.animalReportId.animal && (
+                                                    <Link 
+                                                        href={`/animal/${msg.animalReportId._id}`} 
+                                                        className={styles.animalNameLink}
+                                                        style={{ color: 'inherit', textDecoration: 'none' }}
+                                                    >
+                                                        <div className={styles.animalReportPreview}>
+                                                            <img src={msg.animalReportId.animal.imageUrl} alt={msg.animalReportId.animal.name} className={styles.animalImage} />
+                                                            <div className={styles.animalInfo}>
+                                                                <p className={styles.animalName}>{msg.animalReportId.animal.name}</p>
+                                                                <p className={styles.animalStatus}>{msg.animalReportId.reportType}</p>
+                                                            </div>
+                                                        </div>
+                                                    </Link>
+                                                )}
                                             </div>
                                             <span className={styles.timestamp}>
                                                 {new Date(msg.timestamp).toLocaleString()}
