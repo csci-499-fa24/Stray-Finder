@@ -29,6 +29,12 @@
   position: relative;
 }
 
+.userInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 .userListItem:hover {
   background-color: #ececec;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
@@ -47,7 +53,7 @@
 .lastMessage {
   font-size: 0.85rem;
   color: #888;
-  margin-top: 5px;
+  /* margin-top: 5px; */
   font-style: italic;
 }
 
@@ -55,7 +61,7 @@
 .unreadLastMessage {
   font-weight: 700; /* Bold last message */
   color: #333;
-  font-style: normal; /* Remove italic to enhance bold effect */
+  font-style: normal; 
 }
 
 .unreadDot {
@@ -73,7 +79,7 @@
 .profileIcon {
   width: 30px;
   height: 30px;
-  margin-right: 10px;
+  margin-right: 8px;
   border-radius: 50%;
   overflow: hidden;
 }
