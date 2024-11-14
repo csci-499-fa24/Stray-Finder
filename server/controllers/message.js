@@ -7,10 +7,11 @@ app.use(express.json());
 
 
 const sendMessage = async (req, res) => {
-    const { content } = req.body;
+    const { content, animalReportId } = req.body; 
     const recipientId = req.params.recipientId;
+
     if (!recipientId || !content) {
-        return res.status(400).json({ message: 'Receiver and content are required' });
+        return res.status(400).json({ message: 'Recipient and content are required' });
     }
 
     try {
@@ -18,12 +19,12 @@ const sendMessage = async (req, res) => {
             senderId: req.user._id,
             recipientId,
             content,
+            animalReportId: animalReportId || null 
         });
         await message.save();
         return res.status(201).json(message);
-
     } catch (error) {
-        return res.status(500).json({ message: 'failed to send message ', error: error.message });
+        return res.status(500).json({ message: 'Failed to send message', error: error.message });
     }
 };
 
@@ -34,19 +35,26 @@ const getMessages = async (req, res) => {
         const messages = await Message.find({
             $or: [
                 { senderId: req.user._id, recipientId: otherUserId },
-                { senderId: otherUserId, recipientId: req.user._id}
-            ],
-        }).sort({ timestamp: 1 });
+                { senderId: otherUserId, recipientId: req.user._id }
+            ]
+        })
+        .populate({
+            path: 'animalReportId',  
+            populate: {
+                path: 'animal', 
+                select: 'name imageUrl species' 
+            }
+        })
+        .sort({ timestamp: 1 });
 
         await Message.updateMany(
             { senderId: otherUserId, recipientId: req.user._id, delivered: false },
             { $set: { delivered: true } }
         );
-        
-        return res.status(200).json(messages);
 
-    } catch(error) {
-        return res.status(500).json({ message: 'Failed to get messages ', error: error.message });
+        return res.status(200).json(messages);
+    } catch (error) {
+        return res.status(500).json({ message: 'Failed to get messages', error: error.message });
     }
 };
 

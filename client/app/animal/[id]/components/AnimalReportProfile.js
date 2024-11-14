@@ -210,6 +210,8 @@ const AnimalReportProfile = ({ id }) => {
               <MessagingInterface
                 recipientId={reportProfile?.reportedBy?._id}
                 senderId={user?._id}
+                animalReportId={id}
+                recipientName={reportProfile?.reportedBy?.username}
               />
             </div>
           </div>
