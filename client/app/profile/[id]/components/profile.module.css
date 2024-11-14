@@ -167,7 +167,7 @@
 
 .profileImageContainer {
     position: absolute;
-    bottom: 430px; 
+    bottom: 500px; 
     left: 50%;
     transform: translateX(-50%); 
     width: 120px;
