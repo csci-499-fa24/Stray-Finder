@@ -53,7 +53,8 @@ export default function MessagingLayout() {
                 users={users} 
                 onUserSelect={setSelectedUser} 
                 selectedUser={selectedUser} 
-                currentUser={user} 
+                currentUser={user}
+                setHasUnreadMessages={setHasUnreadMessages} 
             />
             <MessagePanel 
                 selectedUser={selectedUser} 

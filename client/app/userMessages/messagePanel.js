@@ -92,20 +92,29 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
                         ) : (
                             messages.map((msg, index) => {
                                 const isSentByCurrentUser = msg.senderId === user._id;
-
-                                const senderLabel = msg.senderId 
-                                    ? (isSentByCurrentUser ? "You" : selectedUser.username) 
-                                    : "Unknown";
+                                const senderLabel = isSentByCurrentUser ? "You" : selectedUser.username;
+                                const senderProfileImage = isSentByCurrentUser ? user.profileImage : selectedUser.profileImage;
 
                                 return (
                                     <div key={index} className={`${styles.messageWrapper} ${isSentByCurrentUser ? styles.sent : styles.received}`}>
-                                        <p className={styles.senderLabel}>{senderLabel}</p>
-                                        <div className={styles.messageBubble}>
-                                            <p className={styles.messageContent}>{msg.content}</p>
+                                        {/* Profile image or initial next to the message bubble */}
+                                        {!isSentByCurrentUser && (
+                                            <div className={styles.profileIcon}>
+                                                {senderProfileImage ? (
+                                                    <img src={senderProfileImage} alt={`${senderLabel}'s profile`} className={styles.bubbleProfileImage} />
+                                                ) : (
+                                                    <span className={styles.bubbleInitial}>{senderLabel.charAt(0).toUpperCase()}</span>
+                                                )}
+                                            </div>
+                                        )}
+                                        <div className={styles.bubbleContainer}>
+                                            <div className={styles.messageBubble}>
+                                                <p className={styles.messageContent}>{msg.content}</p>
+                                            </div>
+                                            <span className={styles.timestamp}>
+                                                {new Date(msg.timestamp).toLocaleString()}
+                                            </span>
                                         </div>
-                                        <span className={styles.timestamp}>
-                                            {new Date(msg.timestamp).toLocaleString()}
-                                        </span>
                                     </div>
                                 );
                             })
