@@ -70,19 +70,19 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Authentication: ProfileMenu or Login Button */}
-        <div className="p-3 ml-auto">
-          {isAuthenticated && user ? (
-            <div className="profile">
-              <ProfileMenu />
-            </div>
-          ) : (
-            <div className="login">
-              <Link href="/auth" className="login-button">Login</Link>
-            </div>
-          )}
+    {/* Authentication: ProfileMenu or Login Button */}
+    <div className="d-flex align-items-center login-profile-container">
+      {isAuthenticated && user ? (
+        <div className="profile">
+          <ProfileMenu />
         </div>
-      </div>
+      ) : (
+        <div className="login">
+          <Link href="/auth" className="login-button">Login</Link>
+        </div>
+      )}
+    </div>
+  </div>
     </nav>
   );
 };

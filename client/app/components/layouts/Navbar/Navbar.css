@@ -58,3 +58,72 @@
 border-bottom: 2px solid orange;
 font-weight: bold;
 }
+
+/* Additional styles for screens 700px and below */
+@media (max-width: 700px) {
+  .login-button {
+    padding: 8px 15px; /* Reduce padding for smaller size */
+    font-size: 0.8rem; /* Adjust font size for better fit */
+  }
+}
+/* Additional styles for screens 500px and below */
+@media (max-width: 500px) {
+  .custom-navbar {
+    padding: 10px 15px; /* Adjust padding to save space */
+    display: flex;
+    flex-direction: row; /* Ensure items are aligned horizontally */
+    justify-content: space-between; /* Space out the logo and login/profile button */
+    align-items: center; /* Align items vertically in the center */
+  }
+  .login-button {
+    padding: 4px 10px; /* Further reduce padding for very small screens */
+    font-size: 0.8rem; /* Smaller font for extra space-saving */
+  }
+
+  .logo-container {
+    flex-grow: 1; /* Allow logo container to take up remaining space */
+    text-align: center; /* Keep logo centered */
+  }
+
+  .navbar-brand {
+    margin-right: -30px; /* Ensure no extra margin between logo and button */
+  }
+
+  .login-profile-container {
+    margin-left: auto; /* Ensure the login/profile button is on the far right */
+  }
+  .brand-text {
+  font-size: 1.2rem; /* Increase font size for emphasis */
+  color: #333333; /* Dark gray to distinguish from nav links */
+  font-weight: 700; /* Bolder weight to stand out */
+  margin-right: 20px;
+}
+
+/* Additional styles for screens 380px and below */
+@media (max-width: 380px) {
+  .brand-text {
+    font-size: 1.0rem;
+    color: #333333; /* Dark gray to distinguish from nav links */
+    font-weight: 700; /* Bolder weight to stand out */
+    margin-right: 20px;
+  }
+
+  .navbar-brand img, .logo-container img {
+    width: 50px; /* Set a smaller width for the logo */
+    transform: scale(0.7); /* Scale down the logo to 80% of its original size */
+
+  }
+  .login-button {
+    padding: 4px 8px; /* Further reduce padding for very small screens */
+    font-size: 0.8rem; /* Smaller font for extra space-saving */
+  }
+  @media (max-width: 350px) {
+  .brand-text {
+    font-size: 0.9rem;
+    color: #333333; /* Dark gray to distinguish from nav links */
+    font-weight: 700; /* Bolder weight to stand out */
+    margin-right: -10px;
+  }
+}
+}
+}
