@@ -22,7 +22,7 @@ export default function UserList({ users, onUserSelect, selectedUser, currentUse
                 .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
                 .map((user) => {
                     const isUnread = user.senderId !== currentUser._id && !user.delivered;
-                    const userProfileImage = user.profileImage || null; // Adjust based on your data structure
+                    const userProfileImage = user.profileImage || null; 
 
                     return (
                         <div 
