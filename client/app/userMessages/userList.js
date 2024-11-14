@@ -1,7 +1,6 @@
 import styles from './userList.module.css';
 
 export default function UserList({ users, onUserSelect, selectedUser, currentUser, setHasUnreadMessages }) {
-    console.log("All users data in UserList:", users);
     const handleUserClick = async (user) => {
         onUserSelect(user);
 
