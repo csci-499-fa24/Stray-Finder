@@ -33,19 +33,23 @@ export default function UserList({ users, onUserSelect, selectedUser, currentUse
                             className={`${styles.userListItem} ${selectedUser && selectedUser.id === user.id ? styles.userListItemSelected : ''}`}
                             onClick={() => handleUserClick(user)}
                         >
-                            {/* Container for profile icon and username */}
                             <div className={styles.userInfo}>
-                                <div className={styles.profileIcon}>
-                                    {userProfileImage ? (
-                                        <img src={userProfileImage} alt={`${user.username}'s profile`} className={styles.profileImage} />
-                                    ) : (
-                                        <span className={styles.avatarCircle}>{user.username.charAt(0).toUpperCase()}</span>
-                                    )}
+                                {/* Profile image and username are in the same row */}
+                                <div className={styles.profileColumn}>
+                                    <div className={styles.profileIcon}>
+                                        {userProfileImage ? (
+                                            <img src={userProfileImage} alt={`${user.username}'s profile`} className={styles.profileImage} />
+                                        ) : (
+                                            <span className={styles.avatarCircle}>{user.username.charAt(0).toUpperCase()}</span>
+                                        )}
+                                    </div>
                                 </div>
-                                <div className={styles.username}>{user.username}</div>
-                            </div>
-                            <div className={`${styles.lastMessage} ${isUnread ? styles.unreadLastMessage : ''}`}>
-                                {user.lastMessage}
+                                <div className={styles.textContainer}>
+                                    <div className={styles.username}>{user.username}</div>
+                                    <div className={`${styles.lastMessage} ${isUnread ? styles.unreadLastMessage : ''}`}>
+                                        {user.lastMessage}
+                                    </div>
+                                </div>
                             </div>
                             {isUnread && <span className={styles.unreadDot}></span>}
                         </div>
