@@ -64,7 +64,9 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
     // Scroll to the latest message when messages are updated
     useEffect(() => {
         if (endOfMessagesRef.current) {
-            endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            setTimeout(() => {
+                endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100); // Adding a small delay to ensure the element is rendered before scrolling
         }
     }, [messages]);
 
@@ -86,6 +88,13 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
                 );
                 setMessages([...messages, { content: newMessage, senderId: user._id, timestamp: new Date().toISOString() }]);
                 setNewMessage("");
+
+                // Scroll to the latest message after sending
+                if (endOfMessagesRef.current) {
+                    setTimeout(() => {
+                        endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100); // Adding a small delay to ensure messages are updated before scrolling
+                }
             } catch (error) {
                 console.error('Error sending message:', error);
             }
