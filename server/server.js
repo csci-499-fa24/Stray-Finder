@@ -1,6 +1,5 @@
 const express = require('express')
 const cors = require('cors')
-// const http = require('http');
 const cookieParser = require('cookie-parser')
 const app = express()
 const animal = require('./routes/animal')
@@ -13,7 +12,6 @@ const match = require('./routes/match')
 const email = require('./routes/email')
 const profile = require('./routes/profile');
 const { exec } = require('child_process')
-// const socketSetUp = require('./socket/socket');
 
 /**
  * Connection to the database
@@ -57,11 +55,6 @@ app.use('/api/match/', match)
 app.use('/api/email/', email)
 app.use('/api/profile/', profile);
 ///////////////////////////////////////////////////////////////////////////
-
-// Create HTTP server with app
-// const server = http.createServer(app);
-// Initialize Socket.IO with the HTTP server
-// socketSetUp(server);
 
 const port = process.env.PORT || 8080
 // Load DB then start server
