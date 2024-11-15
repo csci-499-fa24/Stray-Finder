@@ -440,19 +440,20 @@ const ReportAnimal = () => {
                                     </GoogleMap>
                                 </LoadScriptNext>
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="file" className="form-label">
-                                    Upload Image (optional)
-                                </label>
-                                <input
-                                    type="file"
-                                    className="form-control"
-                                    id="file"
-                                    name="file"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                />
-                            </div>
+                    <div className="mb-3">
+                        <label htmlFor="file" className="form-label">
+                            Take or Upload an Image (optional)
+                        </label>
+                        <input
+                            type="file"
+                            className="form-control"
+                            id="file"
+                            name="file"
+                            accept="image/*"
+                            capture="user" // Allows taking pictures from the front camera if supported
+                            onChange={handleFileChange}
+                        />
+                    </div>
                             <button
                                 type="submit"
                                 className="btn btn-primary"
