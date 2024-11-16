@@ -221,7 +221,7 @@ const Map = () => {
                     value={filters.fixed}
                     onChange={handleFilterChange}
                 >
-                    <option value="">All</option>
+                    <option value="">Fixed Status</option>
                     <option value="Yes">Fixed</option>
                     <option value="No">Not Fixed</option>
                 </select>
@@ -232,7 +232,7 @@ const Map = () => {
                     value={filters.collar}
                     onChange={handleFilterChange}
                 >
-                    <option value="">All</option>
+                    <option value="">Collar Status</option>
                     <option value="true">With Collar</option>
                     <option value="false">Without Collar</option>
                 </select>
