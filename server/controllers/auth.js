@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const { sendEmail } = require('./email');
+const Message = require('../models/message');
 
 // Register new user
 const register = async (req, res, next) => {
@@ -21,6 +22,16 @@ const register = async (req, res, next) => {
         // Create a new user without manually hashing
         const user = new User({ username, email, password })
         await user.save()
+
+        // Add a welcome message to the user's inbox
+        const strayFinderUserId = '67380f3303b2a7f7d8a8543c'; 
+        const welcomeMessage = new Message({
+            senderId: strayFinderUserId,
+            recipientId: user._id,
+            content: `Hi ${username}, welcome to Stray Finder! We're so glad you joined us. Explore the platform and help connect pets with their families.`,
+            delivered: false,
+        });
+        await welcomeMessage.save();
 
         // Compose a welcome email
         const emailSubject = 'Welcome to Stray Finder!';
