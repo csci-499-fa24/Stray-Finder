@@ -118,3 +118,21 @@
   flex-direction: column;
   justify-content: center;
 }
+@media (max-width: 600px) {
+  .header {
+    font-size: 1.8rem; /* Smaller font size on mobile */
+    margin-bottom: 0.8rem;
+  }
+  .userList {
+    width: 100%;
+    border-right: none;
+    padding: 10px;
+  }
+  .userListItem {
+    padding: 10px; /* Smaller padding on mobile */
+  }
+  .profileIcon, .bubbleProfileImage {
+    width: 20px;
+    height: 20px;
+  }
+}
