@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const {sendEmail, fetchAllRecentAnimals} = require('../controllers/email')
+const {sendEmail, sendReportsEmail, fetchAllRecentAnimals} = require('../controllers/email')
 
-router.post('/:targetEmail', sendEmail)
+router.post('/:targetEmail', sendReportsEmail)
 
 module.exports = router
