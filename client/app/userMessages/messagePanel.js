@@ -12,7 +12,9 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
     const endOfMessagesRef = useRef(null);
 
     // Check if the current chat is with StrayFinder
-    const isStrayFinder = selectedUser && selectedUser.username === 'StrayFinder';
+    const STRAYFINDER_ID = '67380f3303b2a7f7d8a8543c'; 
+    const isStrayFinder = selectedUser && selectedUser.id === STRAYFINDER_ID;
+
 
     useEffect(() => {
         let loadingTimeout;
