@@ -1,6 +1,7 @@
 const Message = require('../models/message');
 const User = require('../models/user');
 const express = require('express');
+const { sendEmail } = require('./email');
 const app = express();
 
 app.use(express.json());
@@ -15,6 +16,7 @@ const sendMessage = async (req, res) => {
     }
 
     try {
+        // Save the message
         const message = new Message({
             senderId: req.user._id,
             recipientId,
@@ -22,6 +24,66 @@ const sendMessage = async (req, res) => {
             animalReportId: animalReportId || null 
         });
         await message.save();
+
+        // Fetch recipient details
+        const recipient = await User.findById(recipientId).select('email username');
+        if (!recipient) {
+            return res.status(404).json({ message: 'Recipient not found' });
+        }
+
+        // Fetch sender details for personalization
+        const sender = await User.findById(req.user._id).select('username');
+        
+        // Compose the email
+        const emailSubject = `New Message from ${sender.username}`;
+        const emailBody = `
+            <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                <!-- Header Section -->
+                <div style="background-color: #fdf2e9; padding: 20px; text-align: center;">
+                    <img src="https://raw.githubusercontent.com/csci-499-fa24/Stray-Finder/refs/heads/main/client/app/components/layouts/assets/file.png" alt="Stray Finder Logo" style="width: 80px; margin-bottom: 10px;">
+                    <h1 style="font-size: 24px; color: #555; margin: 0;">You’ve Got a New Message!</h1>
+                </div>
+
+                <!-- Main Content -->
+                <div style="padding: 20px;">
+                    <p style="font-size: 18px; margin: 0 0 15px;">Hi ${recipient.username},</p>
+                    <p style="margin: 0 0 15px;">
+                        ${sender.username} has sent you a message:
+                    </p>
+                    <blockquote style="margin: 0 0 15px; font-size: 16px; font-style: italic; color: #555; border-left: 4px solid #ff6f61; padding-left: 10px;">
+                        ${content}
+                    </blockquote>
+                    <p style="margin: 0 0 15px;">
+                        Log in to your account to view the full conversation and respond.
+                    </p>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <a href="https://stray-finder-client.onrender.com/userMessages" 
+                           style="background-color: #ff6f61; color: white; text-decoration: none; font-size: 16px; padding: 10px 20px; border-radius: 4px; display: inline-block;">
+                            View Messages
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Footer Section -->
+                <div style="background-color: #f9f9f9; padding: 20px; text-align: center; border-top: 1px solid #ddd;">
+                    <p style="margin: 0; font-size: 14px; color: #777;">
+                        If you have any questions, feel free to reach out to us at 
+                        <a href="mailto:support@strayfinder.com" style="color: #ff6f61;">support@strayfinder.com</a>.
+                    </p>
+                    <p style="margin: 10px 0 0; font-size: 14px; color: #aaa;">
+                        © 2024 Stray Finder. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        `;
+
+        // Send email notification
+        await sendEmail({
+            targetEmail: recipient.email,
+            subject: emailSubject,
+            body: emailBody,
+        });
+
         return res.status(201).json(message);
     } catch (error) {
         return res.status(500).json({ message: 'Failed to send message', error: error.message });
