@@ -11,6 +11,9 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
     // Reference to the end of the messages
     const endOfMessagesRef = useRef(null);
 
+    // Check if the current chat is with StrayFinder
+    const isStrayFinder = selectedUser && selectedUser.username === 'StrayFinder';
+
     useEffect(() => {
         let loadingTimeout;
 
@@ -155,16 +158,20 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
                         {/* Dummy div for scrolling to the bottom */}
                         <div ref={endOfMessagesRef} />
                     </div>
-                    <div className={styles.messageInputContainer}>
-                        <input
-                            type="text"
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            placeholder="Type a message..."
-                            className={styles.messageInput}
-                        />
-                        <button onClick={handleSendMessage} className={styles.sendButton}>Send</button>
-                    </div>
+
+                    {/* Hide the input and send button if chatting with StrayFinder */}
+                    {!isStrayFinder && (
+                        <div className={styles.messageInputContainer}>
+                            <input
+                                type="text"
+                                value={newMessage}
+                                onChange={(e) => setNewMessage(e.target.value)}
+                                placeholder="Type a message..."
+                                className={styles.messageInput}
+                            />
+                            <button onClick={handleSendMessage} className={styles.sendButton}>Send</button>
+                        </div>
+                    )}
                 </>
             ) : (
                 <div className={styles.waitingContainer}>
