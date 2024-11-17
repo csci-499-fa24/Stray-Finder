@@ -7,7 +7,9 @@ import toast from 'react-hot-toast';
 
 const ReportAnimal = () => {
     const router = useRouter();
-    const { isAuthenticated, user } = useAuth(); // Get user and authentication status from useAuth
+    const { isAuthenticated, user } = useAuth();
+    const DEFAULT_CENTER = { lat: 40.768, lng: -73.964 }; // Default coordinates (e.g., NYC)
+
     const [formData, setFormData] = useState({
         reportType: '',
         name: '',
@@ -19,7 +21,7 @@ const ReportAnimal = () => {
         collar: false,
         description: '',
         location: '',
-        coordinates: { lat: 40.768, lng: -73.964 }, // Default coordinates
+        coordinates: DEFAULT_CENTER,
     });
 
     const [file, setFile] = useState(null); // Store the image file
@@ -69,7 +71,7 @@ const ReportAnimal = () => {
 
     useEffect(() => {
         if (isAuthenticated === false) {
-            router.push('/auth'); // Redirect to login if not authenticated
+            router.push('/auth');
         }
 
         if (isAuthenticated && navigator.geolocation && !locationAsked) {
@@ -160,15 +162,59 @@ const ReportAnimal = () => {
         setFile(e.target.files[0]); // Store the selected file
     };
 
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 3959; // Radius of Earth in miles
+        const dLat = ((lat2 - lat1) * Math.PI) / 180;
+        const dLon = ((lon2 - lon1) * Math.PI) / 180;
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos((lat1 * Math.PI) / 180) *
+                Math.cos((lat2 * Math.PI) / 180) *
+                Math.sin(dLon / 2) *
+                Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Distance in miles
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        const center = userLocation || DEFAULT_CENTER;
+
+        const distance = calculateDistance(
+            center.lat,
+            center.lng,
+            formData.coordinates.lat,
+            formData.coordinates.lng
+        );
+
+        // If userLocation is available, enforce the 10-mile limit
+        if (userLocation) {
+            const distance = calculateDistance(
+                userLocation.lat,
+                userLocation.lng,
+                formData.coordinates.lat,
+                formData.coordinates.lng
+            );
     
-        // Prepare FormData for the image and other form data
+            if (distance > 10) {
+                setError(
+                    `The report location is ${distance.toFixed(
+                        1
+                    )} miles away from your location, exceeding the 10-mile limit.`
+                );
+                setLoading(false);
+                toast.error("Report location exceeds 10-mile distance limit.");
+                return;
+            }
+        }
+    
+        // Prepare FormData and submit the report (same as in the original handleSubmit)
         const uploadData = new FormData();
         uploadData.append('reportType', formData.reportType);
-        uploadData.append('name', formData.name);    
+        uploadData.append('name', formData.name);
         uploadData.append('species', formData.species);
         uploadData.append('breed', formData.breed);
         uploadData.append('color', formData.color);
@@ -176,38 +222,33 @@ const ReportAnimal = () => {
         uploadData.append('fixed', formData.fixed);
         uploadData.append('collar', formData.collar);
         uploadData.append('description', formData.description);
-        uploadData.append('reportedBy', user._id); // Add user ID
+        uploadData.append('reportedBy', user._id);
     
-        // Prepare location data
         const locationData = {
-            address: formData.location || 'Unknown', // Default to 'Unknown' if no address is provided
+            address: formData.location || 'Unknown',
             coordinates: {
                 type: 'Point',
                 coordinates: [
                     formData.coordinates.lng,
                     formData.coordinates.lat,
-                ], // Coordinates in GeoJSON format: [longitude, latitude]
+                ],
             },
         };
     
-        // Append location to FormData
-        uploadData.append('location', JSON.stringify(locationData)); // Ensure location is stringified
+        uploadData.append('location', JSON.stringify(locationData));
     
-        // If an image file is selected, append it to the FormData
         if (file) {
             uploadData.append('image', file);
         }
     
         try {
-            const requestOptions = {
-                method: 'POST',
-                body: uploadData, // Use FormData
-                credentials: 'include',
-            };
-    
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`, // Corrected backtick usage for template literal
-                requestOptions
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`,
+                {
+                    method: 'POST',
+                    body: uploadData,
+                    credentials: 'include',
+                }
             );
     
             if (!response.ok) {
@@ -218,7 +259,7 @@ const ReportAnimal = () => {
             console.log('Form submitted successfully:', result);
     
             toast.success("Report submitted successfully!", {
-                duration: 5000, // Toast will show for 5 seconds
+                duration: 5000,
             });
     
             router.push('/');
