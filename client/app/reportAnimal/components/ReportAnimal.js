@@ -165,10 +165,34 @@ const ReportAnimal = () => {
         setLoading(true);
         setError('');
     
+        // Calculate and check the distance before submitting
+        const userLat = userLocation?.lat;
+        const userLng = userLocation?.lng;
+        const reportLat = formData.coordinates.lat;
+        const reportLng = formData.coordinates.lng;
+    
+        if (userLat && userLng) {
+            const distance = calculateDistance(userLat, userLng, reportLat, reportLng);
+    
+            if (distance > 10) {
+                const errorMessage = `Reports are only allowed within 10 miles of your location.`;
+                setError(errorMessage);
+                toast.error(errorMessage); // Toast notification for the error
+                setLoading(false);
+                return;
+            }
+        } else {
+            const errorMessage = 'Your location is required to submit a report.';
+            setError(errorMessage);
+            toast.error(errorMessage); // Toast notification for the error
+            setLoading(false);
+            return;
+        }
+    
         // Prepare FormData for the image and other form data
         const uploadData = new FormData();
         uploadData.append('reportType', formData.reportType);
-        uploadData.append('name', formData.name);    
+        uploadData.append('name', formData.name);
         uploadData.append('species', formData.species);
         uploadData.append('breed', formData.breed);
         uploadData.append('color', formData.color);
@@ -176,22 +200,19 @@ const ReportAnimal = () => {
         uploadData.append('fixed', formData.fixed);
         uploadData.append('collar', formData.collar);
         uploadData.append('description', formData.description);
-        uploadData.append('reportedBy', user._id); // Add user ID
+        uploadData.append('reportedBy', user._id);
     
         // Prepare location data
         const locationData = {
-            address: formData.location || 'Unknown', // Default to 'Unknown' if no address is provided
+            address: formData.location || 'Unknown',
             coordinates: {
                 type: 'Point',
-                coordinates: [
-                    formData.coordinates.lng,
-                    formData.coordinates.lat,
-                ], // Coordinates in GeoJSON format: [longitude, latitude]
+                coordinates: [formData.coordinates.lng, formData.coordinates.lat],
             },
         };
     
         // Append location to FormData
-        uploadData.append('location', JSON.stringify(locationData)); // Ensure location is stringified
+        uploadData.append('location', JSON.stringify(locationData));
     
         // If an image file is selected, append it to the FormData
         if (file) {
@@ -201,12 +222,12 @@ const ReportAnimal = () => {
         try {
             const requestOptions = {
                 method: 'POST',
-                body: uploadData, // Use FormData
+                body: uploadData,
                 credentials: 'include',
             };
     
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`, // Corrected backtick usage for template literal
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`,
                 requestOptions
             );
     
@@ -217,18 +238,35 @@ const ReportAnimal = () => {
             const result = await response.json();
             console.log('Form submitted successfully:', result);
     
-            toast.success("Report submitted successfully!", {
-                duration: 5000, // Toast will show for 5 seconds
+            toast.success('Report submitted successfully!', {
+                duration: 5000,
             });
     
             router.push('/');
         } catch (error) {
             setError(error.message);
-            toast.error("An error occurred while submitting the report.");
+            toast.error('An error occurred while submitting the report.');
         } finally {
             setLoading(false);
         }
     };
+    
+    // Distance calculation function
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 3959; // Radius of the Earth in miles
+        const dLat = ((lat2 - lat1) * Math.PI) / 180;
+        const dLon = ((lon2 - lon1) * Math.PI) / 180;
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos((lat1 * Math.PI) / 180) *
+                Math.cos((lat2 * Math.PI) / 180) *
+                Math.sin(dLon / 2) *
+                Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c; // Distance in miles
+        return distance;
+    };
+    
     
     const handleMapClick = (event) => {
         const lat = event.latLng.lat();
