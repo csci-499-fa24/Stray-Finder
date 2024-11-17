@@ -87,7 +87,7 @@ const CommentModal = ({ animalId, reportId, image, description, onClose }) => {
         <button onClick={onClose} className="comment-close-button">&times;</button>
         <div className="comment-modal-body">
           <div className="comment-left-section">
-            <img src={image || '/placeholder.png'} alt="Animal" />
+            <img src={image || '/paw-pattern.jpg'} alt="Animal" />
             <p>{description}</p>
           </div>
           <div className="comment-right-section">

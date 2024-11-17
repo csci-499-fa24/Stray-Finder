@@ -46,6 +46,17 @@
   border-right: 1px solid #ddd;
 }
 
+.comment-left-section img {
+  width: 100%; 
+  height: auto;
+  min-height: 500px; 
+  max-height: 500px; 
+  object-fit: cover; 
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: block;
+}
+
 /* Right Section: Comments */
 .comment-right-section {
   width: 60%;
