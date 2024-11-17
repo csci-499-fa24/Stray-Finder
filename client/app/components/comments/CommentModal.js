@@ -10,47 +10,17 @@ const CommentModal = ({ animalId, reportId, image, description, onClose }) => {
   const [newComment, setNewComment] = useState('');
   const [isPosting, setIsPosting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [authError, setAuthError] = useState(''); // State for authentication error messages
+  const [authError, setAuthError] = useState('');
 
   useEffect(() => {
-    setTimeout(() => {
-      fetch(`${BASE_URL}/api/comments/${reportId}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      })
-        .then((response) => {
-          if (response.status === 401) {
-            throw new Error('Unauthorized. Please sign in to view comments.');
-          }
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setComments(data);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching comments:', error);
-          setAuthError(error.message); // Set the error message for UI display
-          setIsLoading(false);
-        });
-    }, 500);
-  }, [reportId]);
-
-  const handleAddComment = () => {
-    setIsPosting(true);
     fetch(`${BASE_URL}/api/comments/${reportId}`, {
-      method: 'POST',
+      method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ content: newComment }),
     })
       .then((response) => {
         if (response.status === 401) {
-          throw new Error('Unauthorized. Please sign in to post a comment.');
+          throw new Error('Unauthorized. Please sign in to view comments.');
         }
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -58,16 +28,43 @@ const CommentModal = ({ animalId, reportId, image, description, onClose }) => {
         return response.json();
       })
       .then((data) => {
-        setComments([...comments, data]);
-        setNewComment('');
-        setIsPosting(false);
+        setComments(data);
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.error('Error adding comment:', error);
-        setAuthError(error.message); // Set the error message for UI display
-        setIsPosting(false);
+        console.error('Error fetching comments:', error);
+        setAuthError(error.message);
+        setIsLoading(false);
       });
-  };
+  }, [reportId]);
+
+  const handleAddComment = async () => {
+    setIsPosting(true);
+    try {
+      const response = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ content: newComment }),
+      });
+      if (!response.ok) throw new Error('Failed to post comment');
+  
+      // Refetch all comments to ensure completeness
+      const commentsResponse = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      const updatedComments = await commentsResponse.json();
+      setComments(updatedComments);
+      setNewComment('');
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      setAuthError(error.message);
+    } finally {
+      setIsPosting(false);
+    }
+  };  
 
   const formatTimestamp = (timestamp) => {
     const now = new Date();
@@ -113,12 +110,12 @@ const CommentModal = ({ animalId, reportId, image, description, onClose }) => {
                         />
                       ) : (
                         <span className="comment-avatar-placeholder">
-                          {comment.userId?.username.charAt(0).toUpperCase()}
+                          {comment.userId?.username?.charAt(0).toUpperCase() || ''}
                         </span>
                       )}
                     </div>
                     <div className="comment-text">
-                      <span className="comment-username">{comment.userId?.username}</span>
+                      <span className="comment-username">{comment.userId?.username || ''}</span>
                       <p className="comment-content">{comment.content}</p>
                       <span className="comment-timestamp">{formatTimestamp(comment.createdAt)}</span>
                     </div>
@@ -127,21 +124,29 @@ const CommentModal = ({ animalId, reportId, image, description, onClose }) => {
               </div>
             )}
             <div className="comment-input-container">
-              <input
-                type="text"
-                placeholder="Add a comment..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                disabled={isPosting || !!authError}
-                className="comment-input"
-              />
-              <button
-                onClick={handleAddComment}
-                disabled={isPosting || !newComment.trim() || !!authError}
-                className={`post-button ${isPosting ? 'disabled' : ''}`}
-              >
-                {isPosting ? <FaSpinner className="posting-spinner" /> : 'Post'}
-              </button>
+              {isPosting ? (
+                <div className="posting-loader">
+                  Posting<span className="bouncing-dots"><span>.</span><span>.</span><span>.</span></span>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    disabled={isPosting || !!authError}
+                    className="comment-input"
+                  />
+                  <button
+                    onClick={handleAddComment}
+                    disabled={isPosting || !newComment.trim() || !!authError}
+                    className={`post-button ${isPosting ? 'disabled' : ''}`}
+                  >
+                    Post
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
