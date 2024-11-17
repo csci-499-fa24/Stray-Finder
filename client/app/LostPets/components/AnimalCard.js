@@ -1,20 +1,27 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { FaEllipsisV, FaCommentDots } from 'react-icons/fa'; // Import icons
-import './AnimalDropdown.css'; // Import the separate CSS file
+import { FaEllipsisV, FaCommentDots } from 'react-icons/fa';
+import CommentModal from '../../components/comments/CommentModal';
+import './AnimalDropdown.css';
 
 const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state, description }) => {
     const currentPath = usePathname();
 
-    const [isModalOpen, setModalOpen] = useState(false);
+    const [isModalOpen, setModalOpen] = useState(false); // State for report modal
     const [selectedReason, setSelectedReason] = useState('');
     const [isLoginModalOpen, setLoginModalOpen] = useState(false); // State for login modal
     const [isDropdownOpen, setDropdownOpen] = useState(false); // State for dropdown visibility
+    const [isCommentModalOpen, setIsCommentModalOpen] = useState(false); // State for comment modal
 
     // Toggle Dropdown
     const toggleDropdown = () => {
         setDropdownOpen((prevState) => !prevState);
+    };
+
+    // Toggle the comment modal
+    const handleCommentIconClick = () => {
+        setIsCommentModalOpen(true);
     };
 
     // Handle Report Click
@@ -23,7 +30,6 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
         setModalOpen(true); // Open the modal
         setDropdownOpen(false); // Close dropdown after opening modal
     };
-    
 
     // Submit Report
     const submitReport = async () => {
@@ -104,7 +110,7 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                         <Link href={`/animal/${report_id}?from=${currentPath}`} className="card-link">
                             Read More
                         </Link>
-                        <FaCommentDots className="comment-icon" />
+                        <FaCommentDots className="comment-icon" onClick={handleCommentIconClick} />
                     </div>
                 </div>
 
@@ -138,6 +144,17 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                             <button onClick={() => setLoginModalOpen(false)}>Cancel</button>
                         </div>
                     </div>
+                )}
+
+                {/* Comment Modal */}
+                {isCommentModalOpen && (
+                    <CommentModal
+                        animalId={animal_id}
+                        reportId={report_id}
+                        image={image}
+                        description={description}
+                        onClose={() => setIsCommentModalOpen(false)} // Close modal handler
+                    />
                 )}
             </div>
         </div>
