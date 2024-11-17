@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { FaEllipsisV, FaCommentDots } from 'react-icons/fa';
 import CommentModal from '../../components/comments/CommentModal';
@@ -13,6 +13,30 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
     const [isLoginModalOpen, setLoginModalOpen] = useState(false); // State for login modal
     const [isDropdownOpen, setDropdownOpen] = useState(false); // State for dropdown visibility
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false); // State for comment modal
+    const [commentCount, setCommentCount] = useState(0); // State for comment count
+
+    // Fetch the comment count for this report
+    useEffect(() => {
+        async function fetchCommentCount() {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/comments/${report_id}/count`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setCommentCount(data.count || 0);
+                } else {
+                    console.error('Failed to fetch comment count.');
+                }
+            } catch (error) {
+                console.error('Error fetching comment count:', error);
+            }
+        }
+
+        fetchCommentCount();
+    }, [report_id]);
 
     // Toggle Dropdown
     const toggleDropdown = () => {
@@ -110,7 +134,10 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                         <Link href={`/animal/${report_id}?from=${currentPath}`} className="card-link">
                             Read More
                         </Link>
-                        <FaCommentDots className="comment-icon" onClick={handleCommentIconClick} />
+                        <div className="comment-icon-container" onClick={handleCommentIconClick}>
+                            <FaCommentDots className="comment-icon" />
+                            <span className="comment-count">{commentCount}</span>
+                        </div>
                     </div>
                 </div>
 

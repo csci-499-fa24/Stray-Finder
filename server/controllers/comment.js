@@ -41,5 +41,17 @@ const getComments = async (req, res) => {
     }
   };
   
+// Fetch the count of comments for a specific report
+const getCommentCount = async (req, res) => {
+    const { reportId } = req.params;
+  
+    try {
+      const count = await Comment.countDocuments({ reportId }); // Count comments for the given report
+      res.status(200).json({ count }); // Send the count in the response
+    } catch (error) {
+      console.error('Error fetching comment count:', error);
+      res.status(500).json({ message: 'Failed to fetch comment count', error: error.message });
+    }
+  };
 
-module.exports = { saveComment, getComments };
+module.exports = { saveComment, getComments, getCommentCount };

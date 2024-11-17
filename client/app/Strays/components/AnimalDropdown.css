@@ -53,14 +53,18 @@
     background-color: #f2f2f2;
 }
 
-/* Comment Icon */
 .comment-icon {
     font-size: 1.5rem;
     color: #607d8b;
     margin-left: auto;
     cursor: pointer;
+    opacity: 0.5; /* Semi-transparent */
+    transition: opacity 0.3s ease; /* Smooth transition */
 }
 
+.comment-icon:hover {
+    opacity: 1; /* Fully visible on hover */
+}
 
 /* Modal Styling */
 .modal {
@@ -107,3 +111,15 @@
 
 
 /* -------------*/
+
+.comment-icon-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+  
+  .comment-count {
+    font-size: 0.9rem;
+    color: #555;
+  }

@@ -1,27 +1,32 @@
+/* Modal Container */
 .comment-modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Dim background */
+  background-color: rgba(0, 0, 0, 0.7); /* Dim background */
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  transition: none;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
+/* Modal Content */
 .comment-modal-content {
-  width: 70%; 
-  max-width: 900px; 
-  height: 80%; /* Add a consistent height */
-  max-height: 600px; /* Prevent excessive height on large screens */
+  width: 70%;
+  max-width: 900px;
+  height: 80%;
+  max-height: 600px;
   display: flex;
   flex-direction: row;
   background-color: #fff;
-  border-radius: 10px;
-  overflow: hidden; /* Prevent content overflow from affecting the layout */
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+  transform: scale(0.95);
+  animation: scaleUp 0.3s ease-in-out;
 }
 
 .comment-modal-body {
@@ -29,6 +34,7 @@
   width: 100%;
 }
 
+/* Left Section: Animal Details */
 .comment-left-section {
   width: 40%;
   background-color: #f9f9f9;
@@ -37,14 +43,10 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  border-right: 1px solid #ddd;
 }
 
-.comment-left-section img {
-  max-width: 100%;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
+/* Right Section: Comments */
 .comment-right-section {
   width: 60%;
   padding: 20px;
@@ -55,9 +57,18 @@
 .comment-comments-list {
   flex-grow: 1;
   margin-bottom: 20px;
-  overflow-y: auto;
-  max-height: 300px;
-  /* padding-right: 10px; */
+  overflow-y: auto; /* Enable scrolling */
+  max-height: calc(100% - 100px); /* Dynamically adjust height */
+  padding-right: 10px; /* Add padding for better readability */
+}
+
+.comment-comments-list::-webkit-scrollbar {
+  width: 6px; /* Scrollbar width for WebKit browsers */
+}
+
+.comment-comments-list::-webkit-scrollbar-thumb {
+  background-color: #ccc; /* Scrollbar thumb color */
+  border-radius: 4px; /* Rounded scrollbar */
 }
 
 .comment-comments-list p {
@@ -67,37 +78,7 @@
   border-radius: 5px;
 }
 
-input {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
-
-button {
-  padding: 10px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-.comment-close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
+/* Comment Item */
 .comment-item {
   display: flex;
   align-items: flex-start;
@@ -155,4 +136,119 @@ button:hover {
   color: #888;
   margin-top: 0px;
   text-align: left;
+}
+
+/* Input and Button Styling */
+.comment-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  position: sticky; /* Stick to the bottom */
+  bottom: 0;
+  background-color: #fff; /* Match modal background */
+  z-index: 10; /* Ensure it stays above comments */
+}
+
+.comment-input {
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 20px; /* Rounded input */
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 14px;
+}
+
+.comment-input:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+}
+
+.post-button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.post-button:hover {
+  background-color: #45a049;
+}
+
+.post-button.disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+}
+
+.posting-spinner {
+  font-size: 1rem;
+  animation: spin 1s linear infinite;
+}
+
+/* Close Button */
+.comment-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Spinner */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.loading-spinner {
+  font-size: 2rem;
+  color: #4caf50;
+  animation: spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.auth-error {
+  background-color: #ffe4e4;
+  color: #b00020;
+  padding: 10px;
+  border: 1px solid #b00020;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 14px;
 }

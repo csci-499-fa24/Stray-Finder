@@ -111,3 +111,16 @@
 
 
 /* -------------*/
+
+.comment-icon-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+  
+  .comment-count {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
