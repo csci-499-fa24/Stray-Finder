@@ -61,9 +61,32 @@ font-weight: bold;
 
 /* Additional styles for screens 700px and below */
 @media (max-width: 700px) {
-  .login-button {
-    padding: 8px 15px; /* Reduce padding for smaller size */
-    font-size: 0.8rem; /* Adjust font size for better fit */
+  /* Ensure the navbar brand (logo + title) aligns to the left */
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align to the left */
+    flex-grow: 1; /* Allow it to take up available space */
+    margin-right: auto; /* Push the brand away from other elements */
+  }
+
+  /* Ensure the login/profile container aligns to the right */
+  .login-profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align container to the right */
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-left: auto; /* Push it to the far right */
+  }
+
+  /* Navbar toggle button remains on the far right */
+  .navbar-toggler {
+    margin-left: auto; /* Ensure toggle button stays aligned to the right */
+  }
+
+  /* Prevent overlapping of the collapsible content */
+  .collapse.navbar-collapse {
+    margin-top: 10px; /* Add spacing below the brand and profile/login */
   }
 }
 /* Additional styles for screens 500px and below */
