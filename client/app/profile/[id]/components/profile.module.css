@@ -5,7 +5,8 @@
     align-items: center; /* Center items vertically */
 	position: relative;           /* Allow for absolute positioning */
 	height: 70px;
-	background-color: linear-gradient(to bottom, #FFEBEB, #fad9e1); /* Light background color for contrast */
+	background: url('/bbb1.png') no-repeat center center; 
+    background-size: cover;
 }
 
 .reportcontainer {
@@ -51,7 +52,8 @@
 
 .dl {
     padding: 1em; /* Padding around the list */
-    background-color: linear-gradient(to bottom, #FFEBEB, #fad9e1); /* Light background color for contrast */
+    background: url('/bbb.png') no-repeat center center; 
+    background-size: cover;
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
@@ -139,7 +141,8 @@
 }
 
 .profileBackground {
-    background: linear-gradient(to bottom, #FFEBEB, #fad9e1); 
+    background: url('/bbb.png') no-repeat center center; 
+    background-size: cover; 
     min-height: 100vh; /* Ensures it covers the full viewport */
 }
 
@@ -232,7 +235,7 @@
 .badge {
     display: flex;
     align-items: center;
-    background-color: #6A5ACD;
+    background-color: #a03751;
     color: white;
     padding: 0.4rem 0.8rem;
     border-radius: 15px;
@@ -259,7 +262,7 @@
 .statNumber {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #6A5ACD;
+    color: #a03751;
 }
 
 .statLabel {

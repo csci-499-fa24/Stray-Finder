@@ -1,29 +1,37 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { FaEllipsisV, FaCommentDots } from 'react-icons/fa'; // Import icons
+import './AnimalDropdown.css'; // Import the separate CSS file
 
 const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state, description }) => {
     const currentPath = usePathname();
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedReason, setSelectedReason] = useState('');
-    const [isLoginModalOpen, setLoginModalOpen] = useState(false);  // New state for login modal
+    const [isLoginModalOpen, setLoginModalOpen] = useState(false); // State for login modal
+    const [isDropdownOpen, setDropdownOpen] = useState(false); // State for dropdown visibility
 
-    // Function to handle reporting
-    const handleReportClick = () => {
-        setModalOpen(true);  // Open the modal when Report is clicked
+    // Toggle Dropdown
+    const toggleDropdown = () => {
+        setDropdownOpen((prevState) => !prevState);
     };
 
-    // Function to submit report
+    // Handle Report Click
+    const handleReportClick = (event) => {
+        event.stopPropagation(); // Prevent dropdown from closing
+        setModalOpen(true); // Open the modal
+        setDropdownOpen(false); // Close dropdown after opening modal
+    };
+    
+
+    // Submit Report
     const submitReport = async () => {
         if (!selectedReason) {
             alert('Please select a reason for reporting.');
             return;
         }
 
-        console.log("Submitting report...");
-
-        //KEEP FULL URL until production when everything is hosted on the same domain
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/report/`, {
                 method: 'POST',
@@ -39,10 +47,8 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
             });
 
             if (response.ok) {
-                console.log('Report submitted successfully');
                 alert('Report submitted successfully!');
             } else if (response.status === 401) {
-                // If not authenticated, show login modal
                 setLoginModalOpen(true);
             } else {
                 const errorData = await response.json();
@@ -65,28 +71,46 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                         alt={name}
                         style={{ position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', objectFit: 'cover' }}
                     />
+                    {/* Dropdown toggle */}
+                    <div className="animal-dropdown-container">
+                        <button
+                            className="animal-dropdown-toggle"
+                            onClick={toggleDropdown}
+                            aria-label="Options"
+                        >
+                            <FaEllipsisV />
+                        </button>
+                        {isDropdownOpen && (
+                            <div className="animal-dropdown-menu show">
+                                <button
+                                    className="animal-dropdown-item"
+                                    onClick={handleReportClick}
+                                    aria-label="Report"
+                                >
+                                    Report
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <div className="card-body">
-                    <h5 className="card-title">{name}</h5>
-                    <p className="card-text">{description}</p>
-                </div>
-                <ul className="list-group list-group-flush">
-                    <li className="list-group-item">Species: {species}</li>
-                    <li className="list-group-item">Gender: {gender}</li>
-                    <li className="list-group-item">State: {state}</li>
-                </ul>
-                <div className="card-body">
-                    <Link href={`/animal/${report_id}?from=${currentPath}`} className="card-link">
-                        Read More
-                    </Link>
-                    <button className="report-btn" onClick={handleReportClick}>
-                        Report
-                    </button>
+
+                {/* Card Bottom Section */}
+                <div className="card-bottom">
+                    <div className="card-body">
+                        <h5 className="card-title">{name}</h5>
+                        <p className="card-text">{description}</p>
+                    </div>
+                    <div className="card-body d-flex justify-content-between align-items-center">
+                        <Link href={`/animal/${report_id}?from=${currentPath}`} className="card-link">
+                            Read More
+                        </Link>
+                        <FaCommentDots className="comment-icon" />
+                    </div>
                 </div>
 
                 {/* Modal for reporting */}
                 {isModalOpen && (
-                    <div className="modal">
+                    <div className="modal" style={{ display: isModalOpen ? 'flex' : 'none' }}>
                         <div className="modal-content">
                             <h4>Report Post</h4>
                             <p>Why do you want to report this post?</p>
