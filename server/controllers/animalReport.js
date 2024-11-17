@@ -7,28 +7,38 @@ const upload = require('../middleware/uploadMiddleware')
 // GET: Retrieve list of animal reports
 const getAnimalReports = async (req, res) => {
     try {
-        const { reportType, gender, species, reportedBy } = req.query;
+        const { reportType, gender, species, reportedBy, fixed, collar, breed } = req.query;
         let query = {};
 
+        // Filter by report type
         if (reportType) query.reportType = reportType;
 
-        if (reportedBy) {
-            query.reportedBy = reportedBy; // Ensure this is included for filtering
-        }
+        // Filter by the user who reported
+        if (reportedBy) query.reportedBy = reportedBy;
 
+        // Construct the animal query
         let animalQuery = {};
-        if (gender) animalQuery.gender = gender;
-        if (species) animalQuery.species = species;
+        if (gender) animalQuery.gender = gender; // Match gender
+        if (species) animalQuery.species = species; // Match species
+        if (breed) animalQuery.breed = breed; // Match breed
 
+        // Match fixed status (as a string)
+        if (fixed) animalQuery.fixed = fixed; // Fixed is "Yes", "No", or "Unknown"
+
+        // Match collar status (as a boolean)
+        if (collar) animalQuery.collar = collar === 'true'; // Convert to boolean for query
+
+        // If animalQuery has filters, fetch matching animals' IDs
         if (Object.keys(animalQuery).length > 0) {
             const animals = await Animal.find(animalQuery).select('_id');
             const animalIds = animals.map((animal) => animal._id);
-            query.animal = { $in: animalIds };
+            query.animal = { $in: animalIds }; // Filter reports with matching animals
         }
 
+        // Fetch reports based on query
         const reports = await AnimalReport.find(query)
-            .populate('animal')
-            .populate('reportedBy')
+            .populate('animal') // Populate animal details
+            .populate('reportedBy') // Populate user details if needed
             .exec();
 
         res.status(200).json({ reports });
@@ -39,6 +49,7 @@ const getAnimalReports = async (req, res) => {
         });
     }
 };
+
 
 
 // GET: Retrieves a specific animal report by ID
