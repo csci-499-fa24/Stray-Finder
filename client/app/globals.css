@@ -129,7 +129,6 @@ body {
 /* Ensure the image container is a square */
 .img-container {
     width: 100%; /* Take the full width of the card */
-    padding-top: 100%; /* Makes the height equal to the width, keeping it a square */
     position: relative; /* Necessary for absolutely positioning the image */
 }
 
@@ -193,13 +192,13 @@ body {
 }
 
 .card-link {
-    color: #007bff;
+    color: #ff5722; 
     font-weight: bold;
     text-decoration: none;
 }
 
 .card-link:hover {
-    text-decoration: underline;
+    color: #d84315; /* Darker orange on hover */
 }
 
 
@@ -303,7 +302,7 @@ body {
 
 .card {
     width: 100%;
-    max-width: 300px; /* Define a max width for consistency */
+    max-width: 400px; /* Define a max width for consistency */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft shadow for lift */
     overflow: hidden; /* Ensures no overflow on rounded corners */
@@ -323,4 +322,12 @@ body {
     font-size: 1.1rem;
     font-weight: bold;
     color: #2c3e50;
+}
+
+.card-bottom {
+    background: url('/card-bottom.jpg') no-repeat center center;
+    padding: 1px;
+    border-top: 1px solid #e0e0e0;
+    flex: 1;
+    height: 20px;
 }
