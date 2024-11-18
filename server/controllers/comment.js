@@ -32,7 +32,7 @@ const getComments = async (req, res) => {
     try {
       const comments = await Comment.find({ reportId })
         .populate('userId', 'username profileImage') 
-        .sort({ createdAt: 1 }); 
+        .sort({ createdAt: -1 }); 
   
       res.status(200).json(comments);
     } catch (error) {
