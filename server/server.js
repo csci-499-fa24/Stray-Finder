@@ -12,6 +12,7 @@ const match = require('./routes/match')
 const email = require('./routes/email')
 const profile = require('./routes/profile');
 const { exec } = require('child_process')
+const commentRoutes = require('./routes/comment');
 
 /**
  * Connection to the database
@@ -54,6 +55,7 @@ app.use('/api/user/', user)
 app.use('/api/match/', match)
 app.use('/api/email/', email)
 app.use('/api/profile/', profile);
+app.use('/api/comments/', commentRoutes);
 ///////////////////////////////////////////////////////////////////////////
 
 const port = process.env.PORT || 8080

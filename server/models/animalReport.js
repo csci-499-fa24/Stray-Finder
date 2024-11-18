@@ -39,6 +39,8 @@ const AnimalReportSchema = new mongoose.Schema({
         ref: 'User', // Reference to the User model
         required: true,
     },
+    fixed: { type: String, enum: ['Yes', 'No', 'Unknown'], required: true },
+    collar: { type: Boolean, required: true },
 })
 
 AnimalReportSchema.index({ coordinates: '2dsphere' })

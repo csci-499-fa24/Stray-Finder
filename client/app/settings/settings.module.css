@@ -17,8 +17,8 @@
 
 .button {
     padding: 0.5rem 1rem;
-    background-color: #fca311; /* Customize color */
-    color: white;
+    background-color: #472805; /* Customize color */
+    color: #e6babc;
     font-size: 1rem;
     border: none;
     border-radius: 5px;
@@ -31,6 +31,7 @@
 }
 
 .profileBackground {
-    background: linear-gradient(to bottom, #FFEBEB, #fad9e1); /* Light peach to soft lavender */
+    background: url('/bbb.png') no-repeat center center; 
+    background-size: cover;
     min-height: 100vh; /* Ensures it covers the full viewport */
 }

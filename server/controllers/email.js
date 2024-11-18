@@ -48,33 +48,54 @@ const fetchAllRecentAnimals = async (req, res) => {
     }
 };
 
-const sendEmail = async (req, res, next) => {
+const sendEmail = async ({ targetEmail, subject, body }) => {
     try {
-        const {targetEmail} = req.params;
-        // Fetch the most recent 5 animal reports
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASS,
+            },
+        });
+
+        const mailOptions = {
+            from: process.env.EMAIL_USERNAME,
+            to: targetEmail,
+            subject,
+            html: body,
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully');
+    } catch (error) {
+        console.error('Failed to send email:', error);
+        throw new Error('Failed to send email');
+    }
+};
+
+const sendReportsEmail = async (req, res) => {
+    try {
+        const { targetEmail } = req.params;
+
+        // Fetch recent animal reports
         const reports = await fetchAllRecentAnimals(req, res);
 
-        // Generate the HTML email body with the first 5 pets
+        // Generate the HTML email body
         let htmlContent = `
-        <table width="100%" style="border-collapse: collapse; font-family: Arial, sans-serif;">
-            <!-- Navbar/Header Section -->
-            <tr>
-                <td colspan="5" style="background-color: #fdf2e9; color: white; padding: 10px; text-align: left; height: 95px;">
-                    <img src="https://raw.githubusercontent.com/csci-499-fa24/Stray-Finder/refs/heads/main/client/app/components/layouts/assets/file.png" alt="Paw Icon" style="width: 50px; vertical-align: middle; margin-right: 10px;">
-                    <span style="font-size: 1.5rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; color: black;">Stray Finder</span>
-                </td>
-            </tr>
-            
-            <!-- Title Section -->
-            <tr>
-                <td colspan="5" style="padding: 20px; text-align: center;">
-                    <h1 style="font-size: 1.5rem; color: #333;">Latest Animal Reports</h1>
-                    <p style="font-size: 1rem; color: #555;">Here are the most recent animal reports from the last week:</p>
-                </td>
-            </tr>
-            
-            <!-- Reports Section -->
-            <tr>
+            <table width="100%" style="border-collapse: collapse; font-family: Arial, sans-serif;">
+                <tr>
+                    <td colspan="5" style="background-color: #fdf2e9; color: white; padding: 10px; text-align: left; height: 95px;">
+                        <img src="https://raw.githubusercontent.com/csci-499-fa24/Stray-Finder/refs/heads/main/client/app/components/layouts/assets/file.png" alt="Paw Icon" style="width: 50px; vertical-align: middle; margin-right: 10px;">
+                        <span style="font-size: 1.5rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; color: black;">Stray Finder</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="padding: 20px; text-align: center;">
+                        <h1 style="font-size: 1.5rem; color: #333;">Latest Animal Reports</h1>
+                        <p style="font-size: 1rem; color: #555;">Here are the most recent animal reports from the last week:</p>
+                    </td>
+                </tr>
+                <tr>
         `;
 
         reports.forEach((report, index) => {
@@ -88,53 +109,27 @@ const sendEmail = async (req, res, next) => {
                     <p style="font-size: 0.9rem; color: #555;">Report Type: ${report.reportType}</p>
                 </td>
             `;
-            // Add a new row every 5 items
+
             if ((index + 1) % 5 === 0) {
                 htmlContent += `</tr><tr>`;
             }
         });
 
-        // Close the last row and the table
-        htmlContent += `
-                </tr>
-            </table>
-        `;
+        htmlContent += `</tr></table>`;
 
-
-        // Configure the email transporter
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USERNAME,
-                pass: process.env.EMAIL_PASS,
-            },
-        });
-
-        const mailOptions = {
-            from: process.env.EMAIL_USERNAME,
-            to: targetEmail,
+        // Use the reusable `sendEmail` to send the reports email
+        await sendEmail({
+            targetEmail,
             subject: 'Latest Animal Reports',
-            html: htmlContent,
-        };
+            body: htmlContent,
+        });
 
-        // Send the email
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-                res.status(500).json({ message: 'Failed to send email' });
-            } else {
-                console.log('Email sent: ' + info.response);
-                res.status(200).json({ message: 'Email sent successfully' });
-            }
-        });
+        res.status(200).json({ message: 'Email sent successfully' });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Failed to fetch animal reports or send email',
-            error: error.message,
-        });
+        console.error('Failed to send animal reports email:', error);
+        res.status(500).json({ message: 'Failed to send animal reports email', error: error.message });
     }
 };
 
+module.exports = { sendEmail, sendReportsEmail, fetchAllRecentAnimals };
 
-module.exports = { sendEmail, fetchAllRecentAnimals };

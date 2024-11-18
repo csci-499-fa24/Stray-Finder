@@ -32,3 +32,26 @@
     font-weight: bold;
   }
   
+  @media (max-width: 600px) {
+    .userListItem {
+      padding: 8px; /* Smaller padding */
+    }
+    
+    .userListItem.active {
+      font-weight: normal; /* Remove bold for better readability */
+    }
+  
+  .messagingLayout {
+    flex-direction: column; /* Stack user list and message panel */
+    height: auto; /* Adjust height */
+  }
+
+  .userList {
+    width: 50%; /* Full width for mobile */
+    margin-bottom: 15px; /* Add space between user list and messages */
+  }
+
+  .messageWrapper {
+    max-width: 100%; /* Full width for messages */
+  }
+  }

@@ -4,10 +4,15 @@ import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/app/hooks/useAuth';
 import toast from 'react-hot-toast';
+import styles from './reportAnimal.module.css';
+import { FaCamera } from 'react-icons/fa';
+
 
 const ReportAnimal = () => {
     const router = useRouter();
-    const { isAuthenticated, user } = useAuth(); // Get user and authentication status from useAuth
+    const { isAuthenticated, user } = useAuth();
+    const DEFAULT_CENTER = { lat: 40.768, lng: -73.964 }; // Default coordinates (e.g., NYC)
+
     const [formData, setFormData] = useState({
         reportType: '',
         name: '',
@@ -19,7 +24,7 @@ const ReportAnimal = () => {
         collar: false,
         description: '',
         location: '',
-        coordinates: { lat: 40.768, lng: -73.964 }, // Default coordinates
+        coordinates: DEFAULT_CENTER,
     });
 
     const [file, setFile] = useState(null); // Store the image file
@@ -69,7 +74,7 @@ const ReportAnimal = () => {
 
     useEffect(() => {
         if (isAuthenticated === false) {
-            router.push('/auth'); // Redirect to login if not authenticated
+            router.push('/auth');
         }
 
         if (isAuthenticated && navigator.geolocation && !locationAsked) {
@@ -160,15 +165,92 @@ const ReportAnimal = () => {
         setFile(e.target.files[0]); // Store the selected file
     };
 
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 3959; // Radius of Earth in miles
+        const dLat = ((lat2 - lat1) * Math.PI) / 180;
+        const dLon = ((lon2 - lon1) * Math.PI) / 180;
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos((lat1 * Math.PI) / 180) *
+                Math.cos((lat2 * Math.PI) / 180) *
+                Math.sin(dLon / 2) *
+                Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Distance in miles
+    };
+
+    const handleCameraCapture = async () => {
+        try {
+            const cameraCapture = await navigator.mediaDevices.getUserMedia({ video: true });
+    
+            // Create a video element to capture the snapshot
+            const video = document.createElement('video');
+            video.srcObject = cameraCapture;
+            video.play();
+    
+            // Create a canvas to hold the captured image
+            const canvas = document.createElement('canvas');
+            canvas.width = 640; // Set canvas size
+            canvas.height = 480;
+    
+            // Wait for a moment to allow the video to load
+            setTimeout(() => {
+                const context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+                // Convert the canvas image to a blob and set it as the file
+                canvas.toBlob((blob) => {
+                    const capturedImage = new File([blob], 'captured_image.jpg', { type: 'image/jpeg' });
+                    setFile(capturedImage); // Update the state
+                });
+    
+                // Stop the video stream
+                video.srcObject.getTracks().forEach((track) => track.stop());
+            }, 1000);
+        } catch (error) {
+            console.error("Error accessing camera:", error);
+            toast.error("Unable to access the camera. Please try again.");
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        const center = userLocation || DEFAULT_CENTER;
+
+        const distance = calculateDistance(
+            center.lat,
+            center.lng,
+            formData.coordinates.lat,
+            formData.coordinates.lng
+        );
+
+        // If userLocation is available, enforce the 10-mile limit
+        if (userLocation) {
+            const distance = calculateDistance(
+                userLocation.lat,
+                userLocation.lng,
+                formData.coordinates.lat,
+                formData.coordinates.lng
+            );
     
-        // Prepare FormData for the image and other form data
+            if (distance > 10) {
+                setError(
+                    `The report location is ${distance.toFixed(
+                        1
+                    )} miles away from your location, exceeding the 10-mile limit.`
+                );
+                setLoading(false);
+                toast.error("Report location exceeds 10-mile distance limit.");
+                return;
+            }
+        }
+    
+        // Prepare FormData and submit the report (same as in the original handleSubmit)
         const uploadData = new FormData();
         uploadData.append('reportType', formData.reportType);
-        uploadData.append('name', formData.name);    
+        uploadData.append('name', formData.name);
         uploadData.append('species', formData.species);
         uploadData.append('breed', formData.breed);
         uploadData.append('color', formData.color);
@@ -176,38 +258,33 @@ const ReportAnimal = () => {
         uploadData.append('fixed', formData.fixed);
         uploadData.append('collar', formData.collar);
         uploadData.append('description', formData.description);
-        uploadData.append('reportedBy', user._id); // Add user ID
+        uploadData.append('reportedBy', user._id);
     
-        // Prepare location data
         const locationData = {
-            address: formData.location || 'Unknown', // Default to 'Unknown' if no address is provided
+            address: formData.location || 'Unknown',
             coordinates: {
                 type: 'Point',
                 coordinates: [
                     formData.coordinates.lng,
                     formData.coordinates.lat,
-                ], // Coordinates in GeoJSON format: [longitude, latitude]
+                ],
             },
         };
     
-        // Append location to FormData
-        uploadData.append('location', JSON.stringify(locationData)); // Ensure location is stringified
+        uploadData.append('location', JSON.stringify(locationData));
     
-        // If an image file is selected, append it to the FormData
         if (file) {
             uploadData.append('image', file);
         }
     
         try {
-            const requestOptions = {
-                method: 'POST',
-                body: uploadData, // Use FormData
-                credentials: 'include',
-            };
-    
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`, // Corrected backtick usage for template literal
-                requestOptions
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`,
+                {
+                    method: 'POST',
+                    body: uploadData,
+                    credentials: 'include',
+                }
             );
     
             if (!response.ok) {
@@ -218,7 +295,7 @@ const ReportAnimal = () => {
             console.log('Form submitted successfully:', result);
     
             toast.success("Report submitted successfully!", {
-                duration: 5000, // Toast will show for 5 seconds
+                duration: 5000,
             });
     
             router.push('/');
@@ -241,29 +318,29 @@ const ReportAnimal = () => {
     };
     
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
     return (
-        <div className="container my-4">
+        <div className={`container ${styles.container}`}>
             <div className="row justify-content-center">
                 <div className="col-md-8">
-                    <div className="border border-purple rounded p-4 report-form-container">
-                        <h2 className="text-center">Report an Animal</h2>
+                    <div className={`${styles.reportFormContainer}`}>
+                        <h2 className={styles.h2}>Report an Animal</h2>
                         {error && (
-                            <div className="alert alert-danger">{error}</div>
+                            <div className={styles.errorMessage}>{error}</div>
                         )}
                         <form
                             onSubmit={handleSubmit}
                             encType="multipart/form-data"
                         >
-                            <div className="mb-3">
+                            {/* Select fields */}
+                            <div className={styles.formGroup}>
                                 <label
                                     htmlFor="reportType"
-                                    className="form-label"
+                                    className={styles.formLabel}
                                 >
                                     Report Type
                                 </label>
                                 <select
-                                    className="form-select"
+                                    className={styles.formSelect}
                                     id="reportType"
                                     name="reportType"
                                     value={formData.reportType}
@@ -273,9 +350,10 @@ const ReportAnimal = () => {
                                     <option value="">Select report type</option>
                                     <option value="Lost">Lost</option>
                                     <option value="Stray">Stray</option>
-                                    <option value="Found">Found</option> {/* Added new option */}
+                                    <option value="Found">Found</option>
                                 </select>
                             </div>
+
                                 <div className="mb-3">
                                     <label htmlFor="name" className="form-label">
                                         Name
@@ -428,10 +506,30 @@ const ReportAnimal = () => {
                                     required
                                 />
                             </div>
-                            <div className="mb-3">
+                            <div className={styles.imageUploadContainer}>
+                                <button
+                                    type="button"
+                                    className={styles.imageUploadButton}
+                                    onClick={handleCameraCapture}
+                                >
+                                <FaCamera className={styles.cameraIcon} />
+                                <span>Take a Picture</span>
+                                </button>
+                                <input
+                                    type="file"
+                                    className={`${styles.formControl} ${styles.fileInput}`}
+                                    id="file"
+                                    name="file"
+                                    accept="image/*"
+                                    capture="user"
+                                    onChange={handleFileChange}
+                                />
+                            </div>
+                            {/* Map */}
+                            <div className={styles.mapContainer}>
                                 <LoadScriptNext googleMapsApiKey={apiKey}>
                                     <GoogleMap
-                                        mapContainerStyle={{ height: '400px', width: '100%' }}
+                                        mapContainerStyle={{ height: '100%', width: '100%' }}
                                         center={formData.coordinates}
                                         zoom={12}
                                         onClick={handleMapClick}
@@ -440,22 +538,9 @@ const ReportAnimal = () => {
                                     </GoogleMap>
                                 </LoadScriptNext>
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="file" className="form-label">
-                                    Upload Image (optional)
-                                </label>
-                                <input
-                                    type="file"
-                                    className="form-control"
-                                    id="file"
-                                    name="file"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                />
-                            </div>
                             <button
                                 type="submit"
-                                className="btn btn-primary"
+                                className={styles.submitButton}
                                 disabled={loading}
                             >
                                 {loading ? 'Submitting...' : 'Submit'}

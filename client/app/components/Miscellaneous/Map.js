@@ -17,6 +17,17 @@ const center = {
     lng: -73.964,
 };
 
+// Dog and Cat breed options
+const dogBreeds = [
+    "Labrador Retriever", "German Shepherd", "Golden Retriever", "Bulldog", 
+    "Beagle", "Poodle", "Rottweiler", "Yorkshire Terrier", "Dachshund", "Boxer"
+];
+const catBreeds = [
+    "Persian", "Maine Coon", "Siamese", "Ragdoll", "Bengal", 
+    "Sphynx", "British Shorthair"
+];
+
+
 // Function to create a circular icon, with fallback color if the image fails to load
 const createCircularIcon = (imageUrl, fallbackColor, callback) => {
     const img = new Image();
@@ -72,7 +83,10 @@ const Map = () => {
     const [filters, setFilters] = useState({
         gender: '',
         species: '',
-        reportType: ''
+        reportType: '',
+        fixed: '',
+        collar: '',
+        breed: ''
     });
     const [radius, setRadius] = useState(50); // Add radius state (in miles)
 
@@ -120,6 +134,8 @@ const Map = () => {
         const { name, value } = e.target;
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
+
+    const breedOptions = filters.species === 'Dog' ? dogBreeds : filters.species === 'Cat' ? catBreeds : [];
 
     // Function to calculate distance between two points (Haversine formula)
     const calculateDistance = (lat1, lng1, lat2, lng2) => {
@@ -179,6 +195,15 @@ const Map = () => {
                     <option value="Cat">Cat</option>
                 </select>
 
+                {filters.species && (
+                    <select name="breed" className="filter-dropdown" value={filters.breed} onChange={handleFilterChange}>
+                        <option value="">All Breeds</option>
+                        {breedOptions.map((breed) => (
+                            <option key={breed} value={breed}>{breed}</option>
+                        ))}
+                    </select>
+                )}
+
                 <select
                     name="reportType"
                     className="filter-dropdown"
@@ -189,6 +214,30 @@ const Map = () => {
                     <option value="Stray">Stray</option>
                     <option value="Lost">Lost</option>
                 </select>
+
+                <select
+                    name="fixed"
+                    className="filter-dropdown"
+                    value={filters.fixed}
+                    onChange={handleFilterChange}
+                >
+                    <option value="">Fixed Status</option>
+                    <option value="Yes">Fixed</option>
+                    <option value="No">Not Fixed</option>
+                </select>
+
+                <select
+                    name="collar"
+                    className="filter-dropdown"
+                    value={filters.collar}
+                    onChange={handleFilterChange}
+                >
+                    <option value="">Collar Status</option>
+                    <option value="true">With Collar</option>
+                    <option value="false">Without Collar</option>
+                </select>
+
+                
 
                 {/* Slider to adjust the radius */}
                 <input
@@ -256,10 +305,12 @@ const Map = () => {
                                     borderRadius: '50%',
                                 }}
                             />
-                            <p>Breed: {selectedReport.animal.breed}</p>
+                           <p>Breed: {selectedReport.animal.breed}</p>
                             <p>Color: {selectedReport.animal.color}</p>
                             <p>Gender: {selectedReport.animal.gender}</p>
                             <p>Report Type: {selectedReport.reportType}</p>
+                            <p>Fixed Status: {selectedReport.animal.fixed}</p>
+                            <p>Collar: {selectedReport.animal.collar ? "Yes" : "No"}</p>
                             <p>Date Reported: {new Date(selectedReport.dateReported).toLocaleDateString()}</p>
                             <p>Address: {selectedReport.location.address || 'Address not provided'}</p>
                         </div>

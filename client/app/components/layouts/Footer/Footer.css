@@ -1,7 +1,8 @@
 /* Footer.css */
 
 .custom-footer {
-    background-color: rgba(90, 57, 13, 0.9);
+    background: url('/bbb.png') no-repeat center center; 
+    background-size: cover; 
     padding: 20px;
     text-align: center;
     font-family: 'Nunito', sans-serif;

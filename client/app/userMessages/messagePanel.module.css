@@ -242,3 +242,31 @@
   text-decoration: none;
   cursor: pointer;
 }
+@media (max-width: 768px) {
+  .messagePanel {
+    width: 100%; /* Full width on mobile */
+    height: calc(100vh - 60px); /* Adjust height for smaller screens */
+    padding: 10px;
+  }
+  .messageInputContainer {
+    gap: 5px; /* Smaller gap on mobile */
+  }
+  .messageBubble {
+    padding: 8px; /* Smaller padding on mobile */
+    font-size: 0.9rem; /* Adjust font size */
+  }
+
+  .messageInput {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+    .animalReportPreview {
+    max-width: 100%; /* Full width on mobile */
+    flex-direction: column;
+  }
+
+  .animalImage {
+    width: 100%; /* Full width for images */
+    height: 100px; /* Adjust height */
+  }
+}
