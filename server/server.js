@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const app = express()
 const animal = require('./routes/animal')
 const animalReport = require('./routes/animalReport')
+const story = require('./routes/story')
 const user = require('./routes/user')
 const auth = require('./routes/auth')
 const message = require('./routes/message');
@@ -51,6 +52,7 @@ app.use('/auth', auth)
  */
 app.use('/api/animal/', animal)
 app.use('/api/animal-report/', animalReport)
+app.use('/api/story/', story)
 app.use('/api/message/', message);
 app.use('/api/report/', report);
 app.use('/api/user/', user)
