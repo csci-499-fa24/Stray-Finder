@@ -293,3 +293,8 @@
   }
 }
 
+.creator-badge {
+  font-weight: bold;
+  color: gray;
+  margin-left: 5px;
+}
