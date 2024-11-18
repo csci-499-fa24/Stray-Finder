@@ -5,7 +5,7 @@ import './CommentModal.css';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
-const CommentModal = ({ animalId, reportId, image, description, onClose, onCommentAdded }) => {
+const CommentModal = ({ animalId, reportId, image, description, reportedByUsername, onClose, onCommentAdded }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isPosting, setIsPosting] = useState(false);
@@ -41,35 +41,33 @@ const CommentModal = ({ animalId, reportId, image, description, onClose, onComme
   const handleAddComment = async () => {
     setIsPosting(true);
     try {
-        const response = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ content: newComment }),
-        });
-        if (!response.ok) throw new Error('Failed to post comment');
+      const response = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ content: newComment }),
+      });
+      if (!response.ok) throw new Error('Failed to post comment');
 
-        // Increment the comment count in the parent component
-        if (onCommentAdded) {
-            onCommentAdded();
-        }
+      if (onCommentAdded) {
+        onCommentAdded();
+      }
 
-        // Refetch all comments to ensure completeness
-        const commentsResponse = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-        });
-        const updatedComments = await commentsResponse.json();
-        setComments(updatedComments);
-        setNewComment('');
+      const commentsResponse = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      const updatedComments = await commentsResponse.json();
+      setComments(updatedComments);
+      setNewComment('');
     } catch (error) {
-        console.error('Error adding comment:', error);
-        setAuthError(error.message);
+      console.error('Error adding comment:', error);
+      setAuthError(error.message);
     } finally {
-        setIsPosting(false);
+      setIsPosting(false);
     }
-  };  
+  };
 
   const formatTimestamp = (timestamp) => {
     const now = new Date();
@@ -91,6 +89,7 @@ const CommentModal = ({ animalId, reportId, image, description, onClose, onComme
           <div className="comment-left-section">
             <img src={image || '/paw-pattern.jpg'} alt="Animal" />
             <p>{description}</p>
+            <p><strong>Reported by:</strong> {reportedByUsername}</p>
           </div>
           <div className="comment-right-section">
             <h3>Comments</h3>
@@ -120,7 +119,12 @@ const CommentModal = ({ animalId, reportId, image, description, onClose, onComme
                       )}
                     </div>
                     <div className="comment-text">
-                      <span className="comment-username">{comment.userId?.username || ''}</span>
+                      <span className="comment-username">
+                        {comment.userId?.username || ''}
+                        {comment.userId?.username === reportedByUsername && (
+                          <span className="creator-badge"> • Creator</span>
+                        )}
+                      </span>
                       <p className="comment-content">{comment.content}</p>
                       <span className="comment-timestamp">{formatTimestamp(comment.createdAt)}</span>
                     </div>
