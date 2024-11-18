@@ -5,7 +5,7 @@ import { FaEllipsisV, FaCommentDots } from 'react-icons/fa';
 import CommentModal from '../../components/comments/CommentModal';
 import './AnimalDropdown.css';
 
-const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state, description }) => {
+const AnimalCard = ({ report_id, animal_id, name, username, image, species, gender, state, description }) => {
     const currentPath = usePathname();
 
     const [isModalOpen, setModalOpen] = useState(false); // State for report modal
@@ -180,6 +180,7 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                         reportId={report_id}
                         image={image}
                         description={description}
+                        reportedByUsername={username}
                         onClose={() => setIsCommentModalOpen(false)} 
                         onCommentAdded={() => setCommentCount((prevCount) => prevCount + 1)}
                     />

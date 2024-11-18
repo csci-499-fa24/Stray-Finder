@@ -5,7 +5,7 @@ import './CommentModal.css';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
-const CommentModal = ({ animalId, reportId, image, description, onClose, onCommentAdded }) => {
+const CommentModal = ({ animalId, reportId, image, description, reportedByUsername, onClose, onCommentAdded }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isPosting, setIsPosting] = useState(false);
@@ -91,6 +91,7 @@ const CommentModal = ({ animalId, reportId, image, description, onClose, onComme
           <div className="comment-left-section">
             <img src={image || '/paw-pattern.jpg'} alt="Animal" />
             <p>{description}</p>
+            <p><strong>Reported by:</strong> {reportedByUsername}</p>
           </div>
           <div className="comment-right-section">
             <h3>Comments</h3>

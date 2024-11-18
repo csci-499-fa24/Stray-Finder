@@ -11,14 +11,14 @@ const matchReports = async (req, res) => {
 
     try {
         // Fetch the specified report
-        const targetReport = await Report.findById(reportId).populate('animal')
+        const targetReport = await Report.findById(reportId).populate('animal').populate('reportedBy', 'username');
 
         if (!targetReport || !targetReport.animal) {
             return res.status(404).json({ error: 'Report not found or has no associated animal.' })
         }
 
         // Fetch all other reports
-        const otherReports = await Report.find({ _id: { $ne: reportId } }).populate('animal')
+        const otherReports = await Report.find({ _id: { $ne: reportId } }).populate('animal').populate('reportedBy', 'username');
 
         // Calculate match scores
         const matchScores = await Promise.all(
