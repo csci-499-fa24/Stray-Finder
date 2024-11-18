@@ -1,0 +1,158 @@
+/* reportAnimal.module.css */
+
+/* Container */
+.container {
+    margin-top: 2rem;
+  }
+  
+  .reportFormContainer {
+    border: 2px solid #6f42c1;
+    border-radius: 10px;
+    padding: 2rem;
+    background-color: #fff;
+  }
+  
+  /* Heading */
+  .h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Form Layout */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .form-control {
+    width: 100%;
+  }
+  
+  .form-select {
+    width: 100%;
+  }
+  
+  /* Select Elements */
+  .selectOptions {
+    font-size: 1rem;
+  }
+  
+  /* Image Upload Section */
+  .imageUploadContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  
+  .imageUploadButton {
+    background-color: #fca311;
+    color: white;
+    border: none;
+    width: 50%;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
+  .imageUploadButton:hover {
+    background-color: #fca311;
+  }
+  
+  /* Map Container */
+  .mapContainer {
+    margin-top: 1.5rem;
+    height: 400px;
+    width: 100%;
+  }
+  
+  .fileInput {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .fileInput input {
+    flex-grow: 1;
+    margin-left: 1rem;
+  }
+  
+  /* Submit Button */
+  .submitButton {
+    width: 50%;
+    padding: 1rem;
+    background-color: #fca311;
+    color: rgb(12, 1, 1);
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  
+  .submitButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .submitButton:hover:enabled {
+    background-color: #698821;
+  }
+  
+  /* Error Message */
+  .errorMessage {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.8rem;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Input Section */
+  .textInput {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  textarea.form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .container {
+      margin-top: 1rem;
+    }
+  
+    .reportFormContainer {
+      padding: 1rem;
+    }
+  
+    .h2 {
+      font-size: 1.5rem;
+    }
+  
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+  
+    .imageUploadContainer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .fileInput input {
+      width: 100%;
+    }
+  
+    .submitButton {
+      padding: 1rem;
+    }
+  }
+  
