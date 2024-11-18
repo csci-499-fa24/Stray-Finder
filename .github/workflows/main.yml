@@ -5,14 +5,11 @@ on:
     branches:
       - main
 
-permissions:
-  checks: write
-  contents: read
-  pull-requests: write
-
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }}  # Use the secret as an environment variable
 
     env:
       MONGO_URI: ${{ secrets.MONGO_URI }}

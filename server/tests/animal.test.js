@@ -1,94 +1,98 @@
 const request = require('supertest')
-const express = require('express')
-const cors = require('cors')
-require('dotenv').config()
+const mongoose = require('mongoose')
+const app = require('../server')
+const Animal = require('../models/animal')
+require('dotenv').config({ path: '.env.test' })
 
-// In-memory Animal Model
-class InMemoryAnimalModel {
-    constructor() {
-        this.animals = []
-    }
 
-    async create(animal) {
-        this.animals.push(animal)
-        return animal
-    }
-
-    async find() {
-        return this.animals
-    }
-
-    async deleteMany() {
-        this.animals = []
-    }
-}
-
-// Create an instance of the in-memory model
-const memoryAnimal = new InMemoryAnimalModel()
-
-// Express app setup
-const app = express()
-
-// Middleware setup
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
-app.use(
-    cors({
-        origin: process.env.NEXT_PUBLIC_CLIENT_URL,
-    })
+// Mock uploadImage function
+jest.mock('../cloudinary/upload', () =>
+    jest.fn().mockResolvedValue('http://mock-image-url.com')
 )
 
-// Animal routes
-app.use('/api/animal', (req, res) => {
-    if (req.method === 'GET') {
-        memoryAnimal.find().then((animals) => {
-            res.json({ animals })
-        })
-    } else if (req.method === 'POST') {
-        const newAnimal = req.body
-        memoryAnimal.create(newAnimal).then((createdAnimal) => {
-            res.status(201).json(createdAnimal)
-        })
-    }
-})
+// Mock middleware
+const authenticate = require('../middleware/auth')
+jest.mock('../middleware/auth', () => (req, res, next) => next())
 
-// Jest tests
-describe('GET /api/animal', () => {
-    beforeEach(async () => {
-        // Clear the in-memory database before each test
-        await memoryAnimal.deleteMany()
+describe('Animal API', () => {
+    let animalId
+
+    // Setup database connection before running tests
+    beforeAll(async () => {
+        const url = process.env.MONGO_URI
+        await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
     })
 
-    it('should return a list of animals', async () => {
-        // Create some mock data in the in-memory model
-        const mockAnimal = {
-            name: 'Bella',
+    // Clear database after each test
+    afterEach(async () => {
+        await Animal.deleteMany()
+    })
+
+    // Close database connection after all tests
+    afterAll(async () => {
+        await mongoose.connection.close()
+    })
+
+    it('GET /api/animal - should return all animals based on query', async () => {
+        // Create some animals
+        await Animal.create([
+            { name: 'Buddy', species: 'Dog', gender: 'Male' },
+            { name: 'Whiskers', species: 'Cat', gender: 'Female' },
+        ])
+
+        const res = await request(app)
+            .get('/api/animal')
+            .query({ species: 'Dog' })
+        expect(res.status).toBe(200)
+        expect(res.body.animals.length).toBe(1)
+        expect(res.body.animals[0].name).toBe('Buddy')
+    })
+
+    it('GET /api/animal/:id - should return an animal by ID', async () => {
+        const animal = await Animal.create({
+            name: 'Buddy',
             species: 'Dog',
-            breed: 'Golden Retriever',
-            color: 'Golden',
-            gender: 'Female',
-            description: 'A friendly and playful dog.',
-            imageUrl: 'https://example.com/images/bella.jpg',
-            coordinates: {
-                type: 'Point',
-                coordinates: [-74.006, 40.7128],
-            },
-        }
+            gender: 'Male',
+        })
+        animalId = animal._id
 
-        // Insert the mock data into the in-memory model
-        await memoryAnimal.create(mockAnimal)
-
-        const response = await request(app).get('/api/animal')
-
-        expect(response.status).toBe(200)
-        expect(response.body.animals.length).toBe(1)
-        expect(response.body.animals).toEqual([mockAnimal])
+        const res = await request(app).get(`/api/animal/${animalId}`)
+        expect(res.status).toBe(200)
+        expect(res.body.animal.name).toBe('Buddy')
     })
 
-    it('should return an empty array if no animals exist', async () => {
-        const response = await request(app).get('/api/animal')
+    it('PUT /api/animal/:id - should update an animal by ID', async () => {
+        const animal = await Animal.create({
+            name: 'Buddy',
+            species: 'Dog',
+            gender: 'Male',
+        })
+        animalId = animal._id
 
-        expect(response.status).toBe(200)
-        expect(response.body.animals).toEqual([])
+        const res = await request(app)
+            .put(`/api/animal/${animalId}`)
+            .send({ name: 'Buddy Updated' })
+
+        expect(res.status).toBe(200)
+        expect(res.body.animal.name).toBe('Buddy Updated')
+    })
+
+    it('DELETE /api/animal/:id - should delete an animal by ID', async () => {
+        const animal = await Animal.create({
+            name: 'Buddy',
+            species: 'Dog',
+            gender: 'Male',
+        })
+        animalId = animal._id
+
+        const res = await request(app).delete(`/api/animal/${animalId}`)
+        expect(res.status).toBe(200)
+        expect(res.body.message).toBe('Animal deleted successfully')
+
+        const deletedAnimal = await Animal.findById(animalId)
+        expect(deletedAnimal).toBeNull()
     })
 })
