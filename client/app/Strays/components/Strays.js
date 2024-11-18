@@ -1,5 +1,5 @@
 import { useEffect, useState, memo } from 'react'
-import AnimalCard from './AnimalCard'
+import AnimalCard from '../../components/cards/AnimalCard';
 import './Strays.css';
 
 const Strays = () => {

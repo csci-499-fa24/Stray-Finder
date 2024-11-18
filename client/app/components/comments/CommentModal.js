@@ -5,7 +5,7 @@ import './CommentModal.css';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
-const CommentModal = ({ animalId, reportId, image, description, onClose }) => {
+const CommentModal = ({ animalId, reportId, image, description, onClose, onCommentAdded }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isPosting, setIsPosting] = useState(false);
@@ -41,28 +41,33 @@ const CommentModal = ({ animalId, reportId, image, description, onClose }) => {
   const handleAddComment = async () => {
     setIsPosting(true);
     try {
-      const response = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ content: newComment }),
-      });
-      if (!response.ok) throw new Error('Failed to post comment');
-  
-      // Refetch all comments to ensure completeness
-      const commentsResponse = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      });
-      const updatedComments = await commentsResponse.json();
-      setComments(updatedComments);
-      setNewComment('');
+        const response = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ content: newComment }),
+        });
+        if (!response.ok) throw new Error('Failed to post comment');
+
+        // Increment the comment count in the parent component
+        if (onCommentAdded) {
+            onCommentAdded();
+        }
+
+        // Refetch all comments to ensure completeness
+        const commentsResponse = await fetch(`${BASE_URL}/api/comments/${reportId}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+        const updatedComments = await commentsResponse.json();
+        setComments(updatedComments);
+        setNewComment('');
     } catch (error) {
-      console.error('Error adding comment:', error);
-      setAuthError(error.message);
+        console.error('Error adding comment:', error);
+        setAuthError(error.message);
     } finally {
-      setIsPosting(false);
+        setIsPosting(false);
     }
   };  
 
