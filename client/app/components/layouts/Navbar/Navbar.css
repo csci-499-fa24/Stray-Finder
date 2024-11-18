@@ -97,7 +97,6 @@ font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center; /* Align to the left */
-    flex-grow: 1; /* Allow it to take up available space */
     margin-right: auto; /* Push the brand away from other elements */
   }
 
@@ -109,8 +108,7 @@ font-weight: bold;
     flex-shrink: 0; /* Prevent shrinking */
     margin-left: auto; /* Push it to the far right */
     position: absolute; /* Stay aligned relative to the navbar */
-    top: 25px; /* Align with the brand/logo */
-    right: 15px; /* Adjust for smaller screens */
+
   }
 
   /* Navbar toggle button remains on the far right */
@@ -135,24 +133,29 @@ font-weight: bold;
     padding: 4px 10px; /* Further reduce padding for very small screens */
     font-size: 0.8rem; /* Smaller font for extra space-saving */
   }
+  .navbar-brand img, .logo-container img {
+    width: 50px; /* Set a smaller width for the logo */
+    transform: scale(0.84); /* Scale down the logo to 80% of its original size */
 
-  .logo-container {
-    flex-grow: 1; /* Allow logo container to take up remaining space */
-    text-align: center; /* Keep logo centered */
   }
-
   .navbar-brand {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Align to the left */
-    flex-grow: 1; /* Allow it to take up available space */
+    justify-content: center; /* Align to the left */
     margin-right: auto; /* Push the brand away from other elements */
   }
   .login-profile-container {
-    margin-left: auto; /* Ensure the login/profile button is on the far right */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align container to the right */
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-left: auto; /* Push it to the far right */
+    position: absolute; /* Stay aligned relative to the navbar */
+    top: 25px; /* Align with the brand/logo */
+    right: 15px; /* Adjust for smaller screens */
   }
   .brand-text {
-  font-size: 1.2rem; /* Increase font size for emphasis */
+  font-size: 1.1rem; /* Increase font size for emphasis */
   color: #333333; /* Dark gray to distinguish from nav links */
   font-weight: 700; /* Bolder weight to stand out */
   justify-content: flex-start;
@@ -169,7 +172,7 @@ font-weight: bold;
 
   .navbar-brand img, .logo-container img {
     width: 50px; /* Set a smaller width for the logo */
-    transform: scale(0.7); /* Scale down the logo to 80% of its original size */
+    transform: scale(0.6); /* Scale down the logo to 80% of its original size */
 
   }
   .login-button {
@@ -183,6 +186,34 @@ font-weight: bold;
     font-weight: 700; /* Bolder weight to stand out */
     justify-content: left;
   }
+
+  @media (max-width: 320px) {
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* Align everything to the left */
+      margin-right: auto; /* Push the brand to the left */
+    }
+  
+    .brand-text {
+      font-size: 0.9rem; /* Smaller text size for tight screens */
+      font-weight: 700; /* Keep bold text */
+      margin-left: -5px; /* Slightly nudge the text left */
+      text-align: center; /* Ensure it doesn't break alignment */
+    }
+
+    .login-profile-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end; /* Align container to the right */
+      flex-shrink: 0; /* Prevent shrinking */
+      margin-left: auto; /* Push it to the far right */
+      position: absolute; /* Stay aligned relative to the navbar */
+      top: 25px; /* Align with the brand/logo */
+      right: 10px; /* Adjust for smaller screens */
+    }
+}
+
 }
 }
 }
