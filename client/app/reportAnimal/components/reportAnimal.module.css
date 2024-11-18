@@ -59,9 +59,12 @@
 }
 
 .imageUploadButton {
+    display: flex; /* Make the button a flex container */
+    align-items: center; /* Vertically align icon and text */
+    gap: 0.5rem; /* Add spacing between icon and text */
     background-color: #fca311;
     color: #3d2e27;
-    padding: 15px 30px;
+    padding: 5px 15px;
     font-size: 1rem;
     cursor: pointer;
     border-radius: 5px;
@@ -69,6 +72,9 @@
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
+.cameraIcon {
+    font-size: 1.2rem; /* Adjust icon size if needed */
+}
 .imageUploadButton:hover {
     background-color: #fca311;
 }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import useAuth from '@/app/hooks/useAuth';
 import toast from 'react-hot-toast';
 import styles from './reportAnimal.module.css';
+import { FaCamera } from 'react-icons/fa';
 
 
 const ReportAnimal = () => {
@@ -511,7 +512,8 @@ const ReportAnimal = () => {
                                     className={styles.imageUploadButton}
                                     onClick={handleCameraCapture}
                                 >
-                                    Take a Picture
+                                <FaCamera className={styles.cameraIcon} />
+                                <span>Take a Picture</span>
                                 </button>
                                 <input
                                     type="file"
