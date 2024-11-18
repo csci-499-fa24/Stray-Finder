@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { FaEllipsisV, FaCommentDots } from 'react-icons/fa';
-import CommentModal from '../comments/CommentModal';
+import CommentModal from '../../components/comments/CommentModal';
 import './AnimalDropdown.css';
 
 const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state, description }) => {
@@ -180,7 +180,8 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                         reportId={report_id}
                         image={image}
                         description={description}
-                        onClose={() => setIsCommentModalOpen(false)} // Close modal handler
+                        onClose={() => setIsCommentModalOpen(false)} 
+                        onCommentAdded={() => setCommentCount((prevCount) => prevCount + 1)}
                     />
                 )}
             </div>
