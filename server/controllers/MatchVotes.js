@@ -12,7 +12,7 @@ const getMatchVotes = async (req, res) => {
 }
 
 const createMatchVotes = async (req, res) => {
-    const { report1, report2, vote} = req.body; 
+    const { report1, report2, vote } = req.body; 
     
     if (!report1 || !report2 || !vote){
         return res.status(400).json({ message: 'missing required fields' });
@@ -20,12 +20,14 @@ const createMatchVotes = async (req, res) => {
 
     try {
         const existingMatch = await MatchVotes.findOne({
-            report1: report1,
-            report2: report2,
+            $or: [
+                { report1: report1, report2: report2 },
+                { report1: report2, report2: report1 }
+            ]
         });
 
         if (existingMatch) {
-            return res.status(400).json({ message: 'match already exists' });
+            return updateMatchVotes(req, res, existingMatch._id, vote);
         }
 
         const yes = vote === 'yes' ? 1 : 0;
@@ -39,7 +41,14 @@ const createMatchVotes = async (req, res) => {
         }
 
         const matchVotes = new MatchVotes(matchVotesData);
+
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        user.matchVotes.push({ matchVotesId: matchVotes._id, vote});
         await matchVotes.save();
+        await user.save();
         res.status(200).json({ matchVotes });
 
     }
@@ -48,9 +57,7 @@ const createMatchVotes = async (req, res) => {
     }
 }
 
-const updateMatchVotes = async (req, res) => {
-    const { matchVotesId, vote } = req.body;
-
+const updateMatchVotes = async (req, res, matchVotesId, vote) => {
     if (!matchVotesId || !vote) {
         return res.status(400).json({ message: 'missing required fields' });
     }

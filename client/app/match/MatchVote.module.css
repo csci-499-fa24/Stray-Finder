@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;  
+    border: black solid 10px;
+}
+
+.card{
+    background-color: #fff; /* White background for the card */
+    margin: 15px; /* Space between cards */
+    padding: 20px; /* Padding inside the card */
+}
+
+.centerContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.iconCheckButton {
+    cursor: pointer;
+    color: rgb(0, 222, 0);
+    font-size: 50px;
+    margin: 10px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+  
+.iconCheckButton:hover {
+    transform: scale(1.2);
+    color: rgb(0, 180, 0);
+}
+
+.iconXButton {
+    cursor: pointer;
+    color: rgb(222, 2, 2);
+    font-size: 50px;
+    margin: 10px 10px 10px 10px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+  
+.iconXButton:hover {
+    transform: scale(1.2);
+    color: rgb(180, 4, 4);
+}

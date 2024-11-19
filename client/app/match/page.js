@@ -1,3 +1,4 @@
+'use client';
 
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import MatchVote from "./components/MatchVote";

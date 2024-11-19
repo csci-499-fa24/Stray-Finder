@@ -43,7 +43,6 @@ const getHighMatches = async (req, res) => {
         const allLostReports = await Report.find({ reportType: 'Lost' }).populate('animal');
         const allStrayReports = await Report.find({ reportType: 'Stray' }).populate('animal');
 
-        console.log(allLostReports.length);
         const highMatches = [];
 
         for (const lostReport of allLostReports) {
@@ -54,7 +53,7 @@ const getHighMatches = async (req, res) => {
                 }
             }
         }
-        
+
         res.status(200).json({ matches: highMatches });
 
     } catch (error) {
