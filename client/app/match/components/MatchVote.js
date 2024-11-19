@@ -119,105 +119,110 @@ const MatchVote = () => {
     // console.log(matchVotes);
     return (
         <div>
-            <h2>help us match these guys</h2>
-
-            <div className="row justify-content-center">
-                {displayedMatches.length > 0 ? (
-                    displayedMatches.map(({ lostReport, strayReport, score }, index) => (
-                        <div key={index} className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
-                            <div className={styles.container}>
-                                {/* Lost Report Card */}
-                                <div className={styles.card}>
-                                    <AnimalCard
-                                        report_id={lostReport._id}
-                                        animal_id={lostReport.animal._id}
-                                        name={lostReport.animal.name}
-                                        image={lostReport.animal.imageUrl}
-                                        species={lostReport.animal.species}
-                                        gender={lostReport.animal.gender}
-                                        state={lostReport.location?.address}
-                                        description={lostReport.description}
-                                    />
-                                </div>
-
-                                {/* Match Score */}
-                                <div className="col-md-2 text-center">
-                                    <h2 className="mb-0 font-weight-bold">
-                                        {Math.round(score * 100)}%
-                                    </h2>
-                                    <p className="text-muted">
-                                        Match Score
-                                    </p>
-                                </div>
-
-                                {/* stray Report Card */}
-                                <div className={styles.card}>
-                                    <AnimalCard
-                                        report_id={strayReport._id}
-                                        animal_id={strayReport.animal._id}
-                                        name={strayReport.animal.name}
-                                        image={strayReport.animal.imageUrl}
-                                        species={strayReport.animal.species}
-                                        gender={strayReport.animal.gender}
-                                        state={strayReport.location?.address}
-                                        description={strayReport.description}
-                                    />
-                                </div>
-                                
-                            </div>
-                            <div className={styles.centerContainer}>
-                                <h2>Are the two images the same animal?</h2>
-                                <div className={styles.buttonContainer}>
-                                    <FontAwesomeIcon 
-                                        icon={faCircleCheck}
-                                        onClick={() => handleClick({lostReport, strayReport, vote: 'yes'})}
-                                        className={styles.iconCheckButton}
-                                    />
-                                    <FontAwesomeIcon 
-                                        icon={faCircleXmark}
-                                        onClick={() => handleClick({lostReport, strayReport, vote: 'no'})}
-                                        className={styles.iconXButton}
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <div style= {{textAlign:'center'}}>
-                                    <h2 className="mb-0 font-weight-bold">
-                                        {`${matchVotes[index][0]} : ${matchVotes[index][1]}`}
-                                    </h2>
-                                    <p className="text-muted">
-                                        Yes : No
-                                    </p>
-                                </div>
-                                <ProgressBar
-                                    max={100}
-                                >
-                                    <ProgressBar
-                                    striped
-                                    variant="success"
-                                    now={(matchVotes[index][0] / (matchVotes[index][0] + matchVotes[index][1])) * 100}
-                                    />
-                                    <ProgressBar
-                                    striped
-                                    variant="danger"
-                                    now={(matchVotes[index][1] / (matchVotes[index][0] + matchVotes[index][1])) * 100}
-                                    />
-                                </ProgressBar>
-                                    {/* <div
-                                    className="progress-bar"
-                                    role="progressbar"
-                                    style={{ width: `${matchVotes[index][0]}%` }}
-                                    aria-valuenow={matchVotes[index][0]}
-                                    aria-valuemin="0"
-                                    aria-valuemax={matchVotes[index][0]+matchVotes[index][1]}
-                                    ></div> */}
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <p className="text-center">No matches found.</p>
-                )}
+            <div className={styles.titleContainer}>
+                <h2 className={styles.heading}>Help us match these guys</h2>
             </div>
+                <div className="row justify-content-center">
+                    {displayedMatches.length > 0 ? (
+                        displayedMatches.map(({ lostReport, strayReport, score }, index) => (
+                            matchVotes && matchVotes[index] ? (
+                            <div key={index} className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
+                                <div className={styles.container}>
+                                    {/* Lost Report Card */}
+                                    <div className={styles.card}>
+                                        <AnimalCard
+                                            report_id={lostReport._id}
+                                            animal_id={lostReport.animal._id}
+                                            name={lostReport.animal.name}
+                                            image={lostReport.animal.imageUrl}
+                                            species={lostReport.animal.species}
+                                            gender={lostReport.animal.gender}
+                                            state={lostReport.location?.address}
+                                            description={lostReport.description}
+                                        />
+                                    </div>
+
+                                    {/* Match Score */}
+                                    <div className="col-md-2 text-center">
+                                        <h2 className="mb-0 font-weight-bold">
+                                            {Math.round(score * 100)}%
+                                        </h2>
+                                        <p className="text-muted">
+                                            Match Score
+                                        </p>
+                                    </div>
+
+                                    {/* stray Report Card */}
+                                    <div className={styles.card}>
+                                        <AnimalCard
+                                            report_id={strayReport._id}
+                                            animal_id={strayReport.animal._id}
+                                            name={strayReport.animal.name}
+                                            image={strayReport.animal.imageUrl}
+                                            species={strayReport.animal.species}
+                                            gender={strayReport.animal.gender}
+                                            state={strayReport.location?.address}
+                                            description={strayReport.description}
+                                        />
+                                    </div>
+                                    
+                                </div>
+                                <div className={styles.centerContainer}>
+                                    <h2>Are the two images the same animal?</h2>
+                                    <div className={styles.buttonContainer}>
+                                        <FontAwesomeIcon 
+                                            icon={faCircleCheck}
+                                            onClick={() => handleClick({lostReport, strayReport, vote: 'yes'})}
+                                            className={styles.iconCheckButton}
+                                        />
+                                        <FontAwesomeIcon 
+                                            icon={faCircleXmark}
+                                            onClick={() => handleClick({lostReport, strayReport, vote: 'no'})}
+                                            className={styles.iconXButton}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style= {{textAlign:'center'}}>
+                                        <h2 className="mb-0 font-weight-bold">
+                                            {`${matchVotes[index][0]} : ${matchVotes[index][1]}`}
+                                        </h2>
+                                        <p className="text-muted">
+                                            Yes : No
+                                        </p>
+                                    </div>
+                                    <ProgressBar
+                                        max={100}
+                                    >
+                                        <ProgressBar
+                                        striped
+                                        variant="success"
+                                        now={(matchVotes[index][0] / (matchVotes[index][0] + matchVotes[index][1])) * 100}
+                                        />
+                                        <ProgressBar
+                                        striped
+                                        variant="danger"
+                                        now={(matchVotes[index][1] / (matchVotes[index][0] + matchVotes[index][1])) * 100}
+                                        />
+                                    </ProgressBar>
+                                        {/* <div
+                                        className="progress-bar"
+                                        role="progressbar"
+                                        style={{ width: `${matchVotes[index][0]}%` }}
+                                        aria-valuenow={matchVotes[index][0]}
+                                        aria-valuemin="0"
+                                        aria-valuemax={matchVotes[index][0]+matchVotes[index][1]}
+                                        ></div> */}
+                                </div>
+                            </div> 
+                            ) : (
+                                'Loading...'
+                            )
+                        ))
+                    ) : (
+                        <p className="text-center">No matches found.</p>
+                    )}
+                </div>
             
             {displayedMatches.length < allMatches.length && (
                 <div className="text-center my-4">
