@@ -1,0 +1,160 @@
+/* General Popup Container */
+.popupContainer {
+    position: fixed;
+    top: 50%;
+    right: -320px;
+    transform: translateY(-50%);
+    z-index: 9999;
+    width: 300px;
+    height: 360px; /* Ensure explicit height */
+    display: flex;
+    flex-direction: row; /* Align arrow and content side by side */
+    align-items: stretch; /* Stretch children to match container height */
+    transition: right 0.8s ease-in-out, box-shadow 0.3s ease;
+    background: url("/bb4.jpg") center/cover, linear-gradient(135deg, #fbf1de, #f2dcc4);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 15px 0 0 15px;
+    border: 1px solid rgba(255, 197, 143, 0.7);
+    overflow: hidden;
+}
+
+.popupContainer.active {
+    right: 0; /* Slide the popup into view */
+}
+
+.popupContainer.collapsed {
+    right: -265px; /* Partially hidden, showing only the arrow */
+}
+
+/* Arrow Section */
+.arrowSection {
+    width: 35px;
+    height: 100%; /* Fill the height of the parent container */
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-right: 1px solid rgba(255, 197, 143, 0.7);
+    box-sizing: border-box;
+    transition: background 0.3s ease, color 0.3s ease;
+    flex-shrink: 0; /* Prevent the arrow from shrinking */
+    padding: 0; /* Remove any unwanted padding */
+    margin: 0; /* Ensure it starts at the edge */
+    font-size: 2.1rem;
+    color: orange;
+}
+
+.arrowSection:hover {
+    background: #f6e1c8; /* Light hover effect */
+    color: #ff5722; /* Slightly darker arrow color */
+}
+
+/* Popup Content */
+.popupContent {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1; /* Use remaining space */
+    justify-content: center; /* Center the content */
+}
+
+/* Animation Section */
+.animationSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    gap: 15px; /* Space between images */
+    margin-bottom: 15px;
+}
+
+.petImage {
+    width: 80px; /* Larger pet images */
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #ffcc80; /* More prominent border */
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Add depth */
+}
+
+.matchIcon,
+.unmatchIcon {
+    position: absolute;
+    font-size: 2.5rem; /* Larger icons */
+    color: #fff;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: bounce 0.8s infinite;
+    z-index: 10; /* Ensure on top */
+}
+
+.matchIcon {
+    background: #4caf50; /* Green circle for matches */
+    border-radius: 50%;
+    padding: 8px;
+}
+
+.unmatchIcon {
+    background: #f44336; /* Red circle for mismatches */
+    border-radius: 50%;
+    padding: 8px;
+}
+
+/* Popup Text */
+.popupText {
+    font-size: 1.2rem; /* Larger font for emphasis */
+    font-weight: bold;
+    color: #5d4037;
+    text-align: center;
+    line-height: 1.5;
+    margin: 10px 0;
+}
+
+/* Button Group */
+.buttonGroup {
+    display: flex;
+    justify-content: space-evenly; /* Evenly distribute buttons */
+    gap: 15px;
+}
+
+.helpButton,
+.closeButton {
+    width: 100px; /* Uniform button width */
+    padding: 10px 15px;
+    border-radius: 10px; /* Softer button shapes */
+    font-size: 1rem; /* Balanced font size */
+    font-weight: bold;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.helpButton {
+    background: linear-gradient(135deg, #ff8a65, #ff7043);
+    color: white;
+}
+
+.helpButton:hover {
+    background: #ff5722; /* Darker hover color */
+    transform: scale(1.1); /* Subtle zoom */
+}
+
+.closeButton {
+    background: linear-gradient(135deg, #ffcc80, #ffc947);
+    color: #5d4037;
+}
+
+.closeButton:hover {
+    background: #ffa726;
+    transform: scale(1.1);
+}
+
+/* Keyframes for Animation */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}

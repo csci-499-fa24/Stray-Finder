@@ -3,6 +3,7 @@ import Navbar from '@/app/components/layouts/Navbar/Navbar';
 import Footer from '@/app/components/layouts/Footer/Footer';
 import Strays from './components/Strays';
 import FeaturedStrays from '@/app/components/cards/FeaturedAnimals';
+import HelpMatchPopUp from '@/app/components/HelpMatchPopUp';
 import Map from '@/app/components/Miscellaneous/Map';
 import { useState } from 'react';
 import './components/Strays.css';
@@ -36,6 +37,7 @@ const StraysPage = () => {
 
             <main className="container">
                 {activeTab === 'strayRegistry' ? <Strays /> : <FeaturedStrays />}
+                <HelpMatchPopUp />
             </main>
 
             <Footer />
