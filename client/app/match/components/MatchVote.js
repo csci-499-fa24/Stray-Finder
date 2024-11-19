@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import AnimalCard from '@/app/components/cards/AnimalCard'
+import AnimalCard from './MatchCard'
 import styles from '../MatchVote.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -12,7 +12,6 @@ const MatchVote = () => {
     const [displayedMatches, setDisplayedMatches] = useState([]) // Matches currently displayed
     const [page, setPage] = useState(1) // Track pages for local pagination
     const limit = 20;
-    const [matchVotes, setMatchVotes] = useState([]);
 
     const loadMatches = async () => {
         setIsLoading(true);
@@ -60,7 +59,37 @@ const MatchVote = () => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/match-votes/`);
             const data = await response.json();
             // console.log(data);
-            setMatchVotes(data.map(item => [item.yes, item.no]));
+            // console.log(displayedMatches)
+            const updatedMatches = displayedMatches.map(match => {
+                // console.log(match)
+                const matchVote = data.find(vote =>  {
+                    // console.log('vote.report1:', vote.report1, 'vote.report2:', vote.report2);
+                    // console.log('match.lostReport:', match.lostReport, 'match.strayReport:', match.strayReport);
+                    return (
+                        (vote.report1._id === match.lostReport._id && vote.report2._id === match.strayReport._id) ||
+                        (vote.report1._id === match.strayReport._id && vote.report2._id === match.lostReport._id)
+                    )
+                });
+                if (matchVote) {
+                    return {
+                        ...match,
+                        matchVotes: {
+                            yes: matchVote.yes,
+                            no: matchVote.no
+                        }
+                    };
+                } else {
+                    return {
+                        ...match,
+                        matchVotes: {
+                            yes: 0,
+                            no: 0
+                        }
+                    };
+                };
+            });
+            setDisplayedMatches(updatedMatches);
+
         } catch (error) {
             console.log('failed geting match votes,', error);
         }
@@ -75,8 +104,13 @@ const MatchVote = () => {
     
     useEffect(() => {
         loadMatches();
-        getMatchVotes();
     }, []);
+
+    useEffect(() => {
+        if (allMatches.length > 0) {
+            getMatchVotes();
+        }
+    }, [allMatches]);
 
     const handleClick = async ({lostReport, strayReport, vote}) => {
         try {
@@ -116,7 +150,7 @@ const MatchVote = () => {
             console.log("failed to create match,", error);
         }
     }
-    // console.log(matchVotes);
+    // console.log(displayedMatches);
     return (
         <div>
             <div className={styles.titleContainer}>
@@ -124,8 +158,7 @@ const MatchVote = () => {
             </div>
                 <div className="row justify-content-center">
                     {displayedMatches.length > 0 ? (
-                        displayedMatches.map(({ lostReport, strayReport, score }, index) => (
-                            matchVotes && matchVotes[index] ? (
+                        displayedMatches.map(({ lostReport, strayReport, score, matchVotes }, index) => (
                             <div key={index} className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
                                 <div className={styles.container}>
                                     {/* Lost Report Card */}
@@ -183,41 +216,42 @@ const MatchVote = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <div style= {{textAlign:'center'}}>
-                                        <h2 className="mb-0 font-weight-bold">
-                                            {`${matchVotes[index][0]} : ${matchVotes[index][1]}`}
-                                        </h2>
-                                        <p className="text-muted">
-                                            Yes : No
-                                        </p>
+                                    {matchVotes ? (
+                                    <div>
+                                        <div style= {{textAlign:'center'}}>
+                                            <h2 className="mb-0 font-weight-bold">
+                                                {`${matchVotes.yes} : ${matchVotes.no}`}
+                                            </h2>
+                                            <p className="text-muted">
+                                                Yes : No
+                                            </p>
+                                        </div>
+                                        <ProgressBar
+                                            max={100}
+                                        >
+                                            <ProgressBar
+                                            striped
+                                            variant="success"
+                                            now={(matchVotes.yes / (matchVotes.yes + matchVotes.no)) * 100
+                                            }
+                                            />
+                                            <ProgressBar
+                                            striped
+                                            variant="danger"
+                                            now={(matchVotes.no / (matchVotes.yes + matchVotes.no)) * 100
+                                            }
+                                            />
+                                        </ProgressBar>
                                     </div>
-                                    <ProgressBar
-                                        max={100}
-                                    >
-                                        <ProgressBar
-                                        striped
-                                        variant="success"
-                                        now={(matchVotes[index][0] / (matchVotes[index][0] + matchVotes[index][1])) * 100}
+                                    ) : (
+                                        <ProgressBar 
+                                            striped
+                                            // className={styles.grayBar}
+                                            now={100}
                                         />
-                                        <ProgressBar
-                                        striped
-                                        variant="danger"
-                                        now={(matchVotes[index][1] / (matchVotes[index][0] + matchVotes[index][1])) * 100}
-                                        />
-                                    </ProgressBar>
-                                        {/* <div
-                                        className="progress-bar"
-                                        role="progressbar"
-                                        style={{ width: `${matchVotes[index][0]}%` }}
-                                        aria-valuenow={matchVotes[index][0]}
-                                        aria-valuemin="0"
-                                        aria-valuemax={matchVotes[index][0]+matchVotes[index][1]}
-                                        ></div> */}
+                                    )}
                                 </div>
                             </div> 
-                            ) : (
-                                'Loading...'
-                            )
                         ))
                     ) : (
                         <p className="text-center">No matches found.</p>
