@@ -1,35 +1,45 @@
-const { Story } = require('../models/story')
+const Story = require('../models/story')
 const MatchVotes = require('../models/MatchVotes')
 
 // Core logic for processing matches and creating stories
 const processHighMatches = async () => {
-    const matches = await MatchVotes.find()
+    try {
+        const matches = await MatchVotes.find()
 
-    for (const match of matches) {
-        // Validate match criteria
-        if (match.yes < 100 && match.no < 100) continue
-        if (match.yes / match.no < 2) continue
+        for (const match of matches) {
+            console.log('Processing match:', match)
 
-        // Check if a story already exists for the matched reports
-        const existingStory = await Story.findOne({
-            animalReports: { $all: [match.report1._id, match.report2._id] },
-        })
+            // Validate match criteria
+            if (match.yes / match.no < 1.75) continue
 
-        // If a story doesn't exist, create a new one
-        if (!existingStory) {
-            const newStory = new Story({
-                animalReports: [match.report1._id, match.report2._id],
-                description: `Story created from reports ${match.report1._id} and ${match.report2._id}`,
-                createdAt: new Date(),
+            // Extract report IDs (no need for ._id since they are ObjectIds directly)
+            const reportIds = [match.report1, match.report2]
+
+            console.log('Checking existing story for reports:', reportIds)
+
+            // Check if a story already exists for these reports
+            const existingStory = await Story.findOne({
+                animalReports: { $all: reportIds },
             })
 
-            await newStory.save()
-            console.log(`New story created: ${newStory._id}`)
-        } else {
-            console.log(
-                `Story already exists for reports ${match.report1._id} and ${match.report2._id}`
-            )
+            if (!existingStory) {
+                // Create a new story if it doesn't exist
+                const newStory = new Story({
+                    animalReports: reportIds,
+                    description: `Story created from reports ${reportIds[0]} and ${reportIds[1]}`,
+                    dateCreated: new Date(),
+                })
+
+                await newStory.save()
+                console.log(`New story created: ${newStory._id}`)
+            } else {
+                console.log(
+                    `Story already exists for reports ${reportIds[0]} and ${reportIds[1]}`
+                )
+            }
         }
+    } catch (error) {
+        console.error('Error processing high matches:', error)
     }
 }
 

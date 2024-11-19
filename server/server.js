@@ -30,11 +30,6 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong!' })
 })
 ///////////////////////////////////////////////////////////////////////////
-
-/**
- * Section for authentication routes
- */
-app.use('/auth', auth)
 ///////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////
@@ -54,6 +49,11 @@ const email = require('./routes/email')
 const profile = require('./routes/profile')
 const matchVotes = require('./routes/MatchVotes')
 const commentRoutes = require('./routes/comment')
+
+/**
+ * Section for authentication routes
+ */
+app.use('/auth', auth)
 
 app.use('/api/animal/', animal)
 app.use('/api/animal-report/', animalReport)
