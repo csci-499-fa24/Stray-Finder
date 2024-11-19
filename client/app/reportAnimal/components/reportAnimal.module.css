@@ -1,0 +1,181 @@
+/* reportAnimal.module.css */
+
+/* Container */
+.container {
+    margin-top: 2rem;
+}
+
+.reportFormContainer {
+    border: 2px solid #4e3606;
+    border-radius: 10px;
+    padding: 2rem;
+    background-color: #fff;
+    background-image: url('/bb1.jpg'); /* Corrected image path */
+    background-size: cover; /* Ensure the image covers the entire background */
+    background-position: center center; /* Position the image at the center */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    margin-bottom: 1.5rem; /* Add space below the form container */
+}
+
+/* Heading */
+.h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+/* Form Group Layout */
+.formGroup {
+    display: flex;
+    justify-content: space-between; /* Distribute the label and select field on opposite sides */
+    align-items: center; /* Align items vertically */
+    margin-bottom: 1.5rem;
+}
+
+.formLabel {
+    margin-right: 1rem; /* Add space between the label and the dropdown */
+}
+
+.formSelect {
+    width: auto; /* Let the dropdown take up only as much space as it needs */
+    flex-shrink: 0; /* Prevent the dropdown from shrinking */
+    padding: 0.5rem; /* Add some padding for better look */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Select Options */
+.selectOptions {
+    font-size: 1rem;
+}
+
+/* Image Upload Section */
+.imageUploadContainer {
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    align-items: center;
+    gap: 1rem; /* Add space between buttons */
+}
+
+.imageUploadButton {
+    display: flex; /* Make the button a flex container */
+    align-items: center; /* Vertically align icon and text */
+    gap: 0.5rem; /* Add spacing between icon and text */
+    background-color: #fca311;
+    color: #3d2e27;
+    padding: 5px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.cameraIcon {
+    font-size: 1.2rem; /* Adjust icon size if needed */
+}
+.imageUploadButton:hover {
+    background-color: #fca311;
+}
+
+/* Map Container */
+.mapContainer {
+    margin-top: 1.5rem;
+    height: 400px;
+    width: 100%;
+}
+
+.fileInput {
+    display: flex;
+    justify-content: center; /* Center the file input */
+    width: 100%;
+}
+
+.fileInput input {
+    width: 100%;
+    max-width: 300px; /* Add a max width to limit the input size */
+    margin-left: 1rem;
+}
+
+/* Submit Button */
+.submitButton {
+    display: block; /* Ensure it behaves as a block-level element */
+    margin: 1rem auto; /* Center horizontally using auto margin */
+    padding: 15px 30px;
+    background-color: #fca311;
+    color: #3d2e27;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.submitButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.submitButton:hover:enabled {
+    background-color: #698821;
+}
+
+/* Error Message */
+.errorMessage {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.8rem;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+}
+
+/* Input Section */
+.textInput {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+textarea.form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin-top: 1rem;
+    }
+
+    .reportFormContainer {
+        padding: 1rem;
+    }
+
+    .h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.2rem;
+        flex-direction: column; /* Stack elements vertically on smaller screens */
+        align-items: flex-start; /* Align items to the left */
+    }
+
+    .imageUploadContainer {
+        flex-direction: column;
+        align-items: center; /* Center buttons in column layout */
+        gap: 0.8rem; /* Space between the buttons */
+    }
+
+    .fileInput input {
+        width: 100%;
+    }
+
+    .submitButton {
+        width: 80%;
+    }
+}

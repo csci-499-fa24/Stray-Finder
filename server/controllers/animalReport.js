@@ -7,62 +7,78 @@ const upload = require('../middleware/uploadMiddleware')
 // GET: Retrieve list of animal reports
 const getAnimalReports = async (req, res) => {
     try {
-        const { reportType, gender, species, reportedBy } = req.query;
-        let query = {};
+        const {
+            reportType,
+            gender,
+            species,
+            reportedBy,
+            fixed,
+            collar,
+            breed,
+        } = req.query
+        let query = {}
 
-        if (reportType) query.reportType = reportType;
+        // Filter by report type
+        if (reportType) query.reportType = reportType
 
-        if (reportedBy) {
-            query.reportedBy = reportedBy; // Ensure this is included for filtering
-        }
+        // Filter by the user who reported
+        if (reportedBy) query.reportedBy = reportedBy
 
-        let animalQuery = {};
-        if (gender) animalQuery.gender = gender;
-        if (species) animalQuery.species = species;
+        // Construct the animal query
+        let animalQuery = {}
+        if (gender) animalQuery.gender = gender // Match gender
+        if (species) animalQuery.species = species // Match species
+        if (breed) animalQuery.breed = breed // Match breed
 
+        // Match fixed status (as a string)
+        if (fixed) animalQuery.fixed = fixed // Fixed is "Yes", "No", or "Unknown"
+
+        // Match collar status (as a boolean)
+        if (collar) animalQuery.collar = collar === 'true' // Convert to boolean for query
+
+        // If animalQuery has filters, fetch matching animals' IDs
         if (Object.keys(animalQuery).length > 0) {
-            const animals = await Animal.find(animalQuery).select('_id');
-            const animalIds = animals.map((animal) => animal._id);
-            query.animal = { $in: animalIds };
+            const animals = await Animal.find(animalQuery).select('_id')
+            const animalIds = animals.map((animal) => animal._id)
+            query.animal = { $in: animalIds } // Filter reports with matching animals
         }
 
+        // Fetch reports based on query
         const reports = await AnimalReport.find(query)
-            .populate('animal')
-            .populate('reportedBy')
-            .exec();
+            .populate('animal') // Populate animal details
+            .populate('reportedBy') // Populate user details if needed
+            .exec()
 
-        res.status(200).json({ reports });
+        res.status(200).json({ reports })
     } catch (error) {
         res.status(500).json({
             message: 'Failed to fetch animal reports',
             error: error.message,
-        });
+        })
     }
-};
-
+}
 
 // GET: Retrieves a specific animal report by ID
-    const getAnimalReportById = async (req, res) => {
-        try {
-            const { id } = req.params
-            const report = await AnimalReport.findById(id)
-                .populate('animal')
-                .populate('reportedBy')
-                .exec()
+const getAnimalReportById = async (req, res) => {
+    try {
+        const { id } = req.params
+        const report = await AnimalReport.findById(id)
+            .populate('animal')
+            .populate('reportedBy')
+            .exec()
 
-            if (!report) {
-                return res.status(404).json({ message: 'Animal report not found' })
-            }
-
-            res.status(200).json({ report })
-        } catch (error) {
-            res.status(500).json({
-                message: 'Failed to fetch animal report',
-                error: error.message,
-            })
+        if (!report) {
+            return res.status(404).json({ message: 'Animal report not found' })
         }
-    }
 
+        res.status(200).json({ report })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Failed to fetch animal report',
+            error: error.message,
+        })
+    }
+}
 
 // POST: Creates a new animal report
 const createAnimalReport = async (req, res) => {
@@ -81,27 +97,29 @@ const createAnimalReport = async (req, res) => {
             reportedBy,
         } = req.body
 
+        // Validate required fields
         if (!species || !location || !reportType || !reportedBy) {
             return res.status(400).json({ message: 'Missing required fields' })
         }
 
+        // Parse location
         let parsedLocation
         try {
             parsedLocation = JSON.parse(location)
         } catch (jsonError) {
-            return res
-                .status(400)
-                .json({
-                    message: 'Invalid location format',
-                    error: jsonError.message,
-                })
+            return res.status(400).json({
+                message: 'Invalid location format',
+                error: jsonError.message,
+            })
         }
 
+        // Upload image if provided
         let imageUrl = null
         if (req.file) {
             imageUrl = await uploadImage(req.file)
         }
 
+        // Create or find the animal
         let animal
         if (reportType === 'Found') {
             animal = await Animal.findOne({ species, breed, color, gender })
@@ -112,8 +130,8 @@ const createAnimalReport = async (req, res) => {
                     breed,
                     color,
                     gender,
-                    fixed,
-                    collar,
+                    fixed: fixed || 'Unknown',
+                    collar: collar ?? false,
                     description,
                     imageUrl,
                 }
@@ -127,8 +145,8 @@ const createAnimalReport = async (req, res) => {
                 breed,
                 color,
                 gender,
-                fixed,
-                collar,
+                fixed: fixed || 'Unknown',
+                collar: collar ?? false,
                 description,
                 imageUrl,
             }
@@ -136,17 +154,18 @@ const createAnimalReport = async (req, res) => {
             await animal.save()
         }
 
-        // if (imageUrl) {
-        //     await createOrUpdateFeatureVector(animal._id, imageUrl);
-        // }
-
+        // Prepare animal report data
         const reportData = {
             animal: animal._id,
             location: parsedLocation,
             reportType,
             description,
             reportedBy,
+            fixed: animal.fixed, // Include fixed
+            collar: animal.collar, // Include collar
         }
+
+        // Create the animal report
         const animalReport = new AnimalReport(reportData)
         await animalReport.save()
 
@@ -158,10 +177,11 @@ const createAnimalReport = async (req, res) => {
         console.error('Error creating animal report:', error)
         res.status(500).json({
             message: 'Failed to create animal report',
-            error,
+            error: error.message,
         })
     }
 }
+
 
 // PUT: Updates an animal report by ID
 const updateAnimalReport = async (req, res) => {

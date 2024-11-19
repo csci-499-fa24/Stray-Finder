@@ -173,6 +173,7 @@ const ReportList = ({ reports, loading }) => {
                         report_id={report?._id}
                         animal_id={report?.animal?._id}
                         name={report?.animal?.name}
+                        username={report?.reportedBy?.username}
                         image={report?.animal?.imageUrl}
                         species={report?.animal?.species}
                         gender={report?.animal?.gender}
