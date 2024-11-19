@@ -1,28 +1,32 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import styles from "./HelpMatchPopUp.module.css";
 import Link from "next/link";
 
 const HelpMatchPopUp = () => {
-  const [isVisible, setIsVisible] = useState(false); // Handles visibility
-  const [isCollapsed, setIsCollapsed] = useState(false); // Handles collapse/expand
+  const [isVisible, setIsVisible] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [animationIndex, setAnimationIndex] = useState(0);
+
+  const animationData = [
+    { image1: "/pet1.jpg", image2: "/pet1.jpg", match: true },
+    { image1: "/pet1.jpg", image2: "/pet2.jpg", match: false },
+  ];
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(true); // Show the popup after 2 seconds
-    }, 2000);
-
+    const timer = setTimeout(() => setIsVisible(true), 2000);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleNotNow = () => {
-    setIsCollapsed(true); // Collapse the popup
-  };
+  useEffect(() => {
+    const animationTimer = setInterval(() => {
+      setAnimationIndex((prev) => (prev + 1) % animationData.length);
+    }, 2000);
 
-  const togglePopup = () => {
-    setIsCollapsed((prev) => !prev); // Toggle collapsed/expanded
-  };
+    return () => clearInterval(animationTimer);
+  }, []);
+
+  const handleNotNow = () => setIsCollapsed(true);
+  const togglePopup = () => setIsCollapsed((prev) => !prev);
 
   return (
     <div
@@ -30,22 +34,44 @@ const HelpMatchPopUp = () => {
         isCollapsed ? styles.collapsed : ""
       }`}
     >
-      {/* Arrow Section ❮ ❯*/}
       <div className={styles.arrowSection} onClick={togglePopup}>
         {isCollapsed ? "❮" : "❯"}
       </div>
       <div className={styles.popupContent}>
-        <p className={styles.popupText}>
-          🐾 Help us match lost pets? 🐾
-        </p>
-        <div className={styles.buttonGroup}>
-          <Link href="/match">
-            <button className={styles.helpButton}>Sure!</button>
-          </Link>
-          <button className={styles.closeButton} onClick={handleNotNow}>
-            Not Now
-          </button>
-        </div>
+        {isCollapsed ? null : (
+          <>
+            <div className={styles.animationSection}>
+              <img
+                src={animationData[animationIndex].image1}
+                alt="Pet 1"
+                className={styles.petImage}
+              />
+              <img
+                src={animationData[animationIndex].image2}
+                alt="Pet 2"
+                className={styles.petImage}
+              />
+              <div
+                className={
+                  animationData[animationIndex].match
+                    ? styles.matchIcon
+                    : styles.unmatchIcon
+                }
+              >
+                {animationData[animationIndex].match ? "✔️" : "❌"}
+              </div>
+            </div>
+            <p className={styles.popupText}>🐾 Help us match lost pets? 🐾</p>
+            <div className={styles.buttonGroup}>
+              <Link href="/match">
+                <button className={styles.helpButton}>Sure!</button>
+              </Link>
+              <button className={styles.closeButton} onClick={handleNotNow}>
+                Not Now
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
