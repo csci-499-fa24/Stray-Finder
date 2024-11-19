@@ -29,7 +29,22 @@ const UserSchema = new mongoose.Schema(
         profileImage: {
             type: String,
             default: '',
-        }
+        },
+        matchVotes: [
+            {
+                matchVotesId:
+                {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'MatchVotes' ,
+                    required: true,
+                },
+                vote: {
+                    type: String,
+                    enum: ['yes', 'no', 'unsure'],
+                    required: true,
+                },
+            },
+        ],
     },
     { timestamps: true }
 )
