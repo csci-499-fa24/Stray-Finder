@@ -1,32 +1,31 @@
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { loginUser } from '@/app/utils/api'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { loginUser } from '@/app/utils/api';
 import toast from 'react-hot-toast';
 
 const LoginForm = () => {
-    const router = useRouter()
-    const redirect = router.query?.redirect || '/'
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [errorMessage, setErrorMessage] = useState('') // State for error message
+    const router = useRouter();
+    const redirect = router.query?.redirect || '/';
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState(''); // State for error message
 
     const handleLogin = async (e) => {
-        e.preventDefault()
-        setErrorMessage('') // Reset error message on new attempt
+        e.preventDefault();
+        setErrorMessage(''); // Reset error message on new attempt
 
-        const result = await loginUser(username, password)
+        const result = await loginUser(username, password);
         if (result.error) {
             // Set the error message if the loginUser function returns an error
-            setErrorMessage(result.message)
+            setErrorMessage(result.message);
         } else {
-            
-            toast.success("Login successful!", {
-                duration: 2000, // Toast will show for 5 seconds
+            toast.success('Login successful!', {
+                duration: 2000, // Toast will show for 2 seconds
             });
             // Login successful, redirect
-            router.push(redirect)
+            router.push(redirect);
         }
-    }
+    };
 
     return (
         <div
@@ -37,26 +36,38 @@ const LoginForm = () => {
         >
             <form onSubmit={handleLogin}>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                
+                {/* Username Section */}
                 <div className="form-outline mb-4">
+                    <label htmlFor="loginUsername" className="form-label">
+                        Username
+                    </label>
                     <input
                         type="text"
                         id="loginUsername"
                         className="form-control"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Username"
+                        placeholder="Enter your username"
                     />
                 </div>
+                
+                {/* Password Section */}
                 <div className="form-outline mb-4">
+                    <label htmlFor="loginPassword" className="form-label">
+                        Password
+                    </label>
                     <input
                         type="password"
                         id="loginPassword"
                         className="form-control"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
+                        placeholder="Enter your password"
                     />
                 </div>
+                
+                {/* Submit Button */}
                 <button
                     type="submit"
                     className="btn-purple btn btn-primary btn-block mb-4"
@@ -65,7 +76,7 @@ const LoginForm = () => {
                 </button>
             </form>
         </div>
-    )
-}
+    );
+};
 
-export default LoginForm
+export default LoginForm;
