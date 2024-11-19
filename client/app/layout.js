@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './globals.css' // Import your global styles
 import { Toaster } from 'react-hot-toast' // Import the Toaster component
 import { UnreadMessagesProvider } from '@/app/context/UnreadMessagesContext';
+import HelpMatchPopUp from "./components/HelpMatchPopUp";
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -44,6 +45,7 @@ export default function RootLayout({ children }) {
                 <Toaster position='top-right' /> {/* Add the Toaster here */}
                 <UnreadMessagesProvider>
                     {children}
+                    <HelpMatchPopUp />
                 </UnreadMessagesProvider>
             </body>
         </html>

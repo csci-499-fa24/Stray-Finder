@@ -1,0 +1,114 @@
+.popupContainer {
+    position: fixed;
+    top: 50%;
+    right: -250px; /* Fully hidden off-screen by default */
+    transform: translateY(-50%);
+    z-index: 9999;
+    width: 250px; /* Adjusted for arrow space */
+    transition: right 0.8s ease-in-out, box-shadow 0.3s ease; /* Smooth animations */
+    background: linear-gradient(135deg, #fdf4e3, #f6e1c8); /* Warm gradient */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    border-radius: 12px 0 0 12px; /* Rounded left corners */
+    border: 1px solid rgba(255, 197, 143, 0.7);
+    overflow: hidden;
+    display: flex; /* Align arrow and content side by side */
+    align-items: stretch; /* Make arrow full height */
+}
+
+.popupContainer.active {
+    right: 0; /* Slide the popup into view */
+}
+
+.popupContainer.collapsed {
+    right: -225px; /* Partially hidden, showing only the arrow */
+}
+
+/* Arrow Section */
+.arrowSection {
+    font-size: 1.5rem;
+    color: #ff8a65;
+    background: #fff; /* Background for contrast */
+    width: 30px; /* Fixed width for the arrow */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-right: 1px solid rgba(255, 197, 143, 0.7); /* Separator line */
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.arrowSection:hover {
+    background: #f6e1c8; /* Light hover effect */
+    color: #ff7043; /* Slightly darker arrow color */
+}
+
+/* Popup Content */
+.popupContent {
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1; /* Use remaining space */
+}
+
+.popupText {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #5d4037; /* Warm brown text */
+    margin-bottom: 12px;
+    line-height: 1.4;
+    display: inline-flex; /* Align text and emoji */
+    align-items: center;
+}
+
+/* Button Group */
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.helpButton {
+    background: #ff8a65; /* Warm orange */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.helpButton:hover {
+    background: #ff7043;
+    transform: scale(1.05); /* Slight zoom */
+}
+
+.closeButton {
+    background: #ffcc80; /* Soft yellow */
+    color: #5d4037;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.closeButton:hover {
+    background: #ffc947;
+    transform: scale(1.05);
+}
+
+/* Keyframe animation for bouncing paw */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
