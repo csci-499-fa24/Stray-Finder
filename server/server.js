@@ -12,6 +12,7 @@ const report = require('./routes/report');
 const match = require('./routes/match')
 const email = require('./routes/email')
 const profile = require('./routes/profile');
+const matchVotes = require('./routes/MatchVotes');
 const { exec } = require('child_process')
 const commentRoutes = require('./routes/comment');
 
@@ -57,6 +58,7 @@ app.use('/api/user/', user)
 app.use('/api/match/', match)
 app.use('/api/email/', email)
 app.use('/api/profile/', profile);
+app.use('/api/match-votes/', matchVotes);
 app.use('/api/comments/', commentRoutes);
 ///////////////////////////////////////////////////////////////////////////
 

@@ -38,5 +38,28 @@ const matchReports = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' })
     }
 }
+const getHighMatches = async (req, res) => {
+    try {
+        const allLostReports = await Report.find({ reportType: 'Lost' }).populate('animal');
+        const allStrayReports = await Report.find({ reportType: 'Stray' }).populate('animal');
 
-module.exports = { matchReports }
+        const highMatches = [];
+
+        for (const lostReport of allLostReports) {
+            for (const strayReport of allStrayReports) {
+                const score = await calculateMatchScore(lostReport, strayReport);
+                if (score >= .90) { // only take matches with score >= .90 (90%)
+                    highMatches.push({ lostReport, strayReport, score });
+                }
+            }
+        }
+
+        res.status(200).json({ matches: highMatches });
+
+    } catch (error) {
+        console.error('Error in matching reports:', error)
+        res.status(500).json({ error: 'Internal server error' })
+    }
+}
+
+module.exports = { matchReports, getHighMatches }
