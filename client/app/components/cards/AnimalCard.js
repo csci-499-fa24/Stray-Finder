@@ -93,13 +93,27 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
     };
 
     return (
-        <div className="col position-relative">
+        <div className="col position-relative d-flex justify-content-center align-items-center">
             <div className="card m-3 p-0">
-                <div style={{ position: 'relative', width: '100%', paddingTop: '100%', overflow: 'hidden' }}>
+                <div
+                    style={{
+                        position: 'relative',
+                        width: '100%',
+                        paddingTop: '100%',
+                        overflow: 'hidden',
+                    }}
+                >
                     <img
                         src={image || '/paw-pattern.jpg'}
                         alt={name}
-                        style={{ position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', objectFit: 'cover' }}
+                        style={{
+                            position: 'absolute',
+                            top: '0',
+                            left: '0',
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                        }}
                     />
                     {/* Dropdown toggle */}
                     <div className="animal-dropdown-container">
@@ -131,30 +145,54 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                         <p className="card-text">{description}</p>
                     </div>
                     <div className="card-body d-flex justify-content-between align-items-center">
-                        <Link href={`/animal/${report_id}?from=${currentPath}`} className="card-link">
+                        <Link
+                            href={`/animal/${report_id}?from=${currentPath}`}
+                            className="card-link"
+                        >
                             Read More
                         </Link>
-                        <div className="comment-icon-container" onClick={handleCommentIconClick}>
+                        <div
+                            className="comment-icon-container"
+                            onClick={handleCommentIconClick}
+                        >
                             <FaCommentDots className="comment-icon" />
-                            <span className="comment-count">{commentCount}</span>
+                            <span className="comment-count">
+                                {commentCount}
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 {/* Modal for reporting */}
                 {isModalOpen && (
-                    <div className="modal" style={{ display: isModalOpen ? 'flex' : 'none' }}>
+                    <div
+                        className="modal"
+                        style={{ display: isModalOpen ? 'flex' : 'none' }}
+                    >
                         <div className="modal-content">
                             <h4>Report Post</h4>
                             <p>Why do you want to report this post?</p>
-                            <select value={selectedReason} onChange={(e) => setSelectedReason(e.target.value)}>
+                            <select
+                                value={selectedReason}
+                                onChange={(e) =>
+                                    setSelectedReason(e.target.value)
+                                }
+                            >
                                 <option value="">Select a reason</option>
                                 <option value="Spam">Spam</option>
-                                <option value="Offensive Content">Offensive Content</option>
-                                <option value="Inaccurate Information">Inaccurate Information</option>
+                                <option value="Offensive Content">
+                                    Offensive Content
+                                </option>
+                                <option value="Inaccurate Information">
+                                    Inaccurate Information
+                                </option>
                             </select>
-                            <button onClick={submitReport}>Submit Report</button>
-                            <button onClick={() => setModalOpen(false)}>Cancel</button>
+                            <button onClick={submitReport}>
+                                Submit Report
+                            </button>
+                            <button onClick={() => setModalOpen(false)}>
+                                Cancel
+                            </button>
                         </div>
                     </div>
                 )}
@@ -166,9 +204,13 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                             <h4>User must be logged in</h4>
                             <p>Please log in to submit a report.</p>
                             <Link href="/auth">
-                                <button className="btn-purple btn">Log In</button>
+                                <button className="btn-purple btn">
+                                    Log In
+                                </button>
                             </Link>
-                            <button onClick={() => setLoginModalOpen(false)}>Cancel</button>
+                            <button onClick={() => setLoginModalOpen(false)}>
+                                Cancel
+                            </button>
                         </div>
                     </div>
                 )}
@@ -181,13 +223,15 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                         image={image}
                         description={description}
                         reportedByUsername={username}
-                        onClose={() => setIsCommentModalOpen(false)} 
-                        onCommentAdded={() => setCommentCount((prevCount) => prevCount + 1)}
+                        onClose={() => setIsCommentModalOpen(false)}
+                        onCommentAdded={() =>
+                            setCommentCount((prevCount) => prevCount + 1)
+                        }
                     />
                 )}
             </div>
         </div>
-    );
+    )
 };
 
 export default AnimalCard;
