@@ -5,7 +5,7 @@ const { getMatchVotes, createMatchVotes, updateMatchVotes } = require('../contro
 
 router
     .route('/')
-    .get(authenticate, getMatchVotes)
+    .get(getMatchVotes)
     .post(authenticate, createMatchVotes)
     .put(authenticate, updateMatchVotes)
 

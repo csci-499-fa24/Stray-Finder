@@ -3,6 +3,7 @@ import AnimalCard from '@/app/components/cards/AnimalCard'
 import styles from '../MatchVote.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 //npm install @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons
 
 const MatchVote = () => {
@@ -11,6 +12,7 @@ const MatchVote = () => {
     const [displayedMatches, setDisplayedMatches] = useState([]) // Matches currently displayed
     const [page, setPage] = useState(1) // Track pages for local pagination
     const limit = 20;
+    const [matchVotes, setMatchVotes] = useState([]);
 
     const loadMatches = async () => {
         setIsLoading(true);
@@ -30,7 +32,7 @@ const MatchVote = () => {
             }
 
             const data = await response.json()
-            console.log('Fetched matches:', data.matches)
+            // console.log('Fetched matches:', data.matches)
 
             if (data.matches.length > 0) {
 
@@ -53,6 +55,17 @@ const MatchVote = () => {
         }
     };
 
+    const getMatchVotes = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/match-votes/`);
+            const data = await response.json();
+            // console.log(data);
+            setMatchVotes(data.map(item => [item.yes, item.no]));
+        } catch (error) {
+            console.log('failed geting match votes,', error);
+        }
+    }
+
     const loadMore = () => {
         const nextPage = page + 1
         const newDisplayedMatches = allMatches.slice(0, nextPage * limit)
@@ -62,6 +75,7 @@ const MatchVote = () => {
     
     useEffect(() => {
         loadMatches();
+        getMatchVotes();
     }, []);
 
     const handleClick = async ({lostReport, strayReport, vote}) => {
@@ -82,13 +96,27 @@ const MatchVote = () => {
                 }
             )
             const data = await response.json();
-            console.log('Response data:', data);
+            // console.log('Response data:', data);
+
+            const status = response.status;
+            if(status === 201){
+                alert('vote successfully changed');
+            }
+            else if(status === 202){
+                alert('vote successfully casted');
+            }
+            else if(status === 401){
+                alert('login first');
+            }
+            else if(status === 402){
+                alert('already casted this vote');
+            }
 
         } catch (error) {
             console.log("failed to create match,", error);
         }
     }
-
+    // console.log(matchVotes);
     return (
         <div>
             <h2>help us match these guys</h2>
@@ -96,7 +124,7 @@ const MatchVote = () => {
             <div className="row justify-content-center">
                 {displayedMatches.length > 0 ? (
                     displayedMatches.map(({ lostReport, strayReport, score }, index) => (
-                        <div key={index} className="col-12 col-lg-10 mb-4">
+                        <div key={index} className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
                             <div className={styles.container}>
                                 {/* Lost Report Card */}
                                 <div className={styles.card}>
@@ -138,7 +166,7 @@ const MatchVote = () => {
                                 
                             </div>
                             <div className={styles.centerContainer}>
-                                <h2>Are the two images the same animal? {index}</h2>
+                                <h2>Are the two images the same animal?</h2>
                                 <div className={styles.buttonContainer}>
                                     <FontAwesomeIcon 
                                         icon={faCircleCheck}
@@ -151,7 +179,38 @@ const MatchVote = () => {
                                         className={styles.iconXButton}
                                     />
                                 </div>
-                                <p>hello</p>
+                            </div>
+                            <div>
+                                <div style= {{textAlign:'center'}}>
+                                    <h2 className="mb-0 font-weight-bold">
+                                        {`${matchVotes[index][0]} : ${matchVotes[index][1]}`}
+                                    </h2>
+                                    <p className="text-muted">
+                                        Yes : No
+                                    </p>
+                                </div>
+                                <ProgressBar
+                                    max={100}
+                                >
+                                    <ProgressBar
+                                    striped
+                                    variant="success"
+                                    now={(matchVotes[index][0] / (matchVotes[index][0] + matchVotes[index][1])) * 100}
+                                    />
+                                    <ProgressBar
+                                    striped
+                                    variant="danger"
+                                    now={(matchVotes[index][1] / (matchVotes[index][0] + matchVotes[index][1])) * 100}
+                                    />
+                                </ProgressBar>
+                                    {/* <div
+                                    className="progress-bar"
+                                    role="progressbar"
+                                    style={{ width: `${matchVotes[index][0]}%` }}
+                                    aria-valuenow={matchVotes[index][0]}
+                                    aria-valuemin="0"
+                                    aria-valuemax={matchVotes[index][0]+matchVotes[index][1]}
+                                    ></div> */}
                             </div>
                         </div>
                     ))
