@@ -4,6 +4,7 @@ import {
     GoogleMap,
     Marker,
     InfoWindow,
+    Circle,
     useLoadScript,
 } from '@react-google-maps/api';
 
@@ -88,7 +89,9 @@ const Map = () => {
         collar: '',
         breed: ''
     });
-    const [radius, setRadius] = useState(50); // Add radius state (in miles)
+    const [radius, setRadius] = useState(null); // Add radius state (in miles)
+    const [userLocation, setUserLocation] = useState(null);
+    const [isInitialized, setIsInitialized] = useState(false); // Track initialization
 
     const fetchReports = async () => {
         try {
@@ -155,13 +158,43 @@ const Map = () => {
     // Filter reports based on the distance from the center point
     const filteredReports = reports.filter((report) => {
         const { location } = report;
+        const baseLocation = userLocation || center; // Use user location if available
         if (location && location.coordinates) {
             const [lng, lat] = location.coordinates.coordinates;
-            const distance = calculateDistance(center.lat, center.lng, lat, lng);
+            const distance = calculateDistance(baseLocation.lat, baseLocation.lng, lat, lng);
             return distance <= radius; // Check if the report is within the radius
         }
         return false;
     });
+    
+
+    useEffect(() => {
+        if (!isInitialized) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        setUserLocation({
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        });
+                        setRadius(10); // Set to 10 miles if not already set
+                        setIsInitialized(true); // Mark as initialized
+                    },
+                    (error) => {
+                        console.error("Geolocation error:", error);
+                        alert("Unable to fetch your location. Defaulting to default location.");
+                        setUserLocation(center); // Fallback to default center
+                        setRadius(0); // Set to 10 miles if not already set
+                        setIsInitialized(true); // Mark as initialized
+                    }
+                );
+            }
+        }
+    }, [isInitialized]);
+    
+
+   const mapCenter = userLocation || center;
+
 
     // Show a loading message until the reports are fetched
     if (!isLoaded || loading) return <div className="spinner-border text-primary" role="status">
@@ -213,6 +246,7 @@ const Map = () => {
                     <option value="">All Reports</option>
                     <option value="Stray">Stray</option>
                     <option value="Lost">Lost</option>
+                    <option value="Found">Found</option>
                 </select>
 
                 <select
@@ -244,79 +278,95 @@ const Map = () => {
                     type="range"
                     min="1"
                     max="100"
-                    value={radius}
+                    value={radius || 10}
                     onChange={(e) => setRadius(e.target.value)}
                 />
                 <p>{radius} miles radius</p>
             </div>
 
-            <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
-                {Array.isArray(filteredReports) && filteredReports.length > 0 ? (
-                    filteredReports.map((report) => {
-                        const { location } = report;
+            <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13}>
+               {/* Draw the circle only when radius is defined */}
+                
+               <Circle
+                    center={mapCenter}
+                    radius={radius * 1609.34} // Convert miles to meters
+                    options={{
+                        fillColor: 'rgba(0,0,255,0.2)', // Blue tint outside the circle
+                        fillOpacity: 0.2, // Slightly transparent fill
+                        strokeColor: 'blue', // Blue border
+                        strokeOpacity: 0.5, // Transparent blue border
+                        strokeWeight: 2, // Adjust thickness of the border
+                    }}
+                />
+                
 
-                        if (
-                            location &&
-                            location.coordinates &&
-                            Array.isArray(location.coordinates.coordinates) &&
-                            location.coordinates.coordinates.length === 2
-                        ) {
-                            const [lng, lat] = location.coordinates.coordinates;
-                            const iconUrl = iconUrls[report._id];
+          
 
-                            const iconConfig = iconUrl
-                                ? {
-                                      url: iconUrl,
-                                      scaledSize: new window.google.maps.Size(50, 50),
-                                  }
-                                : undefined;
 
-                            return (
-                                <Marker
-                                    key={report._id}
-                                    position={{ lat, lng }}
-                                    icon={iconConfig}
-                                    onClick={() => setSelectedReport(report)}
-                                />
-                            );
-                        }
-                        return null;
-                    })
-                ) : (
-                    <p>No reports available within the selected radius</p>
-                )}
+               {filteredReports.map((report) => {
+                   const { location } = report;
+                   if (
+                       location &&
+                       location.coordinates &&
+                       Array.isArray(location.coordinates.coordinates) &&
+                       location.coordinates.coordinates.length === 2
+                   ) {
+                       const [lng, lat] = location.coordinates.coordinates;
+                       const iconUrl = iconUrls[report._id];
 
-                {selectedReport && (
-                    <InfoWindow
-                        position={{
-                            lat: selectedReport.location.coordinates.coordinates[1],
-                            lng: selectedReport.location.coordinates.coordinates[0],
-                        }}
-                        onCloseClick={() => setSelectedReport(null)}
-                    >
-                        <div className="info-window">
-                            <h3>{selectedReport.animal.name} ({selectedReport.animal.species})</h3>
-                            <img
-                                src={selectedReport.animal.imageUrl}
-                                alt={selectedReport.animal.name}
-                                style={{
-                                    width: '150px',
-                                    height: '150px',
-                                    borderRadius: '50%',
-                                }}
-                            />
+
+                       const iconConfig = iconUrl
+                           ? {
+                                 url: iconUrl,
+                                 scaledSize: new window.google.maps.Size(50, 50),
+                             }
+                           : undefined;
+
+
+                       return (
+                           <Marker
+                               key={report._id}
+                               position={{ lat, lng }}
+                               icon={iconConfig}
+                               onClick={() => setSelectedReport(report)}
+                           />
+                       );
+                   }
+                   return null;
+               })}
+
+
+               {selectedReport && (
+                   <InfoWindow
+                       position={{
+                           lat: selectedReport.location.coordinates.coordinates[1],
+                           lng: selectedReport.location.coordinates.coordinates[0],
+                       }}
+                       onCloseClick={() => setSelectedReport(null)}
+                   >
+                       <div className="info-window">
+                           <h3>{selectedReport.animal.name} ({selectedReport.animal.species})</h3>
+                           <img
+                               src={selectedReport.animal.imageUrl}
+                               alt={selectedReport.animal.name}
+                               style={{
+                                   width: '150px',
+                                   height: '150px',
+                                   borderRadius: '50%',
+                               }}
+                           />
                            <p>Breed: {selectedReport.animal.breed}</p>
-                            <p>Color: {selectedReport.animal.color}</p>
-                            <p>Gender: {selectedReport.animal.gender}</p>
-                            <p>Report Type: {selectedReport.reportType}</p>
-                            <p>Fixed Status: {selectedReport.animal.fixed}</p>
-                            <p>Collar: {selectedReport.animal.collar ? "Yes" : "No"}</p>
-                            <p>Date Reported: {new Date(selectedReport.dateReported).toLocaleDateString()}</p>
-                            <p>Address: {selectedReport.location.address || 'Address not provided'}</p>
-                        </div>
-                    </InfoWindow>
-                )}
-            </GoogleMap>
+                           <p>Color: {selectedReport.animal.color}</p>
+                           <p>Gender: {selectedReport.animal.gender}</p>
+                           <p>Report Type: {selectedReport.reportType}</p>
+                           <p>Fixed Status: {selectedReport.animal.fixed}</p>
+                           <p>Collar: {selectedReport.animal.collar ? "Yes" : "No"}</p>
+                           <p>Date Reported: {new Date(selectedReport.dateReported).toLocaleDateString()}</p>
+                           <p>Address: {selectedReport.location.address || 'Address not provided'}</p>
+                       </div>
+                   </InfoWindow>
+               )}
+           </GoogleMap>
         </>
     );
 };
