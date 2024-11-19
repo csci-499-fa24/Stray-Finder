@@ -3,8 +3,7 @@ const Story = require('../models/story')
 const getStories = async (req, res) => {
     try {
         const stories = await Story.find()
-            .populate('animalReports') // Populate the animal reports
-            .populate('animal') // Populate the associated animal
+            .populate('animalReports')
 
         res.status(200).json(stories)
     } catch (error) {
@@ -19,7 +18,6 @@ const getStory = async (req, res) => {
     try {
         const story = await Story.findById(id)
             .populate('animalReports')
-            .populate('animal')
 
         if (!story) {
             return res.status(404).json({ error: 'Story not found' })
@@ -45,15 +43,9 @@ const createStory = async (req, res) => {
                 .json({ error: 'One or more reports not found' })
         }
 
-        const animal = await Animal.findById(animalId)
-        if (!animal) {
-            return res.status(404).json({ error: 'Animal not found' })
-        }
-
         // Create the story
         const newStory = new Story({
             animalReports: reportIds,
-            animal: animalId,
         })
 
         const savedStory = await newStory.save()
