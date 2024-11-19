@@ -2,17 +2,26 @@ const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const app = express()
+const animal = require('./routes/animal')
+const animalReport = require('./routes/animalReport')
+const story = require('./routes/story')
+const user = require('./routes/user')
+const auth = require('./routes/auth')
+const message = require('./routes/message');
+const report = require('./routes/report');
+const match = require('./routes/match')
+const email = require('./routes/email')
+const profile = require('./routes/profile');
+const matchVotes = require('./routes/MatchVotes');
 const { exec } = require('child_process')
+const commentRoutes = require('./routes/comment');
 
-///////////////////////////////////////////////////////////////////////////
 /**
  * Connection to the database
  */
 const connectDB = require('./db/connect')
 require('dotenv').config()
-///////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////
 /**
  * Section for middleware
  */
@@ -30,56 +39,27 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong!' })
 })
 ///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////
-
-/**
- * Section for APIs
- */
-const animal = require('./routes/animal')
-const animalReport = require('./routes/animalReport')
-const story = require('./routes/story')
-const user = require('./routes/user')
-const auth = require('./routes/auth')
-const message = require('./routes/message')
-const report = require('./routes/report')
-const match = require('./routes/match')
-const email = require('./routes/email')
-const profile = require('./routes/profile')
-const matchVotes = require('./routes/MatchVotes')
-const commentRoutes = require('./routes/comment')
 
 /**
  * Section for authentication routes
  */
 app.use('/auth', auth)
+///////////////////////////////////////////////////////////////////////////
 
+/**
+ * Section for APIs
+ */
 app.use('/api/animal/', animal)
 app.use('/api/animal-report/', animalReport)
 app.use('/api/story/', story)
-app.use('/api/message/', message)
-app.use('/api/report/', report)
+app.use('/api/message/', message);
+app.use('/api/report/', report);
 app.use('/api/user/', user)
 app.use('/api/match/', match)
 app.use('/api/email/', email)
-app.use('/api/profile/', profile)
-app.use('/api/match-votes/', matchVotes)
-app.use('/api/comments/', commentRoutes)
-///////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////
-/**
- * Section for story match function
- */
-const createStoryFromHighMatch = require('./utils/matchChecker')
-app.use('/special/route/for/demo/', createStoryFromHighMatch)
-
-// setInterval(async () => {
-//     console.log('Running createStoryFromHighMatch...')
-//     await createStoryFromHighMatch()
-// }, 10 * 60 * 1000)
-
+app.use('/api/profile/', profile);
+app.use('/api/match-votes/', matchVotes);
+app.use('/api/comments/', commentRoutes);
 ///////////////////////////////////////////////////////////////////////////
 
 const port = process.env.PORT || 8080
