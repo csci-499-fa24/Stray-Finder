@@ -2,6 +2,7 @@
 import Navbar from '@/app/components/layouts/Navbar/Navbar';
 import Footer from '@/app/components/layouts/Footer/Footer';
 import FoundPets from './components/found-pets';
+import HelpMatchPopUp from '@/app/components/HelpMatchPopUp';
 
 const FoundPage = () => {
     return (
@@ -9,6 +10,7 @@ const FoundPage = () => {
             <Navbar />
             <main className="container my-5">
                 <FoundPets />
+                <HelpMatchPopUp />
             </main>
             <Footer />
         </div>
