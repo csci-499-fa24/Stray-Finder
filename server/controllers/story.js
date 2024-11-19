@@ -32,10 +32,10 @@ const getStory = async (req, res) => {
 
 // creates a story (takes two reports and initialies a story with them)
 const createStory = async (req, res) => {
-    const { reportIds, animalId } = req.body
+    const { reportIds } = req.body // No animalId is extracted here
 
     try {
-        // Check if all reports and the animal exist
+        // Check if all reports exist
         const reports = await AnimalReport.find({ _id: { $in: reportIds } })
         if (reports.length !== reportIds.length) {
             return res
@@ -45,7 +45,7 @@ const createStory = async (req, res) => {
 
         // Create the story
         const newStory = new Story({
-            animalReports: reportIds,
+            animalReports: reportIds, // Only includes reportIds
         })
 
         const savedStory = await newStory.save()
