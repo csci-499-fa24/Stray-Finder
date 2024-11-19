@@ -69,3 +69,21 @@
     background-color: #472805;
     color: #e6babc;
 }
+@media (max-width: 320px) {
+    .dropdown-item {
+        padding: 8px;
+        color: #e6babc;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        
+    }
+    .dropdown-menu {
+        background-color: white;
+        border: 1px solid #fdf2e9;
+        min-width: 100px;
+        padding: 4px 0;
+        text-align: center;
+        transform: translate(-42%, 10px); /* Adjusted to be more centered */
+    }
+}

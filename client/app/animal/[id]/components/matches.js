@@ -29,6 +29,7 @@ const Matches = ({ reportId }) => {
             }
 
             const data = await response.json()
+            console.log('API Response:', data); // Log the response to verify `reportedBy.username`
             console.log('Fetched matches:', data.matches)
 
             if (data.targetReport && data.matches.length > 0) {
@@ -106,6 +107,7 @@ const Matches = ({ reportId }) => {
                                             report_id={targetReport._id}
                                             animal_id={targetReport.animal._id}
                                             name={targetReport.animal.name}
+                                            username={targetReport.reportedBy?.username}
                                             image={targetReport.animal.imageUrl}
                                             species={
                                                 targetReport.animal.species
@@ -134,6 +136,7 @@ const Matches = ({ reportId }) => {
                                             report_id={report._id}
                                             animal_id={report.animal._id}
                                             name={report.animal.name}
+                                            username={report.reportedBy?.username}
                                             image={report.animal.imageUrl}
                                             species={report.animal.species}
                                             gender={report.animal.gender}

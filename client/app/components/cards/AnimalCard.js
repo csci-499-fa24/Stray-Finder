@@ -1,20 +1,51 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { FaEllipsisV, FaCommentDots } from 'react-icons/fa'; // Import icons
-import './AnimalDropdown.css'; // Import the separate CSS file
+import { FaEllipsisV, FaCommentDots } from 'react-icons/fa';
+import CommentModal from '../../components/comments/CommentModal';
+import './AnimalDropdown.css';
 
-const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state, description }) => {
+const AnimalCard = ({ report_id, animal_id, name, username, image, species, gender, state, description }) => {
     const currentPath = usePathname();
 
-    const [isModalOpen, setModalOpen] = useState(false);
+    const [isModalOpen, setModalOpen] = useState(false); // State for report modal
     const [selectedReason, setSelectedReason] = useState('');
     const [isLoginModalOpen, setLoginModalOpen] = useState(false); // State for login modal
     const [isDropdownOpen, setDropdownOpen] = useState(false); // State for dropdown visibility
+    const [isCommentModalOpen, setIsCommentModalOpen] = useState(false); // State for comment modal
+    const [commentCount, setCommentCount] = useState(0); // State for comment count
+
+    // Fetch the comment count for this report
+    useEffect(() => {
+        async function fetchCommentCount() {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/comments/${report_id}/count`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setCommentCount(data.count || 0);
+                } else {
+                    console.error('Failed to fetch comment count.');
+                }
+            } catch (error) {
+                console.error('Error fetching comment count:', error);
+            }
+        }
+
+        fetchCommentCount();
+    }, [report_id]);
 
     // Toggle Dropdown
     const toggleDropdown = () => {
         setDropdownOpen((prevState) => !prevState);
+    };
+
+    // Toggle the comment modal
+    const handleCommentIconClick = () => {
+        setIsCommentModalOpen(true);
     };
 
     // Handle Report Click
@@ -23,7 +54,6 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
         setModalOpen(true); // Open the modal
         setDropdownOpen(false); // Close dropdown after opening modal
     };
-    
 
     // Submit Report
     const submitReport = async () => {
@@ -104,7 +134,10 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                         <Link href={`/animal/${report_id}?from=${currentPath}`} className="card-link">
                             Read More
                         </Link>
-                        <FaCommentDots className="comment-icon" />
+                        <div className="comment-icon-container" onClick={handleCommentIconClick}>
+                            <FaCommentDots className="comment-icon" />
+                            <span className="comment-count">{commentCount}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -138,6 +171,19 @@ const AnimalCard = ({ report_id, animal_id, name, image, species, gender, state,
                             <button onClick={() => setLoginModalOpen(false)}>Cancel</button>
                         </div>
                     </div>
+                )}
+
+                {/* Comment Modal */}
+                {isCommentModalOpen && (
+                    <CommentModal
+                        animalId={animal_id}
+                        reportId={report_id}
+                        image={image}
+                        description={description}
+                        reportedByUsername={username}
+                        onClose={() => setIsCommentModalOpen(false)} 
+                        onCommentAdded={() => setCommentCount((prevCount) => prevCount + 1)}
+                    />
                 )}
             </div>
         </div>

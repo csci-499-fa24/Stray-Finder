@@ -1,10 +1,10 @@
 const express = require('express')
 const cors = require('cors')
-// const http = require('http');
 const cookieParser = require('cookie-parser')
 const app = express()
 const animal = require('./routes/animal')
 const animalReport = require('./routes/animalReport')
+const story = require('./routes/story')
 const user = require('./routes/user')
 const auth = require('./routes/auth')
 const message = require('./routes/message');
@@ -12,8 +12,9 @@ const report = require('./routes/report');
 const match = require('./routes/match')
 const email = require('./routes/email')
 const profile = require('./routes/profile');
+const matchVotes = require('./routes/MatchVotes');
 const { exec } = require('child_process')
-// const socketSetUp = require('./socket/socket');
+const commentRoutes = require('./routes/comment');
 
 /**
  * Connection to the database
@@ -50,18 +51,16 @@ app.use('/auth', auth)
  */
 app.use('/api/animal/', animal)
 app.use('/api/animal-report/', animalReport)
+app.use('/api/story/', story)
 app.use('/api/message/', message);
 app.use('/api/report/', report);
 app.use('/api/user/', user)
 app.use('/api/match/', match)
 app.use('/api/email/', email)
 app.use('/api/profile/', profile);
+app.use('/api/match-votes/', matchVotes);
+app.use('/api/comments/', commentRoutes);
 ///////////////////////////////////////////////////////////////////////////
-
-// Create HTTP server with app
-// const server = http.createServer(app);
-// Initialize Socket.IO with the HTTP server
-// socketSetUp(server);
 
 const port = process.env.PORT || 8080
 // Load DB then start server

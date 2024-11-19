@@ -67,6 +67,11 @@ const Navbar = () => {
                 Report
               </Link>
             </li>
+            <li className="nav-item">
+              <Link href="/match" className={`nav-link ${isActive("/reportAnimal") ? "active" : ""}`}>
+                Match
+              </Link>
+            </li>
           </ul>
         </div>
 

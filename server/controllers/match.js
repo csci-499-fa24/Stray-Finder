@@ -11,14 +11,14 @@ const matchReports = async (req, res) => {
 
     try {
         // Fetch the specified report
-        const targetReport = await Report.findById(reportId).populate('animal')
+        const targetReport = await Report.findById(reportId).populate('animal').populate('reportedBy', 'username');
 
         if (!targetReport || !targetReport.animal) {
             return res.status(404).json({ error: 'Report not found or has no associated animal.' })
         }
 
         // Fetch all other reports
-        const otherReports = await Report.find({ _id: { $ne: reportId } }).populate('animal')
+        const otherReports = await Report.find({ _id: { $ne: reportId } }).populate('animal').populate('reportedBy', 'username');
 
         // Calculate match scores
         const matchScores = await Promise.all(
@@ -38,5 +38,28 @@ const matchReports = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' })
     }
 }
+const getHighMatches = async (req, res) => {
+    try {
+        const allLostReports = await Report.find({ reportType: 'Lost' }).populate('animal');
+        const allStrayReports = await Report.find({ reportType: 'Stray' }).populate('animal');
 
-module.exports = { matchReports }
+        const highMatches = [];
+
+        for (const lostReport of allLostReports) {
+            for (const strayReport of allStrayReports) {
+                const score = await calculateMatchScore(lostReport, strayReport);
+                if (score >= .90) { // only take matches with score >= .90 (90%)
+                    highMatches.push({ lostReport, strayReport, score });
+                }
+            }
+        }
+
+        res.status(200).json({ matches: highMatches });
+
+    } catch (error) {
+        console.error('Error in matching reports:', error)
+        res.status(500).json({ error: 'Internal server error' })
+    }
+}
+
+module.exports = { matchReports, getHighMatches }
