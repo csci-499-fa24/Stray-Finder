@@ -33,13 +33,10 @@
 
 }
 
-
-
 *{
     font-family: sans-serif ;
     /*box-sizing: border-box;*/
 }
-
 
 
 .custom-navbar .navbar-brand{
@@ -88,10 +85,16 @@
 }
 
 body {
-    background-color: var(--purple-19);
-    overflow-y: scroll; /* added a scroll wheel to every page to prevent shift of navbar in presence of a scroll wheel */
-    padding-right: 15px; /* shifted page to the right to center more because of the wheel */
-    overflow-x: hidden; /* horizontal scrollbar fix attempt */
+    margin: 0; /* Ensure no default margin */
+    padding: 0; /* Reset padding */
+    font-family: 'Nunito', sans-serif; /* Consistent font */
+    background: url('/bb7.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: var(--purple-19); /* Fallback color */
+    overflow-y: scroll; /* Prevent layout shift from scrollbars */
+    overflow-x: hidden; /* Prevent horizontal scrollbars */
+    padding-right: 0 !important;
 }
 
 /* For report lost */
