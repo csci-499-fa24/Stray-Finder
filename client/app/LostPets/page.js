@@ -44,7 +44,6 @@ const LostPetsPage = () => {
                 <div className="tab-content">
                     {activeTab === 'lostPets' ? <LostPets /> : <Matches />}
                 </div>
-                <HelpMatchPopUp />
             </main>
             <Footer />
         </div>
