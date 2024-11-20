@@ -25,13 +25,9 @@ const Preferences = ({ isOpen, onClose, user }) => {
 
             // Check response
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Error:", errorData);
                 throw new Error("Failed to update preferences");
             }
 
-            const data = await response.json(); // Parse the response JSON
-            console.log("Response:", data);
             alert("Preferences updated successfully!");
             onClose(); // Close the modal
         } catch (error) {
