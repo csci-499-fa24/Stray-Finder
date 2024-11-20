@@ -2,6 +2,7 @@ var nodemailer = require('nodemailer');
 require('dotenv').config();
 const AnimalReport = require('../models/animalReport')
 const Animal = require('../models/animal')
+const User = require('../models/user');
 
 const fetchAllRecentAnimals = async (req, res) => {
     try {
@@ -44,6 +45,7 @@ const fetchAllRecentAnimals = async (req, res) => {
 
         return reports; // Return the reports to be used in sendEmail
     } catch (error) {
+        console.error('Error fetching recent animals:', error); 
         throw new Error('Failed to fetch animal reports');
     }
 };
@@ -65,34 +67,39 @@ const sendEmail = async ({ targetEmail, subject, body }) => {
             html: body,
         };
 
-        await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully');
+        const info = await transporter.sendMail(mailOptions); // Capture the response
     } catch (error) {
         console.error('Failed to send email:', error);
         throw new Error('Failed to send email');
     }
 };
 
-const sendReportsEmail = async (req, res) => {
+const sendReportsEmail = async (req) => {
     try {
         // Fetch all users who have a notification preference for daily, weekly, or monthly
         const users = await User.find({
-            notificationPreference: { $in: ['daily', 'weekly', 'monthly'] },
+            notificationPreference: { $in: ['immediate', 'daily', 'weekly', 'monthly'] },
         });
 
+        if (users.length === 0) {
+            return 'No users to send reports to.';
+        }
+
         // Categorize users based on their preferences
-        const dailyUsers = users.filter((user) => user.notificationPreference === 'daily');
+        // Categorize users based on their preferences
+        const dailyUsers = users.filter((user) => 
+            user.notificationPreference === 'daily' || user.notificationPreference === 'immediate'
+        );
         const weeklyUsers = users.filter((user) => user.notificationPreference === 'weekly');
         const monthlyUsers = users.filter((user) => user.notificationPreference === 'monthly');
 
         // Fetch recent reports
-        const reports = await fetchAllRecentAnimals(req, res);
+        const reports = await fetchAllRecentAnimals(req);
         if (!reports || reports.length === 0) {
-            console.log('No reports to send.');
-            return res.status(200).json({ message: 'No reports to send' });
+            return 'No reports to send.';
         }
 
-        // Generate the HTML email body
+        // Generate the email content
         let htmlContent = `
             <table width="100%" style="border-collapse: collapse; font-family: Arial, sans-serif;">
                 <tr>
@@ -132,32 +139,53 @@ const sendReportsEmail = async (req, res) => {
         // Current date
         const today = new Date();
 
-        // Send emails to daily and weekly users on Sundays
-        if (today.getDay() === 0) {
-            for (const user of [...dailyUsers, ...weeklyUsers]) {
-                await sendEmail({
-                    targetEmail: user.email,
-                    subject: 'Weekly Animal Reports Summary',
-                    body: htmlContent,
-                });
+        if (true) { // Force daily condition for testing
+            for (const user of dailyUsers) {
+                try {
+                    await sendEmail({
+                        targetEmail: user.email,
+                        subject: 'Daily Animal Reports Summary',
+                        body: htmlContent,
+                    });
+                } catch (emailError) {
+                    console.error('Error sending email to daily user:', user.email, emailError);
+                }
             }
-        }
+        }        
+
+        if (today.getDay() === 0) { // Weekly condition
+            for (const user of weeklyUsers) {
+                try {
+                    await sendEmail({
+                        targetEmail: user.email,
+                        subject: 'Weekly Animal Reports Summary',
+                        body: htmlContent,
+                    });
+                } catch (emailError) {
+                    console.error('Error sending email to weekly user:', user.email, emailError);
+                }
+            }
+        }        
 
         // Send emails to monthly users on the 1st of the month
-        if (today.getDate() === 1) {
+        if (today.getDate() === 1) { // Monthly condition
             for (const user of monthlyUsers) {
-                await sendEmail({
-                    targetEmail: user.email,
-                    subject: 'Monthly Animal Reports Summary',
-                    body: htmlContent,
-                });
+                try {
+                    await sendEmail({
+                        targetEmail: user.email,
+                        subject: 'Monthly Animal Reports Summary',
+                        body: htmlContent,
+                    });
+                } catch (emailError) {
+                    console.error('Error sending email to monthly user:', user.email, emailError);
+                }
             }
-        }
+        }        
 
-        res.status(200).json({ message: 'Reports email sent successfully' });
+        return 'Animal reports sent successfully.';
     } catch (error) {
         console.error('Failed to send animal reports email:', error);
-        res.status(500).json({ message: 'Failed to send animal reports email', error: error.message });
+        throw new Error('Failed to send animal reports email');
     }
 };
 
