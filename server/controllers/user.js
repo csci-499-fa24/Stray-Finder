@@ -94,4 +94,33 @@ const getUserById = async (req, res) => {
     }
 }
 
-module.exports = { getUserProfile, updateUser, updateUserPassword, deleteUser, getUserById }
+const updateUserPreferences = async (req, res) => {
+    try {
+        console.log('Incoming request to update preferences');
+        console.log('Request body:', req.body);
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            console.log('User not found');
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const { notificationPreference } = req.body;
+        if (!['immediate', 'daily', 'weekly', 'monthly', 'none'].includes(notificationPreference)) {
+            console.log('Invalid preference:', notificationPreference);
+            return res.status(400).json({ message: 'Invalid preference' });
+        }
+
+        user.notificationPreference = notificationPreference;
+        await user.save();
+
+        console.log('Preferences updated successfully');
+        res.status(200).json({ message: 'Preferences updated successfully' });
+    } catch (error) {
+        console.error('Error updating preferences:', error.stack);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+module.exports = { getUserProfile, updateUser, updateUserPassword, deleteUser, getUserById, updateUserPreferences }
