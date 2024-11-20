@@ -139,7 +139,7 @@ const sendReportsEmail = async (req) => {
         // Current date
         const today = new Date();
 
-        if (true) { // Force daily condition for testing
+        if (dailyUsers.length > 0) {
             for (const user of dailyUsers) {
                 try {
                     await sendEmail({
@@ -153,7 +153,7 @@ const sendReportsEmail = async (req) => {
             }
         }        
 
-        if (today.getDay() === 0) { // Weekly condition
+        if (today.getDay() === 0 && weeklyUsers.length > 0) {
             for (const user of weeklyUsers) {
                 try {
                     await sendEmail({
@@ -168,7 +168,7 @@ const sendReportsEmail = async (req) => {
         }        
 
         // Send emails to monthly users on the 1st of the month
-        if (today.getDate() === 1) { // Monthly condition
+        if (today.getDate() === 1 && monthlyUsers.length > 0) {
             for (const user of monthlyUsers) {
                 try {
                     await sendEmail({
