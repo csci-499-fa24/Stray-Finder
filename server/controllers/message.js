@@ -110,8 +110,8 @@ const getMessages = async (req, res) => {
         .sort({ timestamp: 1 });
 
         await Message.updateMany(
-            { senderId: otherUserId, recipientId: req.user._id, delivered: false },
-            { $set: { delivered: true } }
+            { senderId: otherUserId, recipientId: req.user._id, read: false },
+            { $set: { read: true } }
         );
 
         return res.status(200).json(messages);
@@ -184,7 +184,7 @@ const getLastMessages = async (req, res) => {
                     lastMessage: { $first: "$content" },
                     timestamp: { $first: "$timestamp" },
                     senderId: { $first: "$senderId" },
-                    delivered: { $first: "$delivered" } // Include delivered status
+                    read: { $first: "$read" } // Include read status
                 }
             }
         ]);
@@ -199,7 +199,7 @@ const getLastMessages = async (req, res) => {
                 lastMessage: msg.lastMessage,
                 timestamp: msg.timestamp,
                 senderId: msg.senderId,
-                delivered: msg.delivered // Return delivered status
+                read: msg.read // Return read status
             };
         });
 
@@ -216,8 +216,8 @@ const markMessagesAsRead = async (req, res) => {
 
     try {
         await Message.updateMany(
-            { senderId: recipientId, recipientId: currentUserId, delivered: false },
-            { $set: { delivered: true } }
+            { senderId: recipientId, recipientId: currentUserId, read: false },
+            { $set: { read: true } }
         );
         res.status(200).json({ message: 'Messages marked as read' });
     } catch (error) {

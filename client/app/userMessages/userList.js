@@ -11,7 +11,7 @@ export default function UserList({ users, onUserSelect, selectedUser, currentUse
         });
 
         // Update local unread status immediately after marking as read
-        const unreadExists = users.some(u => u.id !== user.id && u.senderId !== currentUser._id && !u.delivered);
+        const unreadExists = users.some(u => u.id !== user.id && u.senderId !== currentUser._id && !u.read);
         setHasUnreadMessages(unreadExists);
     };
 
@@ -21,7 +21,7 @@ export default function UserList({ users, onUserSelect, selectedUser, currentUse
             {users
                 .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
                 .map((user) => {
-                    const isUnread = user.senderId !== currentUser._id && !user.delivered;
+                    const isUnread = user.senderId !== currentUser._id && !user.read;
 
                     const userProfileImage = user.profileImage || null;
 

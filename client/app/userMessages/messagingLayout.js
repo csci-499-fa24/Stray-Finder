@@ -32,7 +32,7 @@ export default function MessagingLayout() {
                     setUsers(Array.isArray(data) ? data : []);
             
                     // Update hasUnreadMessages in the context based on the fetched data
-                    const unread = data.some(msg => msg.senderId !== user._id && !msg.delivered);
+                    const unread = data.some(msg => msg.senderId !== user._id && !msg.read);
                     setHasUnreadMessages(unread);
                 } catch (error) {
                     console.error('Error fetching users with last messages:', error);

@@ -27,7 +27,7 @@ const ProfileMenu = () => {
                         credentials: 'include'
                     });
                     const data = await response.json();
-                    const unread = data.some(msg => msg.senderId !== user._id && !msg.delivered);
+                    const unread = data.some(msg => msg.senderId !== user._id && !msg.read);
                     setHasUnreadMessages(unread);
                 } catch (error) {
                     console.error('Error checking unread messages:', error);

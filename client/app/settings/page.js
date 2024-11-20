@@ -1,26 +1,27 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import useAuth from '@/app/hooks/useAuth';
-import Navbar from '@/app/components/layouts/Navbar/Navbar';
-import Footer from '@/app/components/layouts/Footer/Footer';
-import EditProfile from './components/EditProfile';
-import ChangePassword from './components/ChangePassword';
-import styles from './settings.module.css';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import useAuth from "@/app/hooks/useAuth";
+import Navbar from "@/app/components/layouts/Navbar/Navbar";
+import EditProfile from "./components/EditProfile";
+import ChangePassword from "./components/ChangePassword";
+import Preferences from "./components/Preferences"; 
+import styles from "./settings.module.css";
 
 const SettingsPage = () => {
     const { isAuthenticated, user } = useAuth();
     const router = useRouter();
 
-    // State to control modal visibility
+    // State to control modals
     const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+    const [isPreferencesOpen, setIsPreferencesOpen] = useState(false); 
 
     useEffect(() => {
         // Redirect to login if explicitly not authenticated
         if (isAuthenticated === false) {
-            router.push('/auth');
+            router.push("/auth");
             return;
         }
     }, [isAuthenticated, router]);
@@ -42,6 +43,11 @@ const SettingsPage = () => {
                 <button onClick={() => setIsChangePasswordOpen(true)} className={styles.button}>
                     Change Password
                 </button>
+                
+                {/* New button to open Preferences modal */}
+                <button onClick={() => setIsPreferencesOpen(true)} className={styles.button}>
+                    Preferences
+                </button>
 
                 {/* Conditionally render EditProfile and ChangePassword modals */}
                 {isEditProfileOpen && (
@@ -56,6 +62,15 @@ const SettingsPage = () => {
                     <ChangePassword 
                         isOpen={isChangePasswordOpen} 
                         onClose={() => setIsChangePasswordOpen(false)} 
+                    />
+                )}
+
+                {/* Render Preferences Modal */}
+                {isPreferencesOpen && (
+                    <Preferences 
+                        isOpen={isPreferencesOpen} 
+                        onClose={() => setIsPreferencesOpen(false)} 
+                        user={user} // Pass the user to Preferences
                     />
                 )}
             </div>
