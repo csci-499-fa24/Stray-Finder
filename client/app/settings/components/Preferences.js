@@ -1,45 +1,23 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import styles from './Preferences.module.css';
+import { useState } from 'react';
+import styles from './Preferences.module.css'; // Import CSS for styling
 
 const Preferences = ({ isOpen, onClose, user }) => {
-    const [notificationPreference, setNotificationPreference] = useState('immediate');
-
-    // Fetch the current preference when the modal opens
-    useEffect(() => {
-        if (isOpen) {
-            const fetchPreference = async () => {
-                try {
-                    const response = await fetch('/api/user/preferences', {
-                        method: 'GET',
-                        credentials: 'include',
-                    });
-
-                    if (!response.ok) throw new Error('Failed to fetch preferences');
-
-                    const data = await response.json();
-                    setNotificationPreference(data.notificationPreference);
-                } catch (error) {
-                    console.error(error);
-                }
-            };
-
-            fetchPreference();
-        }
-    }, [isOpen]);
+    const [notificationPreference, setNotificationPreference] = useState(user?.notificationPreference || 'immediate');
 
     const handleSave = async () => {
         try {
+            // Save the selected preference to the database
             const response = await fetch('/api/user/preferences', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
                 body: JSON.stringify({ notificationPreference }),
             });
 
-            if (!response.ok) throw new Error('Failed to update preferences');
-
+            if (!response.ok) {
+                throw new Error('Failed to update preferences');
+            }
             alert('Preferences updated successfully!');
             onClose(); // Close the modal
         } catch (error) {
