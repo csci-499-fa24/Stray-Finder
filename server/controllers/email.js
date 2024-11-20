@@ -75,10 +75,22 @@ const sendEmail = async ({ targetEmail, subject, body }) => {
 
 const sendReportsEmail = async (req, res) => {
     try {
-        const { targetEmail } = req.params;
+        // Fetch all users who have a notification preference for daily, weekly, or monthly
+        const users = await User.find({
+            notificationPreference: { $in: ['daily', 'weekly', 'monthly'] },
+        });
 
-        // Fetch recent animal reports
+        // Categorize users based on their preferences
+        const dailyUsers = users.filter((user) => user.notificationPreference === 'daily');
+        const weeklyUsers = users.filter((user) => user.notificationPreference === 'weekly');
+        const monthlyUsers = users.filter((user) => user.notificationPreference === 'monthly');
+
+        // Fetch recent reports
         const reports = await fetchAllRecentAnimals(req, res);
+        if (!reports || reports.length === 0) {
+            console.log('No reports to send.');
+            return res.status(200).json({ message: 'No reports to send' });
+        }
 
         // Generate the HTML email body
         let htmlContent = `
@@ -117,14 +129,32 @@ const sendReportsEmail = async (req, res) => {
 
         htmlContent += `</tr></table>`;
 
-        // Use the reusable `sendEmail` to send the reports email
-        await sendEmail({
-            targetEmail,
-            subject: 'Latest Animal Reports',
-            body: htmlContent,
-        });
+        // Current date
+        const today = new Date();
 
-        res.status(200).json({ message: 'Email sent successfully' });
+        // Send emails to daily and weekly users on Sundays
+        if (today.getDay() === 0) {
+            for (const user of [...dailyUsers, ...weeklyUsers]) {
+                await sendEmail({
+                    targetEmail: user.email,
+                    subject: 'Weekly Animal Reports Summary',
+                    body: htmlContent,
+                });
+            }
+        }
+
+        // Send emails to monthly users on the 1st of the month
+        if (today.getDate() === 1) {
+            for (const user of monthlyUsers) {
+                await sendEmail({
+                    targetEmail: user.email,
+                    subject: 'Monthly Animal Reports Summary',
+                    body: htmlContent,
+                });
+            }
+        }
+
+        res.status(200).json({ message: 'Reports email sent successfully' });
     } catch (error) {
         console.error('Failed to send animal reports email:', error);
         res.status(500).json({ message: 'Failed to send animal reports email', error: error.message });

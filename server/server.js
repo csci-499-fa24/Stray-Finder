@@ -3,6 +3,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const app = express()
 const { exec } = require('child_process')
+const cron = require('node-cron');
 
 ///////////////////////////////////////////////////////////////////////////
 /**
@@ -49,7 +50,8 @@ const email = require('./routes/email')
 const profile = require('./routes/profile')
 const matchVotes = require('./routes/MatchVotes')
 const commentRoutes = require('./routes/comment')
-
+const { sendSummaryEmails } = require('./utils/notificationSummary');
+const testRoutes = require('./test/testRoutes');
 /**
  * Section for authentication routes
  */
@@ -66,6 +68,7 @@ app.use('/api/email/', email)
 app.use('/api/profile/', profile)
 app.use('/api/match-votes/', matchVotes)
 app.use('/api/comments/', commentRoutes)
+app.use('/test', testRoutes);
 ///////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////
@@ -80,6 +83,25 @@ app.use('/special/route/for/demo/', createStoryFromHighMatch)
 //     await createStoryFromHighMatch()
 // }, 10 * 60 * 1000)
 
+///////////////////////////////////////////////////////////////////////////
+/**
+ * Section for cron jobs
+ */
+// Daily Summary (e.g., at 8:00 AM)
+cron.schedule('0 0 * * *', async () => { // Daily at midnight
+    console.log('Sending daily message summaries...');
+    await sendSummaryEmails('daily');
+});
+
+cron.schedule('0 0 * * SUN', async () => { // Weekly on Sundays
+    console.log('Sending weekly message summaries...');
+    await sendSummaryEmails('weekly');
+});
+
+cron.schedule('0 0 1 * *', async () => { // Monthly on the 1st
+    console.log('Sending monthly message summaries...');
+    await sendSummaryEmails('monthly');
+});
 ///////////////////////////////////////////////////////////////////////////
 
 const port = process.env.PORT || 8080
