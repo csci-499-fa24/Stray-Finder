@@ -10,7 +10,6 @@ const FoundPage = () => {
             <Navbar />
             <main className="container my-5">
                 <FoundPets />
-                <HelpMatchPopUp />
             </main>
             <Footer />
         </div>

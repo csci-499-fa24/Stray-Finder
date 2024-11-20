@@ -37,7 +37,6 @@ const StraysPage = () => {
 
             <main className="container">
                 {activeTab === 'strayRegistry' ? <Strays /> : <FeaturedStrays />}
-                <HelpMatchPopUp />
             </main>
 
             <Footer />
