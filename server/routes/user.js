@@ -7,6 +7,7 @@ const {
     updateUserPassword,
     deleteUser,
     getUserById,
+    updateUserPreferences,
 } = require('../controllers/user')
 
 router
@@ -19,5 +20,7 @@ router
 router
     .route('/:id')
     .get(getUserById)
+
+router.post('/preferences', authenticate, updateUserPreferences);
 
 module.exports = router

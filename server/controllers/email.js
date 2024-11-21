@@ -2,6 +2,7 @@ var nodemailer = require('nodemailer');
 require('dotenv').config();
 const AnimalReport = require('../models/animalReport')
 const Animal = require('../models/animal')
+const User = require('../models/user');
 
 const fetchAllRecentAnimals = async (req, res) => {
     try {
@@ -44,6 +45,7 @@ const fetchAllRecentAnimals = async (req, res) => {
 
         return reports; // Return the reports to be used in sendEmail
     } catch (error) {
+        console.error('Error fetching recent animals:', error); 
         throw new Error('Failed to fetch animal reports');
     }
 };
@@ -73,14 +75,32 @@ const sendEmail = async ({ targetEmail, subject, body }) => {
     }
 };
 
-const sendReportsEmail = async (req, res) => {
+const sendReportsEmail = async (req) => {
     try {
-        const { targetEmail } = req.params;
+        // Fetch all users who have a notification preference for daily, weekly, or monthly
+        const users = await User.find({
+            notificationPreference: { $in: ['immediate', 'daily', 'weekly', 'monthly'] },
+        });
 
-        // Fetch recent animal reports
-        const reports = await fetchAllRecentAnimals(req, res);
+        if (users.length === 0) {
+            return 'No users to send reports to.';
+        }
 
-        // Generate the HTML email body
+        // Categorize users based on their preferences
+        // Categorize users based on their preferences
+        const dailyUsers = users.filter((user) => 
+            user.notificationPreference === 'daily' || user.notificationPreference === 'immediate'
+        );
+        const weeklyUsers = users.filter((user) => user.notificationPreference === 'weekly');
+        const monthlyUsers = users.filter((user) => user.notificationPreference === 'monthly');
+
+        // Fetch recent reports
+        const reports = await fetchAllRecentAnimals(req);
+        if (!reports || reports.length === 0) {
+            return 'No reports to send.';
+        }
+
+        // Generate the email content
         let htmlContent = `
             <table width="100%" style="border-collapse: collapse; font-family: Arial, sans-serif;">
                 <tr>
@@ -117,17 +137,56 @@ const sendReportsEmail = async (req, res) => {
 
         htmlContent += `</tr></table>`;
 
-        // Use the reusable `sendEmail` to send the reports email
-        await sendEmail({
-            targetEmail,
-            subject: 'Latest Animal Reports',
-            body: htmlContent,
-        });
+        // Current date
+        const today = new Date();
 
-        res.status(200).json({ message: 'Email sent successfully' });
+        if (dailyUsers.length > 0) {
+            for (const user of dailyUsers) {
+                try {
+                    await sendEmail({
+                        targetEmail: user.email,
+                        subject: 'Daily Animal Reports Summary',
+                        body: htmlContent,
+                    });
+                } catch (emailError) {
+                    console.error('Error sending email to daily user:', user.email, emailError);
+                }
+            }
+        }        
+
+        if (today.getDay() === 0 && weeklyUsers.length > 0) {
+            for (const user of weeklyUsers) {
+                try {
+                    await sendEmail({
+                        targetEmail: user.email,
+                        subject: 'Weekly Animal Reports Summary',
+                        body: htmlContent,
+                    });
+                } catch (emailError) {
+                    console.error('Error sending email to weekly user:', user.email, emailError);
+                }
+            }
+        }        
+
+        // Send emails to monthly users on the 1st of the month
+        if (today.getDate() === 1 && monthlyUsers.length > 0) {
+            for (const user of monthlyUsers) {
+                try {
+                    await sendEmail({
+                        targetEmail: user.email,
+                        subject: 'Monthly Animal Reports Summary',
+                        body: htmlContent,
+                    });
+                } catch (emailError) {
+                    console.error('Error sending email to monthly user:', user.email, emailError);
+                }
+            }
+        }        
+
+        return 'Animal reports sent successfully.';
     } catch (error) {
         console.error('Failed to send animal reports email:', error);
-        res.status(500).json({ message: 'Failed to send animal reports email', error: error.message });
+        throw new Error('Failed to send animal reports email');
     }
 };
 

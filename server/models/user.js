@@ -30,6 +30,11 @@ const UserSchema = new mongoose.Schema(
             type: String,
             default: '',
         },
+        notificationPreference: {
+            type: String,
+            enum: ['immediate', 'daily', 'weekly', 'monthly', 'none'],
+            default: 'immediate',
+        },
         matchVotes: [
             {
                 matchVotesId:

@@ -29,7 +29,7 @@ const register = async (req, res, next) => {
             senderId: strayFinderUserId,
             recipientId: user._id,
             content: `Hi ${username}, welcome to Stray Finder! We're so glad you joined us. Explore the platform and help connect pets with their families.`,
-            delivered: false,
+            read: false,
         });
         await welcomeMessage.save();
 

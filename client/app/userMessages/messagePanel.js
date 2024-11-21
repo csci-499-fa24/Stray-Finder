@@ -49,7 +49,7 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
                     setHasUnreadMessages(false);
                     setUsers(prevUsers => 
                         prevUsers.map(user => 
-                            user.id === selectedUser.id ? { ...user, delivered: true } : user
+                            user.id === selectedUser.id ? { ...user, read: true } : user
                         )
                     );
                 } catch (error) {
