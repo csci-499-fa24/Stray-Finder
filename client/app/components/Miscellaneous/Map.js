@@ -8,23 +8,15 @@ import {
   useLoadScript,
 } from '@react-google-maps/api';
 
-
-
-
 const containerStyle = {
   width: '100%',
   height: '500px',
 };
 
-
-
-
 const center = {
   lat: 40.768,
   lng: -73.964,
 };
-
-
 
 
 // Dog and Cat breed options
@@ -38,30 +30,18 @@ const catBreeds = [
 ];
 
 
-
-
-
-
-
-
 // Function to create a circular icon, with fallback color if the image fails to load
 const createCircularIcon = (imageUrl, fallbackColor, callback) => {
   const img = new Image();
   img.crossOrigin = 'anonymous';
   img.src = imageUrl;
 
-
-
-
-  img.onload = () => {
+    img.onload = () => {
       const canvas = document.createElement('canvas');
       const size = 50;
       canvas.width = size;
       canvas.height = size;
       const ctx = canvas.getContext('2d');
-
-
-
 
       // Create a circular clip for the icon
       ctx.beginPath();
@@ -69,22 +49,13 @@ const createCircularIcon = (imageUrl, fallbackColor, callback) => {
       ctx.closePath();
       ctx.clip();
 
-
-
-
       // Draw the image within the circular region
       ctx.drawImage(img, 0, 0, size, size);
 
-
-
-
       callback(canvas.toDataURL());
-  };
+    };
 
-
-
-
-  img.onerror = () => {
+    img.onerror = () => {
       // Draw a colored circle as a fallback if the image fails to load
       const canvas = document.createElement('canvas');
       const size = 50;
@@ -92,182 +63,153 @@ const createCircularIcon = (imageUrl, fallbackColor, callback) => {
       canvas.height = size;
       const ctx = canvas.getContext('2d');
 
-
-
-
       ctx.beginPath();
       ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2, true);
       ctx.closePath();
       ctx.fillStyle = fallbackColor;
       ctx.fill();
 
-
-
-
       callback(canvas.toDataURL());
-  };
+    };
 };
 
 
 const calculateBounds = (center, radiusInMiles) => {
-   const radiusInMeters = radiusInMiles * 1609.34; // Convert miles to meters
-   const latDelta = (radiusInMeters / 6378137) * (180 / Math.PI); // Approximate latitude delta
-   const lngDelta = latDelta / Math.cos(center.lat * (Math.PI / 180)); // Adjust longitude delta for latitude
-   return {
-       north: center.lat + latDelta,
-       south: center.lat - latDelta,
-       east: center.lng + lngDelta,
-       west: center.lng - lngDelta,
-   };
+const radiusInMeters = radiusInMiles * 1609.34; // Convert miles to meters
+const latDelta = (radiusInMeters / 6378137) * (180 / Math.PI); // Approximate latitude delta
+const lngDelta = latDelta / Math.cos(center.lat * (Math.PI / 180)); // Adjust longitude delta for latitude
+    return {
+        north: center.lat + latDelta,
+        south: center.lat - latDelta,
+        east: center.lng + lngDelta,
+        west: center.lng - lngDelta,
+    };
 };
 
+    const Map = () => {
+    const { isLoaded } = useLoadScript({
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    });
 
 
-
-const Map = () => {
-  const { isLoaded } = useLoadScript({
-      googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-  });
-
-
-  const mapRef = useRef(null); // Reference for the map instance
-  const [reports, setReports] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedReport, setSelectedReport] = useState(null);
-  const [iconUrls, setIconUrls] = useState({});
-  const [filters, setFilters] = useState({
-      gender: '',
-      species: '',
-      reportType: '',
-      fixed: '',
-      collar: '',
-      breed: ''
-  });
-  const [radius, setRadius] = useState(null); // Add radius state (in miles)
-  const [userLocation, setUserLocation] = useState(null);
-  const [isInitialized, setIsInitialized] = useState(false); // Track initialization
+const mapRef = useRef(null); // Reference for the map instance
+const [reports, setReports] = useState([]);
+const [loading, setLoading] = useState(true);
+const [selectedReport, setSelectedReport] = useState(null);
+const [iconUrls, setIconUrls] = useState({});
+const [filters, setFilters] = useState({
+    gender: '',
+    species: '',
+    reportType: '',
+    fixed: '',
+    collar: '',
+    breed: ''
+});
+const [radius, setRadius] = useState(null); // Add radius state (in miles)
+const [userLocation, setUserLocation] = useState(null);
+const [isInitialized, setIsInitialized] = useState(false); // Track initialization
 
 
-
-
-  const fetchReports = async () => {
-      try {
-          const queryParams = new URLSearchParams(filters);
-          const response = await fetch(
-              `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?${queryParams}`
-          );
-          const data = await response.json();
-          setReports(data.reports);
-          setLoading(false);
-      } catch (error) {
-          console.error('Failed to fetch reports', error);
-          setLoading(false);
-      }
-  };
-
-
-
+const fetchReports = async () => {
+    try {
+        const queryParams = new URLSearchParams(filters);
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?${queryParams}`
+        );
+        const data = await response.json();
+        setReports(data.reports);
+        setLoading(false);
+    } catch (error) {
+        console.error('Failed to fetch reports', error);
+        setLoading(false);
+    }
+};
 
   // Fetch reports on initial load and when filters change
-  useEffect(() => {
-      fetchReports();
-  }, [filters]);
-
-
+    useEffect(() => {
+        fetchReports();
+    }, [filters]);
 
 
   // Loop through reports and create icons when reports are fetched
-  useEffect(() => {
-      if (reports.length > 0) {
-          reports.forEach((report) => {
-              // Define fallback color based on report type
-              const fallbackColor = report.reportType === 'Stray' ? '#00ff00' : '#ff0000'; // Green for Stray, Red for Lost
-            
-              // Create the circular icon using the fallback color
-              createCircularIcon(report.animal.imageUrl, fallbackColor, (iconUrl) => {
-                  if (iconUrl) {
-                      setIconUrls((prev) => ({
-                          ...prev,
-                          [report._id]: iconUrl,
-                      }));
-                  }
-              });
-          });
-      }
-  }, [reports]);
+    useEffect(() => {
+        if (reports.length > 0) {
+            reports.forEach((report) => {
+                // Define fallback color based on report type
+                const fallbackColor = report.reportType === 'Stray' ? '#00ff00' : '#ff0000'; // Green for Stray, Red for Lost
+                
+                // Create the circular icon using the fallback color
+                createCircularIcon(report.animal.imageUrl, fallbackColor, (iconUrl) => {
+                    if (iconUrl) {
+                        setIconUrls((prev) => ({
+                            ...prev,
+                            [report._id]: iconUrl,
+                        }));
+                    }
+                });
+            });
+        }
+    }, [reports]);
 
 
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters((prev) => ({ ...prev, [name]: value }));
+    };
 
 
-  const handleFilterChange = (e) => {
-      const { name, value } = e.target;
-      setFilters((prev) => ({ ...prev, [name]: value }));
-  };
-
-
-
-
-  const breedOptions = filters.species === 'Dog' ? dogBreeds : filters.species === 'Cat' ? catBreeds : [];
-
-
-
+    const breedOptions = filters.species === 'Dog' ? dogBreeds : filters.species === 'Cat' ? catBreeds : [];
 
   // Function to calculate distance between two points (Haversine formula)
-  const calculateDistance = (lat1, lng1, lat2, lng2) => {
-      const R = 3961; // Radius of the Earth in miles
-      const dLat = (lat2 - lat1) * (Math.PI / 180);
-      const dLng = (lng2 - lng1) * (Math.PI / 180);
-      const a =
-          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(lat1 * (Math.PI / 180)) *
-              Math.cos(lat2 * (Math.PI / 180)) *
-              Math.sin(dLng / 2) *
-              Math.sin(dLng / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c; // Distance in miles
-  };
+    const calculateDistance = (lat1, lng1, lat2, lng2) => {
+        const R = 3961; // Radius of the Earth in miles
+        const dLat = (lat2 - lat1) * (Math.PI / 180);
+        const dLng = (lng2 - lng1) * (Math.PI / 180);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * (Math.PI / 180)) *
+                Math.cos(lat2 * (Math.PI / 180)) *
+                Math.sin(dLng / 2) *
+                Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Distance in miles
+    };
 
-
-
-
-  // Filter reports based on the distance from the center point
-  const filteredReports = reports.filter((report) => {
+    // Filter reports based on the distance from the center point
+    const filteredReports = reports.filter((report) => {
       const { location } = report;
       const baseLocation = userLocation || center; // Use user location if available
-      if (location && location.coordinates) {
+        if (location && location.coordinates) {
           const [lng, lat] = location.coordinates.coordinates;
           const distance = calculateDistance(baseLocation.lat, baseLocation.lng, lat, lng);
           return distance <= radius; // Check if the report is within the radius
-      }
-      return false;
-  });
+        }
+        return false;
+    });
 
-
-
-
-  useEffect(() => {
-      if (!isInitialized) {
-          if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(
-                  (position) => {
+    useEffect(() => {
+        if (!isInitialized) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
                       setUserLocation({
                           lat: position.coords.latitude,
                           lng: position.coords.longitude,
                       });
                       setRadius(10); // Set to 10 miles if not already set
                       setIsInitialized(true); // Mark as initialized
-                  },
-                  (error) => {
+                    },
+                    (error) => {
                       console.error("Geolocation error:", error);
                       alert("Unable to fetch your location. Defaulting to default location.");
                       setUserLocation(center); // Fallback to default center
                       setRadius(0); // Set to 10 miles if not already set
                       setIsInitialized(true); // Mark as initialized
-                  }
-              );
-          }
-      }
-  }, [isInitialized]);
+                    }
+                );
+            }
+        }
+    }, [isInitialized]);
 
 
   const handleMapLoad = (map) => {
@@ -275,23 +217,15 @@ const Map = () => {
    };
 
 
-useEffect(() => {
-   if (mapRef.current && userLocation && radius) {
-       const bounds = calculateBounds(userLocation, radius);
-       mapRef.current.fitBounds(bounds); // Adjust the map to fit the circle
-   }
-}, [userLocation, radius]); // Recalculate bounds when the user location or radius changes
-
-
+    useEffect(() => {
+    if (mapRef.current && userLocation && radius) {
+        const bounds = calculateBounds(userLocation, radius);
+        mapRef.current.fitBounds(bounds); // Adjust the map to fit the circle
+    }
+    }, [userLocation, radius]); // Recalculate bounds when the user location or radius changes
 
 
  const mapCenter = userLocation || center;
-
-
-
-
-
-
 
 
   // Show a loading message until the reports are fetched
@@ -302,65 +236,59 @@ useEffect(() => {
 
 
 
-  return (
-      <>
-          <div className="filter-container">
-              <h3>Filter Reports</h3>
+return (
+    <>
+        <div className="filter-container">
+            <h3>Filter Reports</h3>
             
-              <select
-                  name="gender"
-                  className="filter-dropdown"
-                  value={filters.gender}
-                  onChange={handleFilterChange}
-              >
-                  <option value="">All Genders</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
+            <select
+              name="gender"
+              className="filter-dropdown"
+              value={filters.gender}
+              onChange={handleFilterChange}
+            >
+              <option value="">All Genders</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+
+
+
+
+            <select
+              name="species"
+              className="filter-dropdown"
+              value={filters.species}
+              onChange={handleFilterChange}
+            >
+              <option value="">All Species</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+            </select>
+
+
+
+
+            {filters.species && (
+              <select name="breed" className="filter-dropdown" value={filters.breed} onChange={handleFilterChange}>
+                  <option value="">All Breeds</option>
+                  {breedOptions.map((breed) => (
+                      <option key={breed} value={breed}>{breed}</option>
+                  ))}
               </select>
+            )}
 
-
-
-
-              <select
-                  name="species"
-                  className="filter-dropdown"
-                  value={filters.species}
-                  onChange={handleFilterChange}
-              >
-                  <option value="">All Species</option>
-                  <option value="Dog">Dog</option>
-                  <option value="Cat">Cat</option>
-              </select>
-
-
-
-
-              {filters.species && (
-                  <select name="breed" className="filter-dropdown" value={filters.breed} onChange={handleFilterChange}>
-                      <option value="">All Breeds</option>
-                      {breedOptions.map((breed) => (
-                          <option key={breed} value={breed}>{breed}</option>
-                      ))}
-                  </select>
-              )}
-
-
-
-
-              <select
-                  name="reportType"
-                  className="filter-dropdown"
-                  value={filters.reportType}
-                  onChange={handleFilterChange}
-              >
-                  <option value="">All Reports</option>
-                  <option value="Stray">Stray</option>
-                  <option value="Lost">Lost</option>
-                  <option value="Found">Found</option>
-              </select>
-
-
-
+            <select
+                name="reportType"
+                className="filter-dropdown"
+                value={filters.reportType}
+                onChange={handleFilterChange}
+            >
+                <option value="">All Reports</option>
+                <option value="Stray">Stray</option>
+                <option value="Lost">Lost</option>
+                <option value="Found">Found</option>
+            </select>
 
               <select
                   name="fixed"
@@ -400,6 +328,7 @@ useEffect(() => {
                   type="range"
                   min="1"
                   max="100"
+                  step=".25"
                   value={radius || 10}
                   onChange={(e) => setRadius(e.target.value)}
               />
