@@ -79,12 +79,12 @@ const Filters = ({ filters, handleFilterChange }) => {
                         <option value="Dog">Dog</option>
                         <option value="Cat">Cat</option>
                         <option value="Bird">Bird</option>
-                        <option value="Bird">Rabbit</option>
-                        <option value="Bird">Hamster</option>
-                        <option value="Bird">Guinea Pig</option>
-                        <option value="Bird">Lizard</option>
-                        <option value="Bird">Pig</option>
-                        <option value="Bird">Ferret</option>
+                        <option value="Rabbit">Rabbit</option>
+                        <option value="Hamster">Hamster</option>
+                        <option value="Guinea Pig">Guinea Pig</option>
+                        <option value="Lizard">Lizard</option>
+                        <option value="Pig">Pig</option>
+                        <option value="Ferret">Ferret</option>
                     </select>
                 </li>
 
