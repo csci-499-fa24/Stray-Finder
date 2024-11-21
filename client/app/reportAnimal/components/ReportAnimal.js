@@ -66,8 +66,83 @@ const ReportAnimal = () => {
                 "I don't know",
             ],
         },
-        { value: 'Unknown', label: "I don't know", breeds: [] },
-    ]
+        {
+            value: 'Rabbit',
+            label: 'Rabbit',
+            breeds: [
+                'Holland Lop',
+                'Netherland Dwarf',
+                'Mini Rex',
+                'Lionhead',
+                'Flemish Giant',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Hamster',
+            label: 'Hamster',
+            breeds: [
+                'Syrian',
+                'Dwarf',
+                'Roborovski',
+                'Chinese',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Guinea Pig',
+            label: 'Guinea Pig',
+            breeds: [
+                'American',
+                'Abyssinian',
+                'Peruvian',
+                'Silkie',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Lizard',
+            label: 'Lizard',
+            breeds: [
+                'Leopard Gecko',
+                'Bearded Dragon',
+                'Crested Gecko',
+                'Chameleon',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Pig',
+            label: 'Pig',
+            breeds: [
+                'Miniature',
+                'Teacup',
+                'Pot-bellied',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Bird',
+            label: 'Bird',
+            breeds: [
+                'Parakeet',
+                'Cockatiel',
+                'Canary',
+                'Lovebird',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Ferret',
+            label: 'Ferret',
+            breeds: ["I don't know"], // Ferrets don't have many distinct breeds
+        },
+        { 
+            value: 'Unknown', 
+            label: "I don't know", 
+            breeds: [] 
+        },
+    ];    
 
     useEffect(() => {
         if (isAuthenticated === false) {
