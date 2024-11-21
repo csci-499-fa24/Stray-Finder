@@ -28,6 +28,27 @@ const catBreeds = [
   "Persian", "Maine Coon", "Siamese", "Ragdoll", "Bengal",
   "Sphynx", "British Shorthair"
 ];
+const rabbitBreeds = [
+    "Holland Lop", "Netherland Dwarf", "Mini Rex", "Lionhead", "Flemish Giant"
+  ];
+  const hamsterBreeds = [
+    "Syrian", "Dwarf", "Roborovski", "Chinese"
+  ];
+  const guineaPigBreeds = [
+    "American", "Abyssinian", "Peruvian", "Silkie"
+  ];
+  const lizardBreeds = [
+    "Leopard Gecko", "Bearded Dragon", "Crested Gecko", "Chameleon"
+  ];
+  const pigBreeds = [
+    "Miniature", "Teacup", "Pot-bellied"
+  ];
+  const birdBreeds = [
+    "Parakeet", "Cockatiel", "Canary", "Lovebird"
+  ];
+  const ferretBreeds = [
+    "I don't know" 
+  ];  
 
 
 // Function to create a circular icon, with fallback color if the image fails to load
@@ -158,7 +179,17 @@ const fetchReports = async () => {
     };
 
 
-    const breedOptions = filters.species === 'Dog' ? dogBreeds : filters.species === 'Cat' ? catBreeds : [];
+    const breedOptions = 
+    filters.species === 'Dog' ? dogBreeds : 
+    filters.species === 'Cat' ? catBreeds : 
+    filters.species === 'Rabbit' ? rabbitBreeds : 
+    filters.species === 'Hamster' ? hamsterBreeds : 
+    filters.species === 'Guinea Pig' ? guineaPigBreeds : 
+    filters.species === 'Lizard' ? lizardBreeds : 
+    filters.species === 'Pig' ? pigBreeds : 
+    filters.species === 'Bird' ? birdBreeds : 
+    filters.species === 'Ferret' ? ferretBreeds : 
+    [];
 
   // Function to calculate distance between two points (Haversine formula)
     const calculateDistance = (lat1, lng1, lat2, lng2) => {
@@ -264,6 +295,13 @@ return (
               <option value="">All Species</option>
               <option value="Dog">Dog</option>
               <option value="Cat">Cat</option>
+              <option value="Rabbit">Rabbit</option>
+              <option value="Hamster">Hamster</option>
+              <option value="Guinea Pig">Guinea Pig</option>
+              <option value="Lizard">Lizard</option>
+              <option value="Pig">Pig</option>
+              <option value="Bird">Bird</option>
+              <option value="Ferret">Ferret</option>
             </select>
 
 
