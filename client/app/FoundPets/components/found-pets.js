@@ -137,7 +137,7 @@ const ReportList = ({ reports, loading }) => {
                         image={report.animal.imageUrl}
                         species={report.animal.species}
                         gender={report.animal.gender}
-                        state="Unknown" // Update this if you have a proper state for animals
+                        state={report.reportType}
                         description={report.animal.description}
                     />
                 ))
