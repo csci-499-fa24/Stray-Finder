@@ -67,6 +67,7 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                 'Dachshund',
                 'Boxer',
                 "I don't know",
+                "Other",
             ],
         },
         {
@@ -81,6 +82,7 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                 'Sphynx',
                 'British Shorthair',
                 "I don't know",
+                "Other",
             ],
         },
         {
