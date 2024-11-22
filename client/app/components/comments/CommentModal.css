@@ -298,3 +298,124 @@
   color: gray;
   margin-left: 5px;
 }
+@media screen and (max-width: 1000px) {
+  /* Modal Content Adjustments */
+  .comment-modal-content {
+    width: 90%; /* Reduce width for smaller screens */
+    max-width: none; /* Remove the max-width constraint */
+    height: auto; /* Allow height to adjust dynamically */
+    max-height: 90%; /* Adjust for vertical space */
+    flex-direction: column; /* Stack sections vertically */
+    transform: scale(1); /* Ensure no unnecessary scaling */
+  }
+
+  /* Left Section: Animal Details */
+  .comment-left-section {
+    display: flex;
+    flex-direction: column; /* Ensure content stacks vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    text-align: center; /* Center-align any text */
+    width: 100%; /* Full width */
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .comment-left-section img {
+    width: 100%; /* Ensure full width */
+    max-width: 100%; /* Limit the width to the container */
+    min-height: 250px; /* Reduce minimum height */
+    max-height: 300px; /* Adjust maximum height */
+    object-fit: cover; /* Maintain aspect ratio */
+    margin-bottom: 10px; /* Space below the image */
+  }
+
+  /* Right Section: Comments */
+  .comment-right-section {
+    width: 100%; /* Full width in stacked layout */
+    padding: 15px; /* Reduce padding */
+  }
+
+  .comment-comments-list {
+    max-height: calc(100vh - 300px); /* Dynamically adjust height for smaller screens */
+    padding-right: 5px; /* Reduce padding */
+  }
+
+  .comment-comments-list p {
+    font-size: 14px; /* Adjust font size for readability */
+    padding: 8px; /* Reduce padding */
+  }
+
+  /* Comment Item */
+  .comment-item {
+    flex-direction: column; /* Stack avatar and text vertically */
+    align-items: flex-start; /* Align items to the start */
+  }
+
+  .comment-avatar {
+    margin-bottom: 5px; /* Add spacing below the avatar */
+    margin-right: 0; /* Remove right margin */
+  }
+
+  .comment-text {
+    align-items: flex-start; /* Align text to the left */
+  }
+
+  .comment-username {
+    font-size: 12px; /* Smaller font size */
+  }
+
+  .comment-content {
+    font-size: 14px; /* Smaller font size */
+  }
+
+  .comment-timestamp {
+    font-size: 10px; /* Adjust timestamp size */
+  }
+
+  /* Input and Button Styling */
+  .comment-input-container {
+    flex-direction: column; /* Stack input and button */
+    gap: 5px; /* Reduce gap */
+    padding: 10px; /* Adjust padding */
+  }
+
+  .comment-input {
+    width: 100%; /* Full width */
+    font-size: 14px; /* Smaller font size */
+  }
+
+  .post-button {
+    width: 100%; /* Full width */
+    padding: 10px; /* Adjust padding */
+  }
+
+  /* Close Button */
+  .comment-close-button {
+    font-size: 1.2rem; /* Smaller close button */
+    top: 8px; /* Adjust position */
+    right: 8px;
+  }
+
+  /* Spinner Adjustments */
+  .spinner-container {
+    padding: 20px; /* Add padding for smaller screens */
+  }
+
+  .loading-spinner {
+    font-size: 1.5rem; /* Adjust spinner size */
+  }
+}
+@media screen and (max-width: 500px) {
+  .comment-left-section img {
+    width: 100%; /* Full width of the container */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 200px; /* Reduce maximum height for small screens */
+    object-fit: contain; /* Ensure the full image is visible */
+    margin-bottom: 10px; /* Add some spacing below the image */
+  }
+
+  .comment-left-section {
+    padding: 10px; /* Reduce padding for smaller screens */
+  }
+}
