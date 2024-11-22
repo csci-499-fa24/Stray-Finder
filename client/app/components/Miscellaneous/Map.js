@@ -264,9 +264,6 @@ const fetchReports = async () => {
   <span className="sr-only"></span>
   </div>;
 
-
-
-
 return (
     <>
         <div className="filter-container">
@@ -282,9 +279,6 @@ return (
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
-
-
-
 
             <select
               name="species"
@@ -303,8 +297,6 @@ return (
               <option value="Bird">Bird</option>
               <option value="Ferret">Ferret</option>
             </select>
-
-
 
 
             {filters.species && (
@@ -328,169 +320,125 @@ return (
                 <option value="Found">Found</option>
             </select>
 
-              <select
-                  name="fixed"
-                  className="filter-dropdown"
-                  value={filters.fixed}
-                  onChange={handleFilterChange}
-              >
+            <select
+                name="fixed"
+                className="filter-dropdown"
+                value={filters.fixed}
+                onChange={handleFilterChange}
+            >
                   <option value="">Fixed Status</option>
                   <option value="Yes">Fixed</option>
                   <option value="No">Not Fixed</option>
               </select>
 
+            <select
+                name="collar"
+                className="filter-dropdown"
+                value={filters.collar}
+                onChange={handleFilterChange}
+            >
+                <option value="">Collar Status</option>
+                <option value="true">With Collar</option>
+                <option value="false">Without Collar</option>
+            </select>
 
 
-
-              <select
-                  name="collar"
-                  className="filter-dropdown"
-                  value={filters.collar}
-                  onChange={handleFilterChange}
-              >
-                  <option value="">Collar Status</option>
-                  <option value="true">With Collar</option>
-                  <option value="false">Without Collar</option>
-              </select>
-
-
-
-
-            
-
-
-
-
-              {/* Slider to adjust the radius */}
-              <input
+                {/* Slider to adjust the radius */}
+                <input
                   type="range"
                   min="1"
                   max="100"
                   step=".25"
                   value={radius || 10}
                   onChange={(e) => setRadius(e.target.value)}
-              />
-              <p>{radius} miles radius</p>
-          </div>
-
-
+                />
+                <p>{radius} miles radius</p>
+            </div>
 
 
           <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} onLoad={handleMapLoad} >
-             {/* Draw the circle only when radius is defined */}
+            {/* Draw the circle only when radius is defined */}
             
-             <Circle
-                  center={mapCenter}
-                  radius={radius * 1609.34} // Convert miles to meters
-                  options={{
-                      fillColor: 'rgba(0,0,255,0.2)', // Blue tint outside the circle
-                      fillOpacity: 0.2, // Slightly transparent fill
-                      strokeColor: 'blue', // Blue border
-                      strokeOpacity: 0.5, // Transparent blue border
-                      strokeWeight: 2, // Adjust thickness of the border
-                  }}
-              />
+            <Circle
+                center={mapCenter}
+                radius={radius * 1609.34} // Convert miles to meters
+                options={{
+                    fillColor: 'rgba(0,0,255,0.2)', // Blue tint outside the circle
+                    fillOpacity: 0.2, // Slightly transparent fill
+                    strokeColor: 'blue', // Blue border
+                    strokeOpacity: 0.5, // Transparent blue border
+                    strokeWeight: 2, // Adjust thickness of the border
+                }}
+            />
             
 
 
-
-
-      
-
-
-
-
-
-
-
-
-             {filteredReports.map((report) => {
-                 const { location } = report;
-                 if (
+            {filteredReports.map((report) => {
+                const { location } = report;
+                if (
                      location &&
                      location.coordinates &&
                      Array.isArray(location.coordinates.coordinates) &&
                      location.coordinates.coordinates.length === 2
-                 ) {
+                ) {
                      const [lng, lat] = location.coordinates.coordinates;
                      const iconUrl = iconUrls[report._id];
 
 
-
-
-
-
-
-
-                     const iconConfig = iconUrl
-                         ? {
-                               url: iconUrl,
-                               scaledSize: new window.google.maps.Size(50, 50),
-                           }
-                         : undefined;
-
-
-
-
-
-
+                    const iconConfig = iconUrl
+                        ? {
+                            url: iconUrl,
+                            scaledSize: new window.google.maps.Size(50, 50),
+                        }
+                        : undefined;
 
 
                      return (
-                         <Marker
-                             key={report._id}
-                             position={{ lat, lng }}
-                             icon={iconConfig}
-                             onClick={() => setSelectedReport(report)}
-                         />
-                     );
-                 }
-                 return null;
-             })}
+                        <Marker
+                            key={report._id}
+                            position={{ lat, lng }}
+                            icon={iconConfig}
+                            onClick={() => setSelectedReport(report)}
+                        />
+                    );
+                }
+                return null;
+            })}
 
 
-
-
-
-
-
-
-             {selectedReport && (
-                 <InfoWindow
-                     position={{
-                         lat: selectedReport.location.coordinates.coordinates[1],
-                         lng: selectedReport.location.coordinates.coordinates[0],
-                     }}
-                     onCloseClick={() => setSelectedReport(null)}
-                 >
-                     <div className="info-window">
-                         <h3>{selectedReport.animal.name} ({selectedReport.animal.species})</h3>
-                         <img
-                             src={selectedReport.animal.imageUrl}
-                             alt={selectedReport.animal.name}
-                             style={{
-                                 width: '150px',
-                                 height: '150px',
-                                 borderRadius: '50%',
-                             }}
-                         />
-                         <p>Breed: {selectedReport.animal.breed}</p>
-                         <p>Color: {selectedReport.animal.color}</p>
-                         <p>Gender: {selectedReport.animal.gender}</p>
-                         <p>Report Type: {selectedReport.reportType}</p>
-                         <p>Fixed Status: {selectedReport.animal.fixed}</p>
-                         <p>Collar: {selectedReport.animal.collar ? "Yes" : "No"}</p>
-                         <p>Date Reported: {new Date(selectedReport.dateReported).toLocaleDateString()}</p>
-                         <p>Address: {selectedReport.location.address || 'Address not provided'}</p>
-                     </div>
+            {selectedReport && (
+                <InfoWindow
+                    position={{
+                        lat: selectedReport.location.coordinates.coordinates[1],
+                        lng: selectedReport.location.coordinates.coordinates[0],
+                    }}
+                    onCloseClick={() => setSelectedReport(null)}
+                >
+                    <div className="info-window">
+                        <h3>{selectedReport.animal.name} ({selectedReport.animal.species})</h3>
+                        <img
+                            src={selectedReport.animal.imageUrl}
+                            alt={selectedReport.animal.name}
+                            style={{
+                                width: '150px',
+                                height: '150px',
+                                borderRadius: '50%',
+                            }}
+                        />
+                        <p>Breed: {selectedReport.animal.breed}</p>
+                        <p>Color: {selectedReport.animal.color}</p>
+                        <p>Gender: {selectedReport.animal.gender}</p>
+                        <p>Report Type: {selectedReport.reportType}</p>
+                        <p>Fixed Status: {selectedReport.animal.fixed}</p>
+                        <p>Collar: {selectedReport.animal.collar ? "Yes" : "No"}</p>
+                        <p>Date Reported: {new Date(selectedReport.dateReported).toLocaleDateString()}</p>
+                        <p>Address: {selectedReport.location.address || 'Address not provided'}</p>
+                    </div>
                  </InfoWindow>
              )}
          </GoogleMap>
       </>
   );
 };
-
-
-
 
 export default Map;
