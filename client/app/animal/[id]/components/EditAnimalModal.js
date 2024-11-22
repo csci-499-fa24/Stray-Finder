@@ -365,6 +365,7 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                             <option value="">Select report type</option>
                             <option value="Lost">Lost</option>
                             <option value="Stray">Stray</option>
+                            <option value="Found">Found</option>
                         </select>
                     </div>
                     <div className="mb-3">
