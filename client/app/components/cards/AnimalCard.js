@@ -1,11 +1,14 @@
 import Link from 'next/link';
+import useAuth from '@/app/hooks/useAuth';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { FaEllipsisV, FaCommentDots } from 'react-icons/fa';
 import CommentModal from '../../components/comments/CommentModal';
+import MarkAsFound from '../mark-as-found/MarkAsFound';
 import './AnimalDropdown.css';
 
 const AnimalCard = ({ report_id, animal_id, name, username, image, species, gender, state, description }) => {
+    const { isAuthenticated, user: currentUser } = useAuth();
     const currentPath = usePathname();
 
     const [isModalOpen, setModalOpen] = useState(false); // State for report modal
@@ -126,13 +129,21 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                         </button>
                         {isDropdownOpen && (
                             <div className="animal-dropdown-menu show">
-                                <button
-                                    className="animal-dropdown-item"
-                                    onClick={handleReportClick}
-                                    aria-label="Report"
-                                >
-                                    Report
-                                </button>
+                                {username !== currentUser?.username && (
+                                    <button
+                                        className="animal-dropdown-item"
+                                        onClick={handleReportClick}
+                                        aria-label="Report"
+                                    >
+                                        Report
+                                    </button>
+                                )}
+                                {state !== 'Found' && isAuthenticated && username === currentUser?.username && (
+                                    <MarkAsFound
+                                        report_id={report_id}
+                                        onClose={() => setDropdownOpen(false)}
+                                    />
+                                )}
                             </div>
                         )}
                     </div>
