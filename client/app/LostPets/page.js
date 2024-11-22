@@ -4,7 +4,6 @@ import Footer from '@/app/components/layouts/Footer/Footer'
 import LostPets from './components/lost-pets'
 import Matches from '@/app/animal/[id]/components/matches'
 import FoundPetsCarousel from '@/app/components/carousel/FoundPetsCarousel'
-import HelpMatchPopUp from '@/app/components/HelpMatchPopUp';
 import { useState } from 'react'
 import './LostPets.css'
 
