@@ -28,6 +28,31 @@ const compareBreed = (breed1, breed2) => {
             ['siberian husky', 'alaskan malamute'], // Group 4: Northern sled dogs
             // Add more groups as needed
         ],
+        rabbit: [
+            ['holland lop', 'mini lop'], // Group 1: Lop breeds
+            ['flemish giant', 'continental giant'], // Group 2: Giant breeds
+        ],
+        hamster: [
+            ['syrian', 'golden'], // Group 1: Syrian hamsters
+            ['dwarf', 'roborovski'], // Group 2: Small hamsters
+        ],
+        guineaPig: [
+            ['american', 'abyssinian'], // Group 1: Common breeds
+            ['peruvian', 'silkie'], // Group 2: Long-haired breeds
+        ],
+        lizard: [
+            ['leopard gecko', 'african fat-tailed gecko'], // Group 1: Gecko types
+            ['bearded dragon', 'chameleon'], // Group 2: Common lizards
+        ],
+        pig: [
+            ['miniature', 'teacup'], // Group 1: Small pig breeds
+            ['pot-bellied'], // Group 2: Common domestic pig breed
+        ],
+        bird: [
+            ['parakeet', 'budgie'], // Group 1: Small parrots
+            ['canary', 'finch'], // Group 2: Small songbirds
+            ['cockatiel', 'lovebird'], // Group 3: Medium-sized parrots
+        ],
     }
 
     // Helper function to check if two breeds are in the same group
