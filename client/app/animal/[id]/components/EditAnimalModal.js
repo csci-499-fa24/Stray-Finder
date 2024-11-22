@@ -6,22 +6,45 @@ import DeleteAnimalModal from './DeleteAnimalModal';
 const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [formData, setFormData] = useState({
-        reportType: reportData?.reportType || '',
-        name: reportData?.animal?.name || '',
-        species: reportData?.animal?.species || '',
-        breed: reportData?.animal?.breed || '',
-        color: reportData?.animal?.color || '',
-        gender: reportData?.animal?.gender || 'Unknown',
-        fixed: reportData?.animal?.fixed || 'Unknown',
-        collar: reportData?.animal?.collar || false,
-        description: reportData?.description || '',
-        location: `Lat: ${reportData?.location?.coordinates?.coordinates[1]}, Lng: ${reportData?.location?.coordinates?.coordinates[0]}` || '',
-        imageUrl: reportData?.animal?.imageUrl || '',
+        reportType: '',
+        name: '',
+        species: '',
+        breed: '',
+        color: '',
+        gender: 'Unknown',
+        fixed: 'Unknown',
+        collar: false,
+        description: '',
+        location: '',
+        imageUrl: '',
         coordinates: {
-            lat: reportData?.location?.coordinates?.coordinates[1] || 40.768,
-            lng: reportData?.location?.coordinates?.coordinates[0] || -73.964,
+            lat: 40.768,
+            lng: -73.964,
         },
     });
+    
+    useEffect(() => {
+        if (reportData) {
+            setFormData({
+                reportType: reportData?.reportType || '',
+                name: reportData?.animal?.name || '',
+                species: reportData?.animal?.species || '',
+                breed: reportData?.animal?.breed || '',
+                color: reportData?.animal?.color || '',
+                gender: reportData?.animal?.gender || 'Unknown',
+                fixed: reportData?.animal?.fixed || 'Unknown',
+                collar: reportData?.animal?.collar || false,
+                description: reportData?.description || '',
+                location: `Lat: ${reportData?.location?.coordinates?.coordinates[1]}, Lng: ${reportData?.location?.coordinates?.coordinates[0]}` || '',
+                imageUrl: reportData?.animal?.imageUrl || '',
+                coordinates: {
+                    lat: reportData?.location?.coordinates?.coordinates[1] || 40.768,
+                    lng: reportData?.location?.coordinates?.coordinates[0] || -73.964,
+                },
+            });
+        }
+    }, [reportData]);
+    
 
     const [file, setFile] = useState(null); // Store the image file
     const [isOtherBreed, setIsOtherBreed] = useState(false);
@@ -44,7 +67,7 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                 'Dachshund',
                 'Boxer',
                 "I don't know",
-                'Other',
+                "Other",
             ],
         },
         {
@@ -59,11 +82,86 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                 'Sphynx',
                 'British Shorthair',
                 "I don't know",
-                'Other',
+                "Other",
             ],
         },
-        { value: 'Unknown', label: "I don't know", breeds: [] },
-    ]
+        {
+            value: 'Rabbit',
+            label: 'Rabbit',
+            breeds: [
+                'Holland Lop',
+                'Netherland Dwarf',
+                'Mini Rex',
+                'Lionhead',
+                'Flemish Giant',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Hamster',
+            label: 'Hamster',
+            breeds: [
+                'Syrian',
+                'Dwarf',
+                'Roborovski',
+                'Chinese',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Guinea Pig',
+            label: 'Guinea Pig',
+            breeds: [
+                'American',
+                'Abyssinian',
+                'Peruvian',
+                'Silkie',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Lizard',
+            label: 'Lizard',
+            breeds: [
+                'Leopard Gecko',
+                'Bearded Dragon',
+                'Crested Gecko',
+                'Chameleon',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Pig',
+            label: 'Pig',
+            breeds: [
+                'Miniature',
+                'Teacup',
+                'Pot-bellied',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Bird',
+            label: 'Bird',
+            breeds: [
+                'Parakeet',
+                'Cockatiel',
+                'Canary',
+                'Lovebird',
+                "I don't know",
+            ],
+        },
+        {
+            value: 'Ferret',
+            label: 'Ferret',
+            breeds: ["I don't know"], // Ferrets don't have many distinct breeds
+        },
+        { 
+            value: 'Unknown', 
+            label: "I don't know", 
+            breeds: [] 
+        },
+    ];    
 
     useEffect(() => {
         // disable scrolling
@@ -177,8 +275,10 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
         uploadData.append('location', JSON.stringify(locationData));
 
         // If an image file is selected, append it to the FormData
-        if (file) {
-            uploadData.append('image', file);
+        if (!file && formData.imageUrl) {
+            uploadData.append('image', formData.imageUrl); // Keep the existing image URL
+        } else if (file) {
+            uploadData.append('image', file); // Append the new file
         }
 
         const animal_id = reportData?.animal?._id;
@@ -451,6 +551,16 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                         <label htmlFor="file" className="form-label">
                             Upload Image (optional)
                         </label>
+                        {formData.imageUrl && (
+                            <div className="mb-3">
+                                <label>Current Image:</label>
+                                <img
+                                    src={formData.imageUrl}
+                                    alt={`${formData.name}'s current`}
+                                    style={{ maxWidth: '100%', maxHeight: '200px', marginBottom: '10px' }}
+                                />
+                            </div>
+                        )}
                         <input
                             type="file"
                             className="form-control"
