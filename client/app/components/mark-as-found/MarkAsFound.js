@@ -45,7 +45,7 @@ const MarkAsFound = ({ report_id, onClose }) => {
                         <h4>Success!</h4>
                         <p>
                             The animal report has been successfully marked as "Found."
-                            Thank you for helping reunite this pet with its owner!
+                            Congratulations!
                         </p>
                         <button
                             className="close-btn"
