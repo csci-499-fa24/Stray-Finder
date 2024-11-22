@@ -109,7 +109,14 @@ export default function MessagePanel({ selectedUser, user, setHasUnreadMessages,
                     <h2 className={styles.panelHeader}>Chat with {selectedUser.username}</h2>
                     <div className={styles.messageHistory}>
                         {loading ? (
-                            <p>Loading...</p>
+            <div
+            className="d-flex justify-content-center align-items-center vh-100"
+            style={{ marginTop: '-50px' }} // Adjust as needed for vertical alignment
+        >
+            <div className="spinner-border text-primary" role="status">
+                <span className="sr-only"></span>
+            </div>
+        </div>
                         ) : (
                             messages.map((msg, index) => {
                                 const isSentByCurrentUser = msg.senderId === user._id;
