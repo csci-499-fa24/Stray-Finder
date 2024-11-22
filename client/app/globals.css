@@ -287,3 +287,13 @@ body {
     flex: 1;
     height: 20px;
 }
+
+.card-text {
+    overflow: hidden; /* Hides any overflowing content */
+    white-space: nowrap; /* Prevents the text from wrapping to the next line */
+    text-overflow: ellipsis; /* Adds "..." at the end of the truncated text */
+    display: block; /* Ensures it's treated as a block element */
+    max-width: 100%; /* Ensures it stays within the card's width */
+    font-size: 0.9rem; /* Optional: Adjust the font size if needed */
+    color: #555; /* Optional: Adjust text color */
+}
