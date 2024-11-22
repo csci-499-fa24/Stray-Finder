@@ -72,7 +72,7 @@ const FeaturedStrays = () => {
 
     return (
         <div className="container text-end">
-            <div className="text-center h2 p-3">Animal Reports in Your Area</div>
+            <div className="text-center h2 p-3">Featured Strays</div>
             <hr />
 
             {/* Render the filters */}
@@ -158,9 +158,14 @@ const MemoizedFilters = memo(Filters)
 
 const ReportList = ({ reports, loading }) => {
     if (loading) {
-        return <div className="spinner-border text-primary" role="status">
-        <span className="sr-only"></span>
-      </div>
+        return  <div
+        className="d-flex justify-content-center align-items-center vh-100"
+        style={{ marginTop: '-50px' }} // Adjust as needed for vertical alignment
+    >
+        <div className="spinner-border text-primary" role="status">
+            <span className="sr-only"></span>
+        </div>
+    </div>
     }
 
     const strayReports = reports.filter(report => report?.reportType === 'Stray')
