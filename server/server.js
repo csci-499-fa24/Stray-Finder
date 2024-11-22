@@ -3,7 +3,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const app = express()
 const { exec } = require('child_process')
-const cron = require('node-cron');
+const cron = require('node-cron')
 
 ///////////////////////////////////////////////////////////////////////////
 /**
@@ -31,10 +31,8 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong!' })
 })
 ///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////
-
 /**
  * Section for APIs
  */
@@ -50,7 +48,7 @@ const email = require('./routes/email')
 const profile = require('./routes/profile')
 const matchVotes = require('./routes/MatchVotes')
 const commentRoutes = require('./routes/comment')
-const { sendSummaryEmails } = require('./utils/notificationSummary');
+const { sendSummaryEmails } = require('./utils/notificationSummary')
 /**
  * Section for authentication routes
  */
@@ -76,38 +74,39 @@ app.use('/api/comments/', commentRoutes)
 const createStoryFromHighMatch = require('./utils/matchChecker')
 app.use('/special/route/for/demo/', createStoryFromHighMatch)
 
-// setInterval(async () => {
-//     console.log('Running createStoryFromHighMatch...')
-//     await createStoryFromHighMatch()
-// }, 10 * 60 * 1000)
-
 ///////////////////////////////////////////////////////////////////////////
 /**
  * Section for cron jobs
  */
-// Daily Summary (e.g., at 8:00 AM)
-cron.schedule('0 0 * * *', async () => { // Daily at midnight
-    console.log('Sending daily message summaries...');
-    await sendSummaryEmails('daily');
-});
+cron.schedule('0 0 * * *', async () => {
+    // Daily at midnight
+    console.log('Sending daily message summaries...')
+    await sendSummaryEmails('daily')
+})
 
-cron.schedule('0 0 * * SUN', async () => { // Weekly on Sundays
-    console.log('Sending weekly message summaries...');
-    await sendSummaryEmails('weekly');
-});
+cron.schedule('0 0 * * SUN', async () => {
+    // Weekly on Sundays
+    console.log('Sending weekly message summaries...')
+    await sendSummaryEmails('weekly')
+})
 
-cron.schedule('0 0 1 * *', async () => { // Monthly on the 1st
-    console.log('Sending monthly message summaries...');
-    await sendSummaryEmails('monthly');
-});
+cron.schedule('0 0 1 * *', async () => {
+    // Monthly on the 1st
+    console.log('Sending monthly message summaries...')
+    await sendSummaryEmails('monthly')
+})
 ///////////////////////////////////////////////////////////////////////////
 
 const port = process.env.PORT || 8080
+const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost'
+
 // Load DB then start server
 const start = async () => {
     try {
         await connectDB(process.env.MONGO_URI)
-        app.listen(port, console.log(`Server started on port ${port}`))
+        app.listen(port, host, () => {
+            console.log(`Server started on port ${port}`)
+        })
     } catch (error) {
         console.log(error)
     }
