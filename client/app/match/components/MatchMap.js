@@ -96,6 +96,7 @@ const MatchMap = ({report1, report2}) => {
 	// Preload and create circular icons for each report
 	const iconUrlsRef = useRef({});
 	useEffect(() => {
+		iconUrlsRef.current = {};
 		markers.forEach((report) => {
 			if (!iconUrlsRef.current[report.id]) {
 				createCircularIcon(report.imageUrl, (iconUrl) => {
@@ -107,7 +108,7 @@ const MatchMap = ({report1, report2}) => {
 				});
 			}
 		});
-	  }, [markers]);
+	}, [markers]);
 
 	if (!isLoaded) {
 		return <div>Error loading Google Maps</div>;

@@ -9,10 +9,7 @@ import Map from './MatchMap';
 const MatchVote = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [allMatches, setAllMatches] = useState([]) // Store all matches
-    const [displayedMatches, setDisplayedMatches] = useState([]) // Matches currently displayed
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [page, setPage] = useState(1) // Track pages for local pagination
-    const limit = 1;
 
     const loadMatches = async () => {
         setIsLoading(true);
@@ -38,14 +35,9 @@ const MatchVote = () => {
                 const sortedMatches = data.matches.sort(
                     (a, b) => b.score - a.score
                 )
-                setAllMatches(sortedMatches)
-
-                // Show the first batch
-                setDisplayedMatches(sortedMatches.slice(0, limit))
-                setPage(1) // Reset page for display
-            } else {
-                setDisplayedMatches([])
+                setAllMatches(sortedMatches);
             }
+
         } catch (error) {
             console.error('Error loading matches:', error)
         } finally {
@@ -82,20 +74,14 @@ const MatchVote = () => {
                     };
                 };
             });
-            setAllMatches(updatedMatches);
+            if (JSON.stringify(updatedMatches) !== JSON.stringify(allMatches)) {
+                setAllMatches(updatedMatches);
+            }
 
         } catch (error) {
             console.log('failed geting match votes,', error);
         }
     }
-
-    const loadMore = () => {
-        const nextPage = page + 1
-        const newDisplayedMatches = allMatches.slice(nextPage, limit)
-        setDisplayedMatches(newDisplayedMatches)
-        setPage(nextPage)
-    }
-    
     useEffect(() => {
         loadMatches();
     }, []);
@@ -142,68 +128,66 @@ const MatchVote = () => {
             console.log("failed to create match,", error);
         }
     }
+
+    const LoadNext = () => {
+        setCurrentIndex(currentIndex + 1);
+    }
+
+    if (isLoading || allMatches.length === 0) {
+        return <div>Loading...</div>; // Loading indicator until data is available
+    }
+    const currentMatch = allMatches[currentIndex];
+
     return (
         <div>
-            <div className={styles.titleContainer}>
-                <h2 className={styles.heading}>Help us match these guys</h2>
-            </div>
-                <div className="row justify-content-center">
-                    {displayedMatches.length > 0 ? (
-                        displayedMatches.map(({ lostReport, strayReport, matchVotes }, index) => (
-                            <div key={index} className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
-                                <div className={styles.container}>
-                                    {/* Lost Report Card */}
-                                    <div className={styles.card}>
-                                        <AnimalCard
-                                            report_id={lostReport._id}
-                                            animal_id={lostReport.animal._id}
-                                            name={lostReport.animal.name}
-                                            image={lostReport.animal.imageUrl}
-                                            species={lostReport.animal.species}
-                                            gender={lostReport.animal.gender}
-                                            state={lostReport.location?.address}
-                                            description={lostReport.description}
-                                        />
-                                    </div>
-
-                                    <Map report1={lostReport} report2={strayReport}/>
-
-                                    {/* stray Report Card */}
-                                    <div className={styles.card}>
-                                        <AnimalCard
-                                            report_id={strayReport._id}
-                                            animal_id={strayReport.animal._id}
-                                            name={strayReport.animal.name}
-                                            image={strayReport.animal.imageUrl}
-                                            species={strayReport.animal.species}
-                                            gender={strayReport.animal.gender}
-                                            state={strayReport.location?.address}
-                                            description={strayReport.description}
-                                        />
-                                    </div>
-                                    
+            {currentIndex < allMatches.length ? (
+                <div>
+                    <div className={styles.titleContainer}>
+                        <h2 className={styles.heading}>Help us match these guys</h2>
+                    </div>
+                    <div className="row justify-content-center">
+                        <div className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
+                            <div className={styles.container}>
+                                {/* Report1 Card */}
+                                <div className={styles.card}>
+                                    <AnimalCard
+                                        report_id={currentMatch.lostReport._id}
+                                        name={currentMatch.lostReport.animal.name}
+                                        image={currentMatch.lostReport.animal.imageUrl}
+                                    />
                                 </div>
-                                <div className={styles.centerContainer}>
-                                    <p>Are the two images the same animal?</p>
-                                    <div className={styles.buttonContainer}>
-                                        <FontAwesomeIcon 
-                                            icon={faCircleCheck}
-                                            onClick={() => handleClick({lostReport, strayReport, vote: 'yes'})}
-                                            className={styles.iconCheckButton}
-                                        />
-                                        <FontAwesomeIcon 
-                                            icon={faCircleXmark}
-                                            onClick={() => handleClick({lostReport, strayReport, vote: 'no'})}
-                                            className={styles.iconXButton}
-                                        />
-                                    </div>
+
+                                <Map report1={currentMatch.lostReport} report2={currentMatch.strayReport}/>
+
+                                {/* Report2 Card */}
+                                <div className={styles.card}>
+                                    <AnimalCard
+                                        report_id={currentMatch.strayReport._id}
+                                        name={currentMatch.strayReport.animal.name}
+                                        image={currentMatch.strayReport.animal.imageUrl}
+                                    />
                                 </div>
-                                <div>
-                                    {matchVotes ? (
+                            </div>
+                            <div className={styles.centerContainer}>
+                                <p>Are the two images the same animal?</p>
+                                <div className={styles.buttonContainer}>
+                                    <FontAwesomeIcon 
+                                        icon={faCircleCheck}
+                                        onClick={() => handleClick({lostReport: currentMatch.lostReport, strayReport: currentMatch.strayReport, vote: 'yes'})}
+                                        className={styles.iconCheckButton}
+                                    />
+                                    <FontAwesomeIcon 
+                                        icon={faCircleXmark}
+                                        onClick={() => handleClick({lostReport: currentMatch.lostReport, strayReport: currentMatch.strayReport, vote: 'no'})}
+                                        className={styles.iconXButton}
+                                    />
+                                </div>
+                                <div style={{ width: '100%', margin: '0 auto' }}>
+                                    {currentMatch.matchVotes && (
                                     <div>
                                         <div style= {{textAlign:'center'}}>
                                             <h2 className="mb-0 font-weight-bold">
-                                                {`${matchVotes.yes} : ${matchVotes.no}`}
+                                                {`${currentMatch.matchVotes.yes} : ${currentMatch.matchVotes.no}`}
                                             </h2>
                                             <p className="text-muted">
                                                 Yes : No
@@ -215,42 +199,35 @@ const MatchVote = () => {
                                             <ProgressBar
                                             striped
                                             variant="success"
-                                            now={(matchVotes.yes / (matchVotes.yes + matchVotes.no)) * 100
+                                            now={(currentMatch.matchVotes.yes / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
                                             }
                                             />
                                             <ProgressBar
                                             striped
                                             variant="danger"
-                                            now={(matchVotes.no / (matchVotes.yes + matchVotes.no)) * 100
+                                            now={(currentMatch.matchVotes.no / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
                                             }
                                             />
                                         </ProgressBar>
-                                    </div>
-                                    ) : (
-                                        <ProgressBar 
-                                            striped
-                                            // className={styles.grayBar}
-                                            now={100}
-                                        />
-                                    )}
+                                    </div>)}
                                 </div>
-                            </div> 
-                        ))
-                    ) : (
-                        <p className="text-center">No matches found.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {currentIndex < allMatches.length && (
+                        <div className="text-center my-4">
+                            <button
+                                onClick={LoadNext}
+                                className="btn btn-primary"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Loading...' : 'Load More'}
+                            </button>
+                        </div>
                     )}
                 </div>
-            
-            {displayedMatches.length < allMatches.length && (
-                <div className="text-center my-4">
-                    <button
-                        onClick={loadMore}
-                        className="btn btn-primary"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Loading...' : 'Load More'}
-                    </button>
-                </div>
+            ) : (
+                <p>There are no more pets to match! Thanks for helping us match all the pets!</p>
             )}
         </div>
     );
