@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { FaEllipsisV, FaCommentDots } from 'react-icons/fa';
 import CommentModal from '../../components/comments/CommentModal';
 import MarkAsFound from '../mark-as-found/MarkAsFound';
+import EditAnimalModal from '../../animal/[id]/components/EditAnimalModal';
 import './AnimalDropdown.css';
 
 const AnimalCard = ({ report_id, animal_id, name, username, image, species, gender, state, description }) => {
@@ -16,6 +17,7 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
     const [isLoginModalOpen, setLoginModalOpen] = useState(false); // State for login modal
     const [isDropdownOpen, setDropdownOpen] = useState(false); // State for dropdown visibility
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false); // State for comment modal
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [commentCount, setCommentCount] = useState(0); // State for comment count
 
     // Fetch the comment count for this report
@@ -129,20 +131,30 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                         </button>
                         {isDropdownOpen && (
                             <div className="animal-dropdown-menu show">
-                                {username !== currentUser?.username && (
-                                    <button
-                                        className="animal-dropdown-item"
-                                        onClick={handleReportClick}
-                                        aria-label="Report"
-                                    >
-                                        Report
-                                    </button>
-                                )}
                                 {state !== 'Found' && isAuthenticated && username === currentUser?.username && (
                                     <MarkAsFound
                                         report_id={report_id}
                                         onClose={() => setDropdownOpen(false)}
                                     />
+                                )}
+                                {isAuthenticated && username === currentUser?.username && (
+                                    <button
+                                        className="animal-dropdown-item"
+                                        onClick={() => {
+                                            setIsEditModalOpen(true);
+                                            setDropdownOpen(false);
+                                        }}
+                                    >
+                                        Edit Animal
+                                    </button>
+                                )}
+                                {isAuthenticated && username !== currentUser?.username && (
+                                    <button
+                                        className="animal-dropdown-item"
+                                        onClick={handleReportClick}
+                                    >
+                                        Report
+                                    </button>
                                 )}
                             </div>
                         )}
@@ -224,6 +236,27 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                             </button>
                         </div>
                     </div>
+                )}
+
+                {/* Edit Modal */}
+                {isEditModalOpen && (
+                    <EditAnimalModal
+                        isOpen={isEditModalOpen}
+                        onClose={() => setIsEditModalOpen(false)}
+                        reportData={{
+                            reportType: state,
+                            animal: {
+                                name,
+                                species,
+                                imageUrl: image,
+                                gender,
+                            },
+                            description,
+                            reportedBy: {
+                                username,
+                            },
+                        }}
+                    />
                 )}
 
                 {/* Comment Modal */}
