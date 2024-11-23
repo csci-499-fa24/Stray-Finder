@@ -19,6 +19,8 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false); // State for comment modal
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [commentCount, setCommentCount] = useState(0); // State for comment count
+    const [detailedReport, setDetailedReport] = useState(null);
+
 
     const dropdownRef = useRef(null); // Create a ref for the dropdown
 
@@ -59,6 +61,20 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
 
         fetchCommentCount();
     }, [report_id]);
+
+    //fetch detailed report 
+    const fetchDetailedReport = async () => {
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report/${report_id}`
+            );
+            const data = await response.json();
+            setDetailedReport(data.report); // Store full report data
+            setIsEditModalOpen(true);      // Open the modal
+        } catch (error) {
+            console.error("Error fetching report data:", error);
+        }
+    };    
 
     // Toggle Dropdown
     const toggleDropdown = () => {
@@ -158,14 +174,14 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                                     <button
                                         className="animal-dropdown-item"
                                         onClick={() => {
-                                            setIsEditModalOpen(true);
+                                            fetchDetailedReport();
                                             setDropdownOpen(false);
                                         }}
                                     >
                                         Edit
                                     </button>
                                 )}
-                                {isAuthenticated && username !== currentUser?.username && (
+                                {username !== currentUser?.username && (
                                     <button
                                         className="animal-dropdown-item"
                                         onClick={handleReportClick}
@@ -260,19 +276,7 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                     <EditAnimalModal
                         isOpen={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
-                        reportData={{
-                            reportType: state,
-                            animal: {
-                                name,
-                                species,
-                                imageUrl: image,
-                                gender,
-                            },
-                            description,
-                            reportedBy: {
-                                username,
-                            },
-                        }}
+                        reportData={detailedReport}
                     />
                 )}
 
