@@ -4,14 +4,15 @@ import styles from '../MatchVote.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-//npm install @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons
+import Map from './MatchMap';
 
 const MatchVote = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [allMatches, setAllMatches] = useState([]) // Store all matches
     const [displayedMatches, setDisplayedMatches] = useState([]) // Matches currently displayed
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [page, setPage] = useState(1) // Track pages for local pagination
-    const limit = 20;
+    const limit = 1;
 
     const loadMatches = async () => {
         setIsLoading(true);
@@ -31,8 +32,6 @@ const MatchVote = () => {
             }
 
             const data = await response.json()
-            // console.log('Fetched matches:', data.matches)
-
             if (data.matches.length > 0) {
 
                 // Sort matches by score in descending order
@@ -58,13 +57,8 @@ const MatchVote = () => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/match-votes/`);
             const data = await response.json();
-            // console.log(data);
-            // console.log(displayedMatches)
-            const updatedMatches = displayedMatches.map(match => {
-                // console.log(match)
+            const updatedMatches = allMatches.map(match => {
                 const matchVote = data.find(vote =>  {
-                    // console.log('vote.report1:', vote.report1, 'vote.report2:', vote.report2);
-                    // console.log('match.lostReport:', match.lostReport, 'match.strayReport:', match.strayReport);
                     return (
                         (vote.report1._id === match.lostReport._id && vote.report2._id === match.strayReport._id) ||
                         (vote.report1._id === match.strayReport._id && vote.report2._id === match.lostReport._id)
@@ -88,7 +82,7 @@ const MatchVote = () => {
                     };
                 };
             });
-            setDisplayedMatches(updatedMatches);
+            setAllMatches(updatedMatches);
 
         } catch (error) {
             console.log('failed geting match votes,', error);
@@ -97,7 +91,7 @@ const MatchVote = () => {
 
     const loadMore = () => {
         const nextPage = page + 1
-        const newDisplayedMatches = allMatches.slice(0, nextPage * limit)
+        const newDisplayedMatches = allMatches.slice(nextPage, limit)
         setDisplayedMatches(newDisplayedMatches)
         setPage(nextPage)
     }
@@ -129,8 +123,6 @@ const MatchVote = () => {
                     credentials: "include",
                 }
             )
-            const data = await response.json();
-            // console.log('Response data:', data);
 
             const status = response.status;
             if(status === 201){
@@ -150,7 +142,6 @@ const MatchVote = () => {
             console.log("failed to create match,", error);
         }
     }
-    // console.log(displayedMatches);
     return (
         <div>
             <div className={styles.titleContainer}>
@@ -158,7 +149,7 @@ const MatchVote = () => {
             </div>
                 <div className="row justify-content-center">
                     {displayedMatches.length > 0 ? (
-                        displayedMatches.map(({ lostReport, strayReport, score, matchVotes }, index) => (
+                        displayedMatches.map(({ lostReport, strayReport, matchVotes }, index) => (
                             <div key={index} className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
                                 <div className={styles.container}>
                                     {/* Lost Report Card */}
@@ -175,15 +166,7 @@ const MatchVote = () => {
                                         />
                                     </div>
 
-                                    {/* Match Score */}
-                                    <div className="col-md-2 text-center">
-                                        <h2 className="mb-0 font-weight-bold">
-                                            {Math.round(score * 100)}%
-                                        </h2>
-                                        <p className="text-muted">
-                                            Match Score
-                                        </p>
-                                    </div>
+                                    <Map report1={lostReport} report2={strayReport}/>
 
                                     {/* stray Report Card */}
                                     <div className={styles.card}>
@@ -201,7 +184,7 @@ const MatchVote = () => {
                                     
                                 </div>
                                 <div className={styles.centerContainer}>
-                                    <h2>Are the two images the same animal?</h2>
+                                    <p>Are the two images the same animal?</p>
                                     <div className={styles.buttonContainer}>
                                         <FontAwesomeIcon 
                                             icon={faCircleCheck}
