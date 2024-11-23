@@ -102,7 +102,9 @@ const MatchVote = () => {
                     setUnvotedMatchIds(prev => [...prev, match]);
                 }
             });
-        };
+        } else {
+            setUnvotedMatchIds(allMatches);
+        }
     }
 
     useEffect(() => {
