@@ -27,7 +27,13 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            // Check if the click is outside the dropdown AND the MarkAsFound modal
+            const markAsFoundModal = document.querySelector('.mark-as-found-modal-overlay'); // Adjust selector if needed
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target) &&
+                (!markAsFoundModal || !markAsFoundModal.contains(event.target)) // Exclude modal clicks
+            ) {
                 setDropdownOpen(false);
             }
         };
@@ -36,8 +42,7 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
-    
+    }, []);    
 
     // Fetch the comment count for this report
     useEffect(() => {

@@ -13,12 +13,14 @@
 }
 
 .mark-as-found-modal-content {
+    position: relative;
     background: #fff;
     padding: 20px;
     border-radius: 10px;
     width: 300px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
 
 .mark-as-found-modal-content h4 {
