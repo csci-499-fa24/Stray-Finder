@@ -6,10 +6,10 @@ export const checkAuthStatus = async () => {
                 method: 'GET',
                 credentials: 'include',
             }
-        );
+        )
 
         if (response.ok) {
-            const authData = await response.json();
+            const authData = await response.json()
             if (authData.authenticated) {
                 // Fetch user details from /api/user
                 const userResponse = await fetch(
@@ -18,20 +18,20 @@ export const checkAuthStatus = async () => {
                         method: 'GET',
                         credentials: 'include',
                     }
-                );
+                )
 
                 if (userResponse.ok) {
-                    const userData = await userResponse.json();
-                    return { authenticated: true, user: userData }; // Return the user data along with authenticated status
+                    const userData = await userResponse.json()
+                    return { authenticated: true, user: userData } // Return the user data along with authenticated status
                 }
             }
         }
-        return { authenticated: false, user: null }; // Return false if not authenticated
+        return { authenticated: false, user: null } // Return false if not authenticated
     } catch (error) {
-        console.error('Error checking authentication:', error);
-        return { authenticated: false, user: null };
+        console.error('Error checking authentication:', error)
+        return { authenticated: false, user: null }
     }
-};
+}
 
 export const registerUser = async (username, email, password) => {
     try {
@@ -45,24 +45,20 @@ export const registerUser = async (username, email, password) => {
                 body: JSON.stringify({ username, email, password }),
                 credentials: 'include',
             }
-        );
-
-        const errorData = await response.json().catch(() => null); // Ensure we parse error data even if not used directly
+        )
 
         if (!response.ok) {
-            const message = errorData?.message || 'Registration failed';
-            return { error: true, message, errorData }; // Include errorData in the returned object
+            const errorData = await response.json().catch(() => null)
+            const message = errorData?.message || 'Registration failed'
+            return { error: true, message } // Return error structure instead of throwing
         }
 
-        return await response.json();
+        return await response.json()
     } catch (error) {
-        return {
-            error: true,
-            message: 'Server error. Please try again later.',
-            errorData: null, // Explicitly include errorData in case of network/server error
-        };
+        return { error: true, message: 'Server error. Please try again later.' }
     }
-};
+}
+
 
 export const loginUser = async (username, password) => {
     try {
@@ -76,40 +72,35 @@ export const loginUser = async (username, password) => {
                 body: JSON.stringify({ username, password }),
                 credentials: 'include',
             }
-        );
-
-        const errorData = await response.json().catch(() => null); // Parse error data if present
+        )
 
         if (!response.ok) {
-            const message = errorData?.message || 'Incorrect username or password';
-            return { error: true, message, errorData }; // Include errorData in the response
+            const errorData = await response.json().catch(() => null)
+            const message = 'Incorrect username or password'
+            return { error: true, message }
         }
 
-        return await response.json();
+        return await response.json()
     } catch (error) {
-        return {
-            error: true,
-            message: 'Server error. Please try again later.',
-            errorData: null, // Explicitly include errorData for uniformity
-        };
+        return { error: true, message: 'Server error. Please try again later.' }
     }
-};
+}
 
 export const logoutUser = async () => {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/logout`, {
             method: 'POST',
-            credentials: 'include',
+            credentials: 'include'
         });
-
+        
         if (!response.ok) {
-            const errorData = await response.json().catch(() => null); // Parse error data if present
-            throw new Error(`Failed to logout: ${errorData?.message || 'Unknown error'}`);
+            throw new Error('Failed to logout');
         }
-
+        
         localStorage.removeItem('token');
         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     } catch (error) {
         console.error('Error logging out:', error);
     }
 };
+
