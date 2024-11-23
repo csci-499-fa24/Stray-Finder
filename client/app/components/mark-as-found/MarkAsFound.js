@@ -38,8 +38,8 @@ const MarkAsFound = ({ report_id, onClose }) => {
     };
 
     const modalContent = (
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className="mark-as-found-modal-overlay">
+            <div className="mark-as-found-modal-content">
                 {isSuccess ? (
                     <>
                         <h4>Success!</h4>

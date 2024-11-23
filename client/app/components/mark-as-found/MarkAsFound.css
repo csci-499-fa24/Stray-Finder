@@ -1,5 +1,5 @@
 /* Modal Styling */
-.modal-overlay {
+.mark-as-found-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -12,7 +12,7 @@
     z-index: 1000;
 }
 
-.modal-content {
+.mark-as-found-modal-content {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -21,33 +21,43 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.modal-content h4 {
+.mark-as-found-modal-content h4 {
     margin-bottom: 10px;
     font-size: 1.2rem;
 }
 
-.modal-content p {
+.mark-as-found-modal-content p {
     margin-bottom: 20px;
     color: #555;
+}
+
+.confirm-btn,
+.cancel-btn {
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 10px;
 }
 
 .confirm-btn {
     background: #28a745;
     color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
+}
+
+.confirm-btn:hover {
+    background: #218838;
 }
 
 .cancel-btn {
     background: #dc3545;
     color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background: #c82333;
 }
 
 .mark-as-found-btn {

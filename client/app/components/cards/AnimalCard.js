@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import useAuth from '@/app/hooks/useAuth';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { FaEllipsisV, FaCommentDots } from 'react-icons/fa';
 import CommentModal from '../../components/comments/CommentModal';
@@ -19,6 +19,23 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false); // State for comment modal
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [commentCount, setCommentCount] = useState(0); // State for comment count
+
+    const dropdownRef = useRef(null); // Create a ref for the dropdown
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownOpen(false);
+            }
+        };
+    
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+    
 
     // Fetch the comment count for this report
     useEffect(() => {
@@ -121,7 +138,7 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                         }}
                     />
                     {/* Dropdown toggle */}
-                    <div className="animal-dropdown-container">
+                    <div className="animal-dropdown-container" ref={dropdownRef}>
                         <button
                             className="animal-dropdown-toggle"
                             onClick={toggleDropdown}
