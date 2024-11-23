@@ -14,15 +14,24 @@ const LoginForm = () => {
         e.preventDefault();
         setErrorMessage(''); // Reset error message on new attempt
 
+        console.log('Logging in with:', { username, password });
+
         const result = await loginUser(username, password);
+        console.log('Login result:', result);
+
         if (result.error) {
             // Set the error message if the loginUser function returns an error
             setErrorMessage(result.message);
+            console.error('Login error:', result.message);
         } else {
+            console.log('Login successful');
             toast.success('Login successful!', {
                 duration: 2000, // Toast will show for 2 seconds
             });
-            // Login successful, redirect
+
+            // After login success, check the result and the authentication state
+            // For debugging purposes, log out the user and their state
+            console.log('Redirecting to:', redirect);
             router.push(redirect);
         }
     };
