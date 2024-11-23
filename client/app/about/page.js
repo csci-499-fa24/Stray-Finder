@@ -95,7 +95,7 @@ export default function AboutPage() {
             Don't forget our honorary members:  
             Vi, who saved our front end;  
             Ken, who improved the user experience with actual registration and login messages;  
-            Krina, who fixed up Andy's broken features;  
+            Krina, who fixed up andy's broken features;  
             Meheraan, who built the messaging system from the ground up.
           </p>
         </div>
