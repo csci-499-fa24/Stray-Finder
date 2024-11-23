@@ -81,23 +81,22 @@ export const loginUser = async (username, password) => {
             }
         );
 
-        // Log the response status and body for debugging
+        // Log the response status for debugging
         console.log('Login response status:', response.status);
-        const errorData = await response.json().catch((error) => {
-            console.error('Error parsing response JSON:', error);
-            return null;
-        });
+
+        // Parse the response JSON only once
+        const result = await response.json();
 
         if (!response.ok) {
-            console.error('Login failed:', errorData); // Log the error data if the response is not OK
-            const message = errorData?.message || 'Incorrect username or password';
-            return { error: true, message, errorData }; // Include errorData in the response
+            // Log error data if the response is not OK
+            console.error('Login failed:', result); 
+            const message = result?.message || 'Incorrect username or password';
+            return { error: true, message, errorData: result }; // Include error data in the response
         }
 
         // Log the successful response
-        const successData = await response.json();
-        console.log('Login successful, received data:', successData);
-        return successData;
+        console.log('Login successful, received data:', result);
+        return result;
     } catch (error) {
         console.error('Error during login request:', error);
         return {
