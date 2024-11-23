@@ -94,21 +94,22 @@ const MatchMap = ({report1, report2}) => {
 	];
 
 	// Preload and create circular icons for each report
-	const iconUrlsRef = useRef({});
+
 	useEffect(() => {
-		iconUrlsRef.current = {};
-		markers.forEach((report) => {
-			if (!iconUrlsRef.current[report.id]) {
-				createCircularIcon(report.imageUrl, (iconUrl) => {
-					iconUrlsRef.current[report.id] = iconUrl;
+		setIconUrls({});
+
+		// Process markers to create icons if not already cached
+		markers.forEach((marker) => {
+			createCircularIcon(marker.imageUrl, (iconUrl) => {
+				if (iconUrl) {
 					setIconUrls((prev) => ({
 						...prev,
-						[report.id]: iconUrl,
+						[marker.id]: iconUrl, // Set the icon URL for this specific marker
 					}));
-				});
-			}
+				}
+			});
 		});
-	}, [markers]);
+	}, [report1, report2]);
 
 	if (!isLoaded) {
 		return <div>Error loading Google Maps</div>;

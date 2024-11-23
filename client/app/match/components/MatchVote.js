@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import AnimalCard from './MatchCard'
+import useAuth from "@/app/hooks/useAuth";
 import styles from '../MatchVote.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -7,13 +8,15 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Map from './MatchMap';
 
 const MatchVote = () => {
+    const { isAuthenticated, user } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [allMatches, setAllMatches] = useState([]) // Store all matches
+    const [allMatchesWithId, setAllMatchesWithId] = useState([])
+    const [unvotedMatchIds, setUnvotedMatchIds] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const loadMatches = async () => {
         setIsLoading(true);
-
         try {
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/match/high`,
@@ -29,8 +32,8 @@ const MatchVote = () => {
             }
 
             const data = await response.json()
-            if (data.matches.length > 0) {
 
+            if (data.matches.length > 0) {
                 // Sort matches by score in descending order
                 const sortedMatches = data.matches.sort(
                     (a, b) => b.score - a.score
@@ -59,6 +62,7 @@ const MatchVote = () => {
                 if (matchVote) {
                     return {
                         ...match,
+                        id: matchVote._id,
                         matchVotes: {
                             yes: matchVote.yes,
                             no: matchVote.no
@@ -75,13 +79,32 @@ const MatchVote = () => {
                 };
             });
             if (JSON.stringify(updatedMatches) !== JSON.stringify(allMatches)) {
-                setAllMatches(updatedMatches);
+                setAllMatchesWithId(updatedMatches);
+                // console.log(updatedMatches);
             }
 
         } catch (error) {
             console.log('failed geting match votes,', error);
         }
     }
+
+    const checkForOverlaps = (allMatches, user) => {
+        if(user){
+            // Iterate over allMatches
+            allMatches.forEach((match) => {
+                // Check if match.id exists in user.matchVotes
+                const isVoted = user.matchVotes.some(vote => vote.matchVotesId === match.id);
+                
+                // console.log(match.id);
+                // If no overlap, push match to unvotedMatchIds
+                if (!isVoted) {
+                    // console.log('hello');
+                    setUnvotedMatchIds(prev => [...prev, match]);
+                }
+            });
+        };
+    }
+
     useEffect(() => {
         loadMatches();
     }, []);
@@ -91,6 +114,10 @@ const MatchVote = () => {
             getMatchVotes();
         }
     }, [allMatches]);
+
+    useEffect(() => {
+        checkForOverlaps(allMatchesWithId, user);
+    }, [user, isAuthenticated, allMatchesWithId]);
 
     const handleClick = async ({lostReport, strayReport, vote}) => {
         try {
@@ -136,11 +163,13 @@ const MatchVote = () => {
     if (isLoading || allMatches.length === 0) {
         return <div>Loading...</div>; // Loading indicator until data is available
     }
-    const currentMatch = allMatches[currentIndex];
+    const currentMatch = unvotedMatchIds[currentIndex];
+
+    // console.log(unvotedMatchIds);
 
     return (
         <div>
-            {currentIndex < allMatches.length ? (
+            {currentIndex < unvotedMatchIds.length ? (
                 <div>
                     <div className={styles.titleContainer}>
                         <h2 className={styles.heading}>Help us match these guys</h2>
