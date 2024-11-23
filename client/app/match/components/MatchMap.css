@@ -1,0 +1,91 @@
+/* Map container styling */
+.map-container {
+    max-width: 500px;
+    max-height: 500px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Marker hover effect */
+.marker {
+    transition: transform 0.2s ease; /* Smooth scale transition */
+}
+
+.marker:hover {
+    transform: scale(1.1); /* Scale up the marker on hover */
+}
+
+/* InfoWindow styling */
+.info-window {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.info-window h3 {
+    margin: 0 0 5px 0;
+    color: #333;
+}
+
+.info-window img {
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #ccc; /* Add a border to the image */
+}
+
+.info-window p {
+    margin: 5px 0;
+    color: #555;
+}
+
+/* Responsive adjustments */
+/* Responsive filter container adjustments */
+@media (max-width: 768px) {
+    .filter-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-dropdown {
+        width: 100%;
+    }
+}
+
+/* Filter container styling */
+.filter-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 0px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 0px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Filter label styling */
+.filter-container label {
+    font-weight: bold;
+    color: #333;
+    margin-right: 5px;
+}
+
+/* Filter dropdown styling */
+.filter-dropdown {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.2s ease;
+}
+
+.filter-dropdown:focus {
+    outline: none;
+    border-color: #007bff; /* Highlight color on focus */
+}
