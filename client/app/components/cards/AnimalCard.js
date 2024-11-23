@@ -162,7 +162,7 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                                             setDropdownOpen(false);
                                         }}
                                     >
-                                        Edit Animal
+                                        Edit
                                     </button>
                                 )}
                                 {isAuthenticated && username !== currentUser?.username && (
