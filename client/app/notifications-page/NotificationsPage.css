@@ -1,0 +1,141 @@
+.notifications-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    background-image: url('/notif-background.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #f8f9fa;
+  }
+  
+  .notifications-container {
+    flex: 1;
+    margin: 0 auto;
+    max-width: 1400px;
+    min-width: 1400px;
+    padding: 40px;
+    box-sizing: border-box;
+  }
+  
+  .notifications-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #343a40;
+  }
+  
+  .time-group-title {
+    margin-top: 40px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #495057;
+    border-bottom: 3px solid #e9ecef;
+    padding-bottom: 10px;
+  }
+  
+  .notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .notification-item {
+    display: flex;
+    justify-content: space-between; /* Align left and right sections */
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 1400px;
+  }
+  
+  .notification-item.unread {
+    background-color: #f8f9fa;
+    border-left: 6px solid #007bff;
+  }
+  
+  .notification-left {
+    display: flex;
+    align-items: flex-start;
+    flex: 3;
+    margin-top: 20px;
+  }
+  
+  .profile-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+  
+  .notification-content {
+    flex: 1;
+    word-wrap: break-word;
+  }
+  
+  .notification-header {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .notification-body {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #555;
+    display: flex;
+    gap: 5px; /* Adds space between the comment and timestamp */
+  }  
+  
+  .commenter-name {
+    font-weight: 600;
+    margin-right: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .latest-comment {
+    font-style: italic;
+  }
+  
+  .notification-timestamp {
+    color: #888;
+    white-space: nowrap;
+  }
+  
+  .notification-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  
+  .post-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  .post-info {
+    text-align: center;
+  }
+  
+  .post-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .no-notifications-message {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #6c757d;
+    margin-top: 50px;
+  }
+  

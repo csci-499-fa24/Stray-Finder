@@ -1,4 +1,5 @@
 "use client";
+import { FaBell } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,6 +11,10 @@ import "./Navbar.css";
 const Navbar = () => {
   const { isAuthenticated, user } = useAuth();
   const [currentPath, setCurrentPath] = useState("");
+  const [notifications, setNotifications] = useState([]); // Store all notifications
+  const [unreadCount, setUnreadCount] = useState(0); // Store the total unread count
+  const [newNotificationsCount, setNewNotificationsCount] = useState(0); // Store new notifications since last open
+
 
   // Set the current path using window.location.pathname
   useEffect(() => {
@@ -17,6 +22,87 @@ const Navbar = () => {
       setCurrentPath(window.location.pathname);
     }
   }, []);
+
+  // Fetch notifications on load
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications`, {
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const allNotifications = data.notifications || [];
+          const totalUnread = allNotifications.filter((n) => !n.read).length;
+
+          setNotifications(allNotifications);
+          setUnreadCount(totalUnread);
+          setNewNotificationsCount(totalUnread); // Initialize with total unread on load
+        })
+        .catch((err) => {
+          console.error("Error fetching notifications:", err);
+        });
+    }
+  }, [isAuthenticated, user]);
+
+  // Recalculate counts whenever notifications change
+  useEffect(() => {
+    const totalUnread = notifications.filter((n) => !n.read).length;
+    setUnreadCount(totalUnread);
+    setNewNotificationsCount(totalUnread);
+  }, [notifications]);
+
+  // Poll for new notifications periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isAuthenticated && user) {
+        fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications`, {
+          credentials: "include",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const allNotifications = data.notifications || [];
+            const totalUnread = allNotifications.filter((n) => !n.read).length;
+            const newUnreadNotifications = allNotifications.filter(
+              (n) => !n.read && !notifications.find((old) => old._id === n._id)
+            );
+
+            setNotifications(allNotifications);
+            setUnreadCount(totalUnread);
+            setNewNotificationsCount(newUnreadNotifications.length);
+          })
+          .catch((err) => {
+            console.error("Error fetching new notifications:", err);
+          });
+      }
+    }, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [isAuthenticated, user, notifications]);
+
+  const handleNotificationsClick = async () => {
+    try {
+      // Mark all notifications as read in the backend
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications/mark-as-read`, {
+        method: "POST",
+        credentials: "include",
+      });
+  
+      if (!response.ok) {
+        throw new Error("Error marking notifications as read");
+      }
+  
+      // Update frontend state
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) => ({ ...notification, read: true }))
+      );
+  
+      // Reset counts
+      setUnreadCount(0);
+      setNewNotificationsCount(0);
+    } catch (err) {
+      console.error("Error marking notifications as read:", err);
+    }
+  };  
 
   // Helper function to determine if a link is active
   const isActive = (path) => currentPath === path;
@@ -73,9 +159,25 @@ const Navbar = () => {
     {/* Authentication: ProfileMenu or Login Button */}
     <div className="d-flex align-items-center login-profile-container">
       {isAuthenticated && user ? (
-        <div className="profile">
-          <ProfileMenu />
-        </div>
+        <>
+          {/* Notifications */}
+          <div className="notification-icon-container">
+            <Link 
+              href="/notifications-page" 
+              className="notification-icon"
+              onClick={handleNotificationsClick}
+            >
+              <FaBell />
+              {newNotificationsCount > 0 && (
+                <span className="notification-count">{newNotificationsCount}</span>
+              )}
+            </Link>
+          </div>
+
+          <div className="profile">
+            <ProfileMenu />
+          </div>
+        </>
       ) : (
         <div className="login">
           <Link href="/auth" className="login-button">Login</Link>
