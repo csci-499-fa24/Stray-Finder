@@ -81,26 +81,38 @@ const Navbar = () => {
 
   const handleNotificationsClick = async () => {
     try {
-      // Mark all notifications as read in the backend
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications/mark-as-read`, {
-        method: "POST",
+      // Fetch notifications and show the page without marking as read
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications`, {
         credentials: "include",
       });
   
       if (!response.ok) {
-        throw new Error("Error marking notifications as read");
+        throw new Error("Error fetching notifications");
       }
   
-      // Update frontend state
-      setNotifications((prevNotifications) =>
-        prevNotifications.map((notification) => ({ ...notification, read: true }))
-      );
+      const data = await response.json();
+      setNotifications(data.notifications);
   
-      // Reset counts
-      setUnreadCount(0);
-      setNewNotificationsCount(0);
+      // Optionally mark notifications as read after some delay
+      setTimeout(async () => {
+        const markAsReadResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications/mark-as-read`, {
+          method: "POST",
+          credentials: "include",
+        });
+  
+        if (!markAsReadResponse.ok) {
+          throw new Error("Error marking notifications as read");
+        }
+  
+        // Update frontend state after marking as read
+        setNotifications((prevNotifications) =>
+          prevNotifications.map((notification) => ({ ...notification, read: true }))
+        );
+        setUnreadCount(0);
+        setNewNotificationsCount(0);
+      }, 3000); // Delay marking notifications as read (3 seconds for example)
     } catch (err) {
-      console.error("Error marking notifications as read:", err);
+      console.error("Error handling notifications click:", err);
     }
   };  
 

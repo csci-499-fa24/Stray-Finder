@@ -62,9 +62,6 @@ export const registerUser = async (username, email, password) => {
 
 export const loginUser = async (username, password) => {
     try {
-        // Log the login request
-        console.log('Attempting to log in with:', { username, password });
-
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/login`,
             {

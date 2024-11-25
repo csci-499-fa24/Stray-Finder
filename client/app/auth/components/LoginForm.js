@@ -14,8 +14,6 @@ const LoginForm = () => {
         e.preventDefault();
         setErrorMessage(''); // Reset error message on new attempt
 
-        console.log('Logging in with:', { username, password });
-
         const result = await loginUser(username, password);
         console.log('Login result:', result);
 
