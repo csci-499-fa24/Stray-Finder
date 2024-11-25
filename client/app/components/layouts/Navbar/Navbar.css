@@ -58,6 +58,7 @@
 border-bottom: 2px solid orange;
 font-weight: bold;
 }
+
 @media (max-width: 978px) {
   /* Ensure the navbar brand (logo + title) aligns to the left */
   .navbar-brand {
@@ -161,59 +162,89 @@ font-weight: bold;
   justify-content: flex-start;
 }
 
-/* Additional styles for screens 380px and below */
-@media (max-width: 380px) {
-  .brand-text {
-    font-size: 1.0rem;
-    color: #333333; /* Dark gray to distinguish from nav links */
-    font-weight: 700; /* Bolder weight to stand out */
-    margin-right: 20px;
-  }
-
-  .navbar-brand img, .logo-container img {
-    width: 50px; /* Set a smaller width for the logo */
-    transform: scale(0.6); /* Scale down the logo to 80% of its original size */
-
-  }
-  .login-button {
-    padding: 4px 8px; /* Further reduce padding for very small screens */
-    font-size: 0.8rem; /* Smaller font for extra space-saving */
-  }
-  @media (max-width: 350px) {
-  .brand-text {
-    font-size: 0.9rem;
-    color: #333333; /* Dark gray to distinguish from nav links */
-    font-weight: 700; /* Bolder weight to stand out */
-    justify-content: left;
-  }
-
-  @media (max-width: 320px) {
-    .navbar-brand {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start; /* Align everything to the left */
-      margin-right: auto; /* Push the brand to the left */
-    }
-  
+  /* Additional styles for screens 380px and below */
+  @media (max-width: 380px) {
     .brand-text {
-      font-size: 0.9rem; /* Smaller text size for tight screens */
-      font-weight: 700; /* Keep bold text */
-      margin-left: -5px; /* Slightly nudge the text left */
-      text-align: center; /* Ensure it doesn't break alignment */
+      font-size: 1.0rem;
+      color: #333333; /* Dark gray to distinguish from nav links */
+      font-weight: 700; /* Bolder weight to stand out */
+      margin-right: 20px;
     }
 
-    .login-profile-container {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end; /* Align container to the right */
-      flex-shrink: 0; /* Prevent shrinking */
-      margin-left: auto; /* Push it to the far right */
-      position: absolute; /* Stay aligned relative to the navbar */
-      top: 25px; /* Align with the brand/logo */
-      right: 10px; /* Adjust for smaller screens */
+    .navbar-brand img, .logo-container img {
+      width: 50px; /* Set a smaller width for the logo */
+      transform: scale(0.6); /* Scale down the logo to 80% of its original size */
+
     }
+    .login-button {
+      padding: 4px 8px; /* Further reduce padding for very small screens */
+      font-size: 0.8rem; /* Smaller font for extra space-saving */
+    }
+    @media (max-width: 350px) {
+    .brand-text {
+      font-size: 0.9rem;
+      color: #333333; /* Dark gray to distinguish from nav links */
+      font-weight: 700; /* Bolder weight to stand out */
+      justify-content: left;
+    }
+
+      @media (max-width: 320px) {
+        .navbar-brand {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start; /* Align everything to the left */
+          margin-right: auto; /* Push the brand to the left */
+        }
+      
+        .brand-text {
+          font-size: 0.9rem; /* Smaller text size for tight screens */
+          font-weight: 700; /* Keep bold text */
+          margin-left: -5px; /* Slightly nudge the text left */
+          text-align: center; /* Ensure it doesn't break alignment */
+        }
+
+        .login-profile-container {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end; /* Align container to the right */
+          flex-shrink: 0; /* Prevent shrinking */
+          margin-left: auto; /* Push it to the far right */
+          position: absolute; /* Stay aligned relative to the navbar */
+          top: 25px; /* Align with the brand/logo */
+          right: 10px; /* Adjust for smaller screens */
+        }
+      }
+    }
+  }
 }
 
+/* Newly Added Notification Bell */
+.notification-icon-container {
+  position: relative;
+  margin-right: 15px;
 }
+
+.notification-icon {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  position: relative;
+  color: #000;
 }
+
+.notification-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #f00;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
