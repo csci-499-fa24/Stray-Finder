@@ -186,35 +186,40 @@ const createAnimalReport = async (req, res) => {
 // PUT: Updates an animal report by ID
 const updateAnimalReport = async (req, res) => {
     try {
-        const { id } = req.params
-        const { location, reportType, description } = req.body
-        let imageUrl = null
+        const { id } = req.params; // Get the report ID from params
+        const { location, reportType, description } = req.body; // Destructure body fields
+        let imageUrl = null;
 
         if (req.file) {
-            imageUrl = await uploadImage(req.file)
+            imageUrl = await uploadImage(req.file); // Handle image upload if a file is provided
         }
 
-        const report = await AnimalReport.findById(id).populate('animal')
-        if (!report)
-            return res.status(404).json({ message: 'Animal report not found' })
+        const report = await AnimalReport.findById(id).populate('animal'); // Find the report and populate animal data
+        if (!report) {
+            return res.status(404).json({ message: 'Animal report not found' });
+        }
 
-        // if (imageUrl) {
-        //     await createOrUpdateFeatureVector(report.animal._id, imageUrl)
-        //     await Animal.findByIdAndUpdate(report.animal._id, { imageUrl })
-        // }
+        // Dynamically construct fields to update
+        const updateFields = {
+            ...(location && { location: JSON.parse(location) }), // Update location only if provided
+            ...(reportType && { reportType }), // Update reportType if provided
+            ...(description && { description }), // Only update description if provided
+        };
 
+        // Update the report with the new fields
         const updatedReport = await AnimalReport.findByIdAndUpdate(
             id,
-            { location: JSON.parse(location), reportType, description },
-            { new: true }
-        )
-        res.status(200).json({ report: updatedReport })
+            updateFields,
+            { new: true } // Return the updated document
+        );
+
+        res.status(200).json({ report: updatedReport });
     } catch (error) {
-        console.error('Error updating animal report:', error.message)
+        console.error('Error updating animal report:', error.message);
         res.status(500).json({
             message: 'Failed to update animal report',
             error: error.message,
-        })
+        });
     }
 }
 

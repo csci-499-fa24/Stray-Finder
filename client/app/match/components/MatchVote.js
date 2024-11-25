@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react';
 import AnimalCard from './MatchCard'
+import useAuth from "@/app/hooks/useAuth";
 import styles from '../MatchVote.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-//npm install @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons
+import Map from './MatchMap';
 
 const MatchVote = () => {
+    const { isAuthenticated, user } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [allMatches, setAllMatches] = useState([]) // Store all matches
-    const [displayedMatches, setDisplayedMatches] = useState([]) // Matches currently displayed
-    const [page, setPage] = useState(1) // Track pages for local pagination
-    const limit = 20;
+    const [allMatchesWithId, setAllMatchesWithId] = useState([])
+    const [unvotedMatchIds, setUnvotedMatchIds] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     const loadMatches = async () => {
         setIsLoading(true);
-
         try {
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/match/high`,
@@ -31,22 +32,15 @@ const MatchVote = () => {
             }
 
             const data = await response.json()
-            // console.log('Fetched matches:', data.matches)
 
             if (data.matches.length > 0) {
-
                 // Sort matches by score in descending order
                 const sortedMatches = data.matches.sort(
                     (a, b) => b.score - a.score
                 )
-                setAllMatches(sortedMatches)
-
-                // Show the first batch
-                setDisplayedMatches(sortedMatches.slice(0, limit))
-                setPage(1) // Reset page for display
-            } else {
-                setDisplayedMatches([])
+                setAllMatches(sortedMatches);
             }
+
         } catch (error) {
             console.error('Error loading matches:', error)
         } finally {
@@ -58,13 +52,8 @@ const MatchVote = () => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/match-votes/`);
             const data = await response.json();
-            // console.log(data);
-            // console.log(displayedMatches)
-            const updatedMatches = displayedMatches.map(match => {
-                // console.log(match)
+            const updatedMatches = allMatches.map(match => {
                 const matchVote = data.find(vote =>  {
-                    // console.log('vote.report1:', vote.report1, 'vote.report2:', vote.report2);
-                    // console.log('match.lostReport:', match.lostReport, 'match.strayReport:', match.strayReport);
                     return (
                         (vote.report1._id === match.lostReport._id && vote.report2._id === match.strayReport._id) ||
                         (vote.report1._id === match.strayReport._id && vote.report2._id === match.lostReport._id)
@@ -73,6 +62,7 @@ const MatchVote = () => {
                 if (matchVote) {
                     return {
                         ...match,
+                        id: matchVote._id,
                         matchVotes: {
                             yes: matchVote.yes,
                             no: matchVote.no
@@ -88,20 +78,35 @@ const MatchVote = () => {
                     };
                 };
             });
-            setDisplayedMatches(updatedMatches);
+            if (JSON.stringify(updatedMatches) !== JSON.stringify(allMatches)) {
+                setAllMatchesWithId(updatedMatches);
+                // console.log(updatedMatches);
+            }
 
         } catch (error) {
             console.log('failed geting match votes,', error);
         }
     }
 
-    const loadMore = () => {
-        const nextPage = page + 1
-        const newDisplayedMatches = allMatches.slice(0, nextPage * limit)
-        setDisplayedMatches(newDisplayedMatches)
-        setPage(nextPage)
+    const checkForOverlaps = (allMatches, user) => {
+        if(user){
+            // Iterate over allMatches
+            allMatches.forEach((match) => {
+                // Check if match.id exists in user.matchVotes
+                const isVoted = user.matchVotes.some(vote => vote.matchVotesId === match.id);
+                
+                // console.log(match.id);
+                // If no overlap, push match to unvotedMatchIds
+                if (!isVoted) {
+                    // console.log('hello');
+                    setUnvotedMatchIds(prev => [...prev, match]);
+                }
+            });
+        } else {
+            setUnvotedMatchIds(allMatches);
+        }
     }
-    
+
     useEffect(() => {
         loadMatches();
     }, []);
@@ -111,6 +116,10 @@ const MatchVote = () => {
             getMatchVotes();
         }
     }, [allMatches]);
+
+    useEffect(() => {
+        checkForOverlaps(allMatchesWithId, user);
+    }, [user, isAuthenticated, allMatchesWithId]);
 
     const handleClick = async ({lostReport, strayReport, vote}) => {
         try {
@@ -129,8 +138,6 @@ const MatchVote = () => {
                     credentials: "include",
                 }
             )
-            const data = await response.json();
-            // console.log('Response data:', data);
 
             const status = response.status;
             if(status === 201){
@@ -150,77 +157,68 @@ const MatchVote = () => {
             console.log("failed to create match,", error);
         }
     }
-    // console.log(displayedMatches);
+
+    const LoadNext = () => {
+        setCurrentIndex(currentIndex + 1);
+    }
+
+    if (isLoading || allMatches.length === 0) {
+        return <div>Loading...</div>; // Loading indicator until data is available
+    }
+    const currentMatch = unvotedMatchIds[currentIndex];
+
+    // console.log(unvotedMatchIds);
+
     return (
         <div>
-            <div className={styles.titleContainer}>
-                <h2 className={styles.heading}>Help us match these guys</h2>
-            </div>
-                <div className="row justify-content-center">
-                    {displayedMatches.length > 0 ? (
-                        displayedMatches.map(({ lostReport, strayReport, score, matchVotes }, index) => (
-                            <div key={index} className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
-                                <div className={styles.container}>
-                                    {/* Lost Report Card */}
-                                    <div className={styles.card}>
-                                        <AnimalCard
-                                            report_id={lostReport._id}
-                                            animal_id={lostReport.animal._id}
-                                            name={lostReport.animal.name}
-                                            image={lostReport.animal.imageUrl}
-                                            species={lostReport.animal.species}
-                                            gender={lostReport.animal.gender}
-                                            state={lostReport.location?.address}
-                                            description={lostReport.description}
-                                        />
-                                    </div>
-
-                                    {/* Match Score */}
-                                    <div className="col-md-2 text-center">
-                                        <h2 className="mb-0 font-weight-bold">
-                                            {Math.round(score * 100)}%
-                                        </h2>
-                                        <p className="text-muted">
-                                            Match Score
-                                        </p>
-                                    </div>
-
-                                    {/* stray Report Card */}
-                                    <div className={styles.card}>
-                                        <AnimalCard
-                                            report_id={strayReport._id}
-                                            animal_id={strayReport.animal._id}
-                                            name={strayReport.animal.name}
-                                            image={strayReport.animal.imageUrl}
-                                            species={strayReport.animal.species}
-                                            gender={strayReport.animal.gender}
-                                            state={strayReport.location?.address}
-                                            description={strayReport.description}
-                                        />
-                                    </div>
-                                    
+            {currentIndex < unvotedMatchIds.length ? (
+                <div>
+                    <div className={styles.titleContainer}>
+                        <h2 className={styles.heading}>Help us match these guys</h2>
+                    </div>
+                    <div className="row justify-content-center">
+                        <div className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
+                            <div className={styles.container}>
+                                {/* Report1 Card */}
+                                <div className={styles.card}>
+                                    <AnimalCard
+                                        report_id={currentMatch.lostReport._id}
+                                        name={currentMatch.lostReport.animal.name}
+                                        image={currentMatch.lostReport.animal.imageUrl}
+                                    />
                                 </div>
-                                <div className={styles.centerContainer}>
-                                    <h2>Are the two images the same animal?</h2>
-                                    <div className={styles.buttonContainer}>
-                                        <FontAwesomeIcon 
-                                            icon={faCircleCheck}
-                                            onClick={() => handleClick({lostReport, strayReport, vote: 'yes'})}
-                                            className={styles.iconCheckButton}
-                                        />
-                                        <FontAwesomeIcon 
-                                            icon={faCircleXmark}
-                                            onClick={() => handleClick({lostReport, strayReport, vote: 'no'})}
-                                            className={styles.iconXButton}
-                                        />
-                                    </div>
+
+                                <Map report1={currentMatch.lostReport} report2={currentMatch.strayReport}/>
+
+                                {/* Report2 Card */}
+                                <div className={styles.card}>
+                                    <AnimalCard
+                                        report_id={currentMatch.strayReport._id}
+                                        name={currentMatch.strayReport.animal.name}
+                                        image={currentMatch.strayReport.animal.imageUrl}
+                                    />
                                 </div>
-                                <div>
-                                    {matchVotes ? (
+                            </div>
+                            <div className={styles.centerContainer}>
+                                <p>Are the two images the same animal?</p>
+                                <div className={styles.buttonContainer}>
+                                    <FontAwesomeIcon 
+                                        icon={faCircleCheck}
+                                        onClick={() => handleClick({lostReport: currentMatch.lostReport, strayReport: currentMatch.strayReport, vote: 'yes'})}
+                                        className={styles.iconCheckButton}
+                                    />
+                                    <FontAwesomeIcon 
+                                        icon={faCircleXmark}
+                                        onClick={() => handleClick({lostReport: currentMatch.lostReport, strayReport: currentMatch.strayReport, vote: 'no'})}
+                                        className={styles.iconXButton}
+                                    />
+                                </div>
+                                <div style={{ width: '100%', margin: '0 auto' }}>
+                                    {currentMatch.matchVotes && (
                                     <div>
                                         <div style= {{textAlign:'center'}}>
                                             <h2 className="mb-0 font-weight-bold">
-                                                {`${matchVotes.yes} : ${matchVotes.no}`}
+                                                {`${currentMatch.matchVotes.yes} : ${currentMatch.matchVotes.no}`}
                                             </h2>
                                             <p className="text-muted">
                                                 Yes : No
@@ -232,42 +230,35 @@ const MatchVote = () => {
                                             <ProgressBar
                                             striped
                                             variant="success"
-                                            now={(matchVotes.yes / (matchVotes.yes + matchVotes.no)) * 100
+                                            now={(currentMatch.matchVotes.yes / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
                                             }
                                             />
                                             <ProgressBar
                                             striped
                                             variant="danger"
-                                            now={(matchVotes.no / (matchVotes.yes + matchVotes.no)) * 100
+                                            now={(currentMatch.matchVotes.no / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
                                             }
                                             />
                                         </ProgressBar>
-                                    </div>
-                                    ) : (
-                                        <ProgressBar 
-                                            striped
-                                            // className={styles.grayBar}
-                                            now={100}
-                                        />
-                                    )}
+                                    </div>)}
                                 </div>
-                            </div> 
-                        ))
-                    ) : (
-                        <p className="text-center">No matches found.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {currentIndex < allMatches.length && (
+                        <div className="text-center my-4">
+                            <button
+                                onClick={LoadNext}
+                                className="btn btn-primary"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Loading...' : 'Load More'}
+                            </button>
+                        </div>
                     )}
                 </div>
-            
-            {displayedMatches.length < allMatches.length && (
-                <div className="text-center my-4">
-                    <button
-                        onClick={loadMore}
-                        className="btn btn-primary"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Loading...' : 'Load More'}
-                    </button>
-                </div>
+            ) : (
+                <p>There are no more pets to match! Thanks for helping us match all the pets!</p>
             )}
         </div>
     );

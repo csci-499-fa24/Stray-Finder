@@ -1,0 +1,93 @@
+/* Modal Styling */
+.mark-as-found-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.mark-as-found-modal-content {
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.mark-as-found-modal-content h4 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.mark-as-found-modal-content p {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.confirm-btn,
+.cancel-btn {
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.confirm-btn {
+    background: #28a745;
+    color: #fff;
+}
+
+.confirm-btn:hover {
+    background: #218838;
+}
+
+.cancel-btn {
+    background: #dc3545;
+    color: #fff;
+}
+
+.cancel-btn:hover {
+    background: #c82333;
+}
+
+.mark-as-found-btn {
+    all: unset; /* Reset default styles */
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: left;
+    color: #333;
+}
+
+.mark-as-found-btn:hover {
+    background-color: #f2f2f2;
+}
+
+.close-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.close-btn:hover {
+    background: #218838;
+}

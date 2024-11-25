@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api'
 import DeleteAnimalModal from './DeleteAnimalModal';
 
+
 const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [formData, setFormData] = useState({
@@ -331,9 +332,14 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
             contentLabel="Animal Details"
             ariaHideApp={false}
             style={{
+                overlay: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dynamically styled overlay
+                    zIndex: 10,
+                },
                 content: {
-                    maxWidth: '1000px', // Adjust this value to your preference
-                    margin: 'auto', // Center the modal
+                    margin: 'auto',
+                    maxWidth: '1000px',
+                    borderRadius: '10px',
                 },
             }}
         >
@@ -365,6 +371,7 @@ const EditAnimalModal = ({ isOpen, onClose, reportData }) => {
                             <option value="">Select report type</option>
                             <option value="Lost">Lost</option>
                             <option value="Stray">Stray</option>
+                            <option value="Found">Found</option>
                         </select>
                     </div>
                     <div className="mb-3">

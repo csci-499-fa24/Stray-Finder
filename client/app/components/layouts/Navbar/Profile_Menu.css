@@ -55,6 +55,7 @@
     padding: 5px 0;
     text-align: center;
     transform: translate(-42%, 10px); /* Adjusted to be more centered */
+    z-index: 20;
 }
 
 .dropdown-item {

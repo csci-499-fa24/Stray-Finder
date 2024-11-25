@@ -4,7 +4,7 @@
     top: 50%;
     right: -320px;
     transform: translateY(-50%);
-    z-index: 9999;
+    z-index: 5;
     width: 300px;
     height: 360px; /* Ensure explicit height */
     display: flex;
@@ -87,7 +87,7 @@
     top: 50%;
     transform: translate(-50%, -50%);
     animation: bounce 0.8s infinite;
-    z-index: 10; /* Ensure on top */
+    z-index: 8; /* Ensure on top */
 }
 
 .matchIcon {
@@ -156,5 +156,51 @@
     }
     50% {
         transform: translateY(-8px);
+    }
+}
+/* Adjust Popup Size for Smaller Screens */
+@media screen and (max-width: 1000px) {
+    .popupContainer {
+        width: 230px; /* Smaller width */
+        height: 225px; /* Adjusted height */
+        right: -270px; /* Adjust hidden state */
+    }
+
+    .popupContainer.active {
+        right: 0; /* Ensure it slides fully into view */
+    }
+
+    .popupContainer.collapsed {
+        right: -200px; /* Adjust for partially hidden state */
+    }
+
+    .arrowSection {
+        width: 30px; /* Slightly smaller arrow section */
+        font-size: 1.8rem; /* Adjust font size */
+    }
+
+    .popupText {
+        font-size: 1rem; /* Slightly smaller text */
+    }
+
+    .animationSection {
+        gap: 10px; /* Reduce spacing between images */
+    }
+
+    .petImage {
+        width: 60px; /* Smaller images */
+        height: 60px;
+    }
+
+    .matchIcon,
+    .unmatchIcon {
+        font-size: 1rem; /* Adjust icon size */
+    }
+
+    .helpButton,
+    .closeButton {
+        width: 90px; /* Slightly smaller buttons */
+        padding: 8px 12px; /* Adjust padding */
+        font-size: 0.9rem; /* Smaller font */
     }
 }

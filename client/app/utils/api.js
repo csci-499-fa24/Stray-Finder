@@ -62,6 +62,9 @@ export const registerUser = async (username, email, password) => {
 
 export const loginUser = async (username, password) => {
     try {
+        // Log the login request
+        console.log('Attempting to log in with:', { username, password });
+
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/login`,
             {
@@ -72,19 +75,34 @@ export const loginUser = async (username, password) => {
                 body: JSON.stringify({ username, password }),
                 credentials: 'include',
             }
-        )
+        );
+
+        // Log the response status for debugging
+        console.log('Login response status:', response.status);
+
+        // Parse the response JSON only once
+        const result = await response.json();
 
         if (!response.ok) {
-            const errorData = await response.json().catch(() => null)
-            const message = 'Incorrect username or password'
-            return { error: true, message }
+            // Log error data if the response is not OK
+            console.error('Login failed:', result); 
+            const message = result?.message || 'Incorrect username or password';
+            return { error: true, message, errorData: result }; // Include error data in the response
         }
 
-        return await response.json()
+        // Log the successful response
+        console.log('Login successful, received data:', result);
+        return result;
     } catch (error) {
-        return { error: true, message: 'Server error. Please try again later.' }
+        console.error('Error during login request:', error);
+        return {
+            error: true,
+            message: 'Server error. Please try again later.',
+            errorData: null, // Explicitly include errorData for uniformity
+        };
     }
-}
+};
+
 
 export const logoutUser = async () => {
     try {

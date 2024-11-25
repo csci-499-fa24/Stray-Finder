@@ -260,9 +260,14 @@ const fetchReports = async () => {
 
 
   // Show a loading message until the reports are fetched
-  if (!isLoaded || loading) return <div className="spinner-border text-primary" role="status">
-  <span className="sr-only"></span>
-  </div>;
+  if (!isLoaded || loading) return             <div
+  className="d-flex justify-content-center align-items-center vh-100"
+  style={{ marginTop: '-50px' }} // Adjust as needed for vertical alignment
+>
+  <div className="spinner-border text-primary" role="status">
+      <span className="sr-only"></span>
+  </div>
+</div>;
 
 return (
     <>

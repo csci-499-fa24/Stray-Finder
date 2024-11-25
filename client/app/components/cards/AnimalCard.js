@@ -1,11 +1,15 @@
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import useAuth from '@/app/hooks/useAuth';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { FaEllipsisV, FaCommentDots } from 'react-icons/fa';
 import CommentModal from '../../components/comments/CommentModal';
+import MarkAsFound from '../mark-as-found/MarkAsFound';
+import EditAnimalModal from '../../animal/[id]/components/EditAnimalModal';
 import './AnimalDropdown.css';
 
 const AnimalCard = ({ report_id, animal_id, name, username, image, species, gender, state, description }) => {
+    const { isAuthenticated, user: currentUser } = useAuth();
     const currentPath = usePathname();
 
     const [isModalOpen, setModalOpen] = useState(false); // State for report modal
@@ -13,7 +17,32 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
     const [isLoginModalOpen, setLoginModalOpen] = useState(false); // State for login modal
     const [isDropdownOpen, setDropdownOpen] = useState(false); // State for dropdown visibility
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false); // State for comment modal
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [commentCount, setCommentCount] = useState(0); // State for comment count
+    const [detailedReport, setDetailedReport] = useState(null);
+
+
+    const dropdownRef = useRef(null); // Create a ref for the dropdown
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Check if the click is outside the dropdown AND the MarkAsFound modal
+            const markAsFoundModal = document.querySelector('.mark-as-found-modal-overlay'); // Adjust selector if needed
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target) &&
+                (!markAsFoundModal || !markAsFoundModal.contains(event.target)) // Exclude modal clicks
+            ) {
+                setDropdownOpen(false);
+            }
+        };
+    
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);    
 
     // Fetch the comment count for this report
     useEffect(() => {
@@ -37,6 +66,20 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
 
         fetchCommentCount();
     }, [report_id]);
+
+    //fetch detailed report 
+    const fetchDetailedReport = async () => {
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report/${report_id}`
+            );
+            const data = await response.json();
+            setDetailedReport(data.report); // Store full report data
+            setIsEditModalOpen(true);      // Open the modal
+        } catch (error) {
+            console.error("Error fetching report data:", error);
+        }
+    };    
 
     // Toggle Dropdown
     const toggleDropdown = () => {
@@ -116,7 +159,7 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                         }}
                     />
                     {/* Dropdown toggle */}
-                    <div className="animal-dropdown-container">
+                    <div className="animal-dropdown-container" ref={dropdownRef}>
                         <button
                             className="animal-dropdown-toggle"
                             onClick={toggleDropdown}
@@ -126,13 +169,31 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                         </button>
                         {isDropdownOpen && (
                             <div className="animal-dropdown-menu show">
-                                <button
-                                    className="animal-dropdown-item"
-                                    onClick={handleReportClick}
-                                    aria-label="Report"
-                                >
-                                    Report
-                                </button>
+                                {state !== 'Found' && isAuthenticated && username === currentUser?.username && (
+                                    <MarkAsFound
+                                        report_id={report_id}
+                                        onClose={() => setDropdownOpen(false)}
+                                    />
+                                )}
+                                {isAuthenticated && username === currentUser?.username && (
+                                    <button
+                                        className="animal-dropdown-item"
+                                        onClick={() => {
+                                            fetchDetailedReport();
+                                            setDropdownOpen(false);
+                                        }}
+                                    >
+                                        Edit
+                                    </button>
+                                )}
+                                {username !== currentUser?.username && (
+                                    <button
+                                        className="animal-dropdown-item"
+                                        onClick={handleReportClick}
+                                    >
+                                        Report
+                                    </button>
+                                )}
                             </div>
                         )}
                     </div>
@@ -213,6 +274,15 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                             </button>
                         </div>
                     </div>
+                )}
+
+                {/* Edit Modal */}
+                {isEditModalOpen && (
+                    <EditAnimalModal
+                        isOpen={isEditModalOpen}
+                        onClose={() => setIsEditModalOpen(false)}
+                        reportData={detailedReport}
+                    />
                 )}
 
                 {/* Comment Modal */}

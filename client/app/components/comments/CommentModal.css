@@ -298,3 +298,148 @@
   color: gray;
   margin-left: 5px;
 }
+@media screen and (max-width: 1000px) {
+  .comment-modal-content {
+    width: 90%;
+    max-width: none;
+    height: auto;
+    max-height: 90%;
+    flex-direction: column;
+    transform: scale(1);
+  }
+
+  /* Left Section: Animal Details */
+  .comment-left-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+
+  .comment-left-section img {
+    width: 100%;
+    max-width: 100%;
+    min-height: 250px;
+    max-height: 300px;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+
+  /* Right Section: Comments */
+  .comment-right-section {
+    width: 100%;
+    max-height: calc(100vh - 350px); /* Reduce height for smaller screens */
+    padding: 10px; /* Reduce padding */
+    overflow-y: auto; /* Enable scrolling */
+    scrollbar-width: thin; /* Thin scrollbar for cleaner look */
+  }
+
+  .comment-comments-list {
+    max-height: calc(100vh - 400px); /* Shorten comment list height */
+    padding-right: 5px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .comment-item {
+    display: flex;
+    align-items: center; /* Center avatar and text */
+    gap: 8px; /* Spacing between avatar and text */
+    margin-bottom: 10px;
+  }
+
+  /* Default Profile Picture Container */
+  .comment-avatar {
+    width: 30px; /* Reduce avatar container size */
+    height: 30px; /* Match width for square shape */
+    border-radius: 50%; /* Keep circular */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ddd; /* Placeholder background color */
+  }
+
+  .comment-avatar img {
+    width: 24px; /* Smaller avatar size */
+    height: 24px; /* Maintain aspect ratio */
+    border-radius: 50%; /* Ensure circular avatar image */
+  }
+
+  .comment-content {
+    font-size: 12px;
+    padding: 5px 8px; /* Compact padding for text bubble */
+    line-height: 1.4; /* Maintain readability */
+  }
+
+  .comment-username {
+    font-size: 10px; /* Smaller username font size */
+    font-weight: bold;
+  }
+
+  .comment-timestamp {
+    font-size: 10px; /* Smaller timestamp font size */
+  }
+
+  /* Input and Button Styling */
+  .comment-input-container {
+    flex-direction: column; /* Stack input and button */
+    gap: 5px; /* Reduce gap */
+    padding: 10px; /* Adjust padding */
+  }
+
+  .comment-input {
+    width: 100%; /* Full width */
+    height: 30px; /* Shorter input field */
+    font-size: 12px; /* Smaller font */
+  }
+
+  .post-button {
+    width: 100%; /* Full width */
+    height: 30px; /* Match input height */
+    font-size: 12px; /* Smaller button text */
+  }
+
+  /* Close Button */
+  .comment-close-button {
+    font-size: 1.2rem; /* Smaller close button */
+    top: 8px; /* Adjust position */
+    right: 8px;
+  }
+
+  /* Spinner Adjustments */
+  .spinner-container {
+    padding: 20px; /* Add padding for smaller screens */
+  }
+
+  .loading-spinner {
+    font-size: 1.5rem; /* Adjust spinner size */
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .comment-left-section img {
+    width: 100%; /* Full width of the container */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 200px; /* Reduce max height for small screens */
+    object-fit: contain; /* Ensure full image is visible */
+    margin-bottom: 10px;
+  }
+
+  .comment-left-section {
+    padding: 10px; /* Reduce padding */
+  }
+
+  .comment-avatar {
+    width: 25px; /* Smaller avatar for tiny screens */
+    height: 25px;
+  }
+
+  .comment-avatar img {
+    width: 20px; /* Emoji size */
+    height: 20px;
+  }
+}

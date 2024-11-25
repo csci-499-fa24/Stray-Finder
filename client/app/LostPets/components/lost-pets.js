@@ -112,7 +112,14 @@ const MemoizedFilters = memo(Filters);
 
 const ReportList = ({ reports, loading }) => {
     if (loading) {
-        return <div className="spinner-border text-primary" role="status"><span className="sr-only"></span></div>;
+        return             <div
+        className="d-flex justify-content-center align-items-center vh-100"
+        style={{ marginTop: '-50px' }} // Adjust as needed for vertical alignment
+    >
+        <div className="spinner-border text-primary" role="status">
+            <span className="sr-only"></span>
+        </div>
+    </div>;
     }
 
     return (
@@ -128,7 +135,7 @@ const ReportList = ({ reports, loading }) => {
                         image={report.animal.imageUrl}
                         species={report.animal.species}
                         gender={report.animal.gender}
-                        state="Unknown" // Update this if you have a proper state for animals
+                        state={report.reportType} // Update this if you have a proper state for animals
                         description={report.animal.description}
                     />
                 ))

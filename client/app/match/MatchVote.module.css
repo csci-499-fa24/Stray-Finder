@@ -47,7 +47,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 0px 10px 0px 10px;
 }
 
 .iconCheckButton {
@@ -67,7 +67,7 @@
     cursor: pointer;
     color: rgb(222, 2, 2);
     font-size: 50px;
-    margin: 10px 10px 10px 10px;
+    margin: 0px 10px 0px 10px;
     transition: transform 0.2s ease, color 0.2s ease;
 }
   
