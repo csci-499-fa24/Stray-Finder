@@ -32,7 +32,7 @@ const MatchVote = () => {
             }
 
             const data = await response.json()
-
+            // console.log(data);
             if (data.matches.length > 0) {
                 // Sort matches by score in descending order
                 const sortedMatches = data.matches.sort(
@@ -55,8 +55,8 @@ const MatchVote = () => {
             const updatedMatches = allMatches.map(match => {
                 const matchVote = data.find(vote =>  {
                     return (
-                        (vote.report1._id === match.lostReport._id && vote.report2._id === match.strayReport._id) ||
-                        (vote.report1._id === match.strayReport._id && vote.report2._id === match.lostReport._id)
+                        (vote.report1._id === match.report1._id && vote.report2._id === match.report2._id) ||
+                        (vote.report1._id === match.report2._id && vote.report2._id === match.report1._id)
                     )
                 });
                 if (matchVote) {
@@ -121,11 +121,11 @@ const MatchVote = () => {
         checkForOverlaps(allMatchesWithId, user);
     }, [user, isAuthenticated, allMatchesWithId]);
 
-    const handleClick = async ({lostReport, strayReport, vote}) => {
+    const handleClick = async ({report1, report2, vote}) => {
         try {
             const sendData = {
-                report1: lostReport._id,
-                report2: strayReport._id,
+                report1: report1._id,
+                report2: report2._id,
                 vote
             }
 
@@ -142,9 +142,11 @@ const MatchVote = () => {
             const status = response.status;
             if(status === 201){
                 alert('vote successfully changed');
+                setCurrentIndex(currentIndex + 1);
             }
             else if(status === 202){
                 alert('vote successfully casted');
+                setCurrentIndex(currentIndex + 1);
             }
             else if(status === 401){
                 alert('login first');
@@ -182,20 +184,20 @@ const MatchVote = () => {
                                 {/* Report1 Card */}
                                 <div className={styles.card}>
                                     <AnimalCard
-                                        report_id={currentMatch.lostReport._id}
-                                        name={currentMatch.lostReport.animal.name}
-                                        image={currentMatch.lostReport.animal.imageUrl}
+                                        report_id={currentMatch.report1._id}
+                                        name={currentMatch.report1.animal.name}
+                                        image={currentMatch.report1.animal.imageUrl}
                                     />
                                 </div>
 
-                                <Map report1={currentMatch.lostReport} report2={currentMatch.strayReport}/>
+                                <Map report1={currentMatch.report1} report2={currentMatch.report2}/>
 
                                 {/* Report2 Card */}
                                 <div className={styles.card}>
                                     <AnimalCard
-                                        report_id={currentMatch.strayReport._id}
-                                        name={currentMatch.strayReport.animal.name}
-                                        image={currentMatch.strayReport.animal.imageUrl}
+                                        report_id={currentMatch.report2._id}
+                                        name={currentMatch.report2.animal.name}
+                                        image={currentMatch.report2.animal.imageUrl}
                                     />
                                 </div>
                             </div>
@@ -204,12 +206,12 @@ const MatchVote = () => {
                                 <div className={styles.buttonContainer}>
                                     <FontAwesomeIcon 
                                         icon={faCircleCheck}
-                                        onClick={() => handleClick({lostReport: currentMatch.lostReport, strayReport: currentMatch.strayReport, vote: 'yes'})}
+                                        onClick={() => handleClick({report1: currentMatch.report1, report2: currentMatch.report2, vote: 'yes'})}
                                         className={styles.iconCheckButton}
                                     />
                                     <FontAwesomeIcon 
                                         icon={faCircleXmark}
-                                        onClick={() => handleClick({lostReport: currentMatch.lostReport, strayReport: currentMatch.strayReport, vote: 'no'})}
+                                        onClick={() => handleClick({report1: currentMatch.report1, report2: currentMatch.report2, vote: 'no'})}
                                         className={styles.iconXButton}
                                     />
                                 </div>
