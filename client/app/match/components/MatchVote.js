@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import AnimalCard from './MatchCard'
 import useAuth from "@/app/hooks/useAuth";
+import toast from 'react-hot-toast';
 import styles from '../MatchVote.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -134,18 +135,26 @@ const MatchVote = () => {
 
             const status = response.status;
             if(status === 201){
-                alert('vote successfully changed');
+                toast.success('vote successfully changed', {
+                    duration: 2000,
+                });
                 setCurrentIndex(currentIndex + 1);
             }
             else if(status === 202){
-                alert('vote successfully casted');
+                toast.success('vote successfully casted', {
+                    duration: 2000,
+                });
                 setCurrentIndex(currentIndex + 1);
             }
             else if(status === 401){
-                alert('login first');
+                toast.success('must be logged in to vote', {
+                    duration: 2000,
+                });
             }
             else if(status === 402){
-                alert('already casted this vote');
+                toast.success('same vote already casted', {
+                    duration: 2000,
+                });
             }
 
         } catch (error) {
@@ -170,6 +179,11 @@ const MatchVote = () => {
                 <div>
                     <div className={styles.titleContainer}>
                         <h2 className={styles.heading}>Help us match these guys</h2>
+                        <p className={styles.p}>
+                            These animals have a high probability to be the same pet based on our algorithm.
+                            Would you help us and pet owners by comparing the images and voting if you think the two pets could be the same?
+                            Click on the images for more details.
+                        </p>
                     </div>
                     <div className="row justify-content-center">
                         <div className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
@@ -219,22 +233,39 @@ const MatchVote = () => {
                                                 Yes : No
                                             </p>
                                         </div>
-                                        <ProgressBar
-                                            max={100}
-                                        >
+                                        {currentMatch.matchVotes.yes && currentMatch.matchVotes.no ? (
                                             <ProgressBar
-                                            striped
-                                            variant="success"
-                                            now={(currentMatch.matchVotes.yes / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
-                                            }
-                                            />
+                                                max={100}
+                                            >
+                                                <ProgressBar
+                                                striped
+                                                variant="success"
+                                                now={(currentMatch.matchVotes.yes / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
+                                                }
+                                                />
+                                                <ProgressBar
+                                                striped
+                                                variant="danger"
+                                                now={(currentMatch.matchVotes.no / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
+                                                }
+                                                />
+                                            </ProgressBar>
+                                        ) : (
                                             <ProgressBar
-                                            striped
-                                            variant="danger"
-                                            now={(currentMatch.matchVotes.no / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
-                                            }
-                                            />
-                                        </ProgressBar>
+                                                max={ 100 }
+                                            >
+                                                <ProgressBar
+                                                striped
+                                                variant="success"
+                                                now={ 50 }
+                                                />
+                                                <ProgressBar
+                                                striped
+                                                variant="danger"
+                                                now={ 50 }
+                                                />
+                                            </ProgressBar>
+                                        )}
                                     </div>)}
                                 </div>
                             </div>

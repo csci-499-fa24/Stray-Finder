@@ -43,6 +43,11 @@
     text-align: center;
 }
 
+.p {
+    text-align: center;
+    color: #4a4a4a;
+}
+
 .buttonContainer {
     display: flex;
     justify-content: space-between;
