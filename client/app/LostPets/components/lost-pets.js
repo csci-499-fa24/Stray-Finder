@@ -1,4 +1,5 @@
 import { useEffect, useState, memo } from 'react';
+import Loader from '../../components/loader/Loader';
 import AnimalCard from '../../components/cards/AnimalCard';
 
 const LostPets = () => {
@@ -59,7 +60,7 @@ const LostPets = () => {
     return (
         <div className="container text-end">
             <MemoizedFilters filters={filters} handleFilterChange={handleFilterChange} />
-            <ReportList reports={reports} loading={loading} />
+            {loading ? <Loader /> : <ReportList reports={reports} />}
         </div>
     );
 };
@@ -112,14 +113,7 @@ const MemoizedFilters = memo(Filters);
 
 const ReportList = ({ reports, loading }) => {
     if (loading) {
-        return             <div
-        className="d-flex justify-content-center align-items-center vh-100"
-        style={{ marginTop: '-50px' }} // Adjust as needed for vertical alignment
-    >
-        <div className="spinner-border text-primary" role="status">
-            <span className="sr-only"></span>
-        </div>
-    </div>;
+        return <Loader />;
     }
 
     return (

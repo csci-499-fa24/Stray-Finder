@@ -3,6 +3,7 @@ import UserList from './userList';
 import MessagePanel from './messagePanel';
 import useAuth from '@/app/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import Loader from '../components/loader/Loader';
 import styles from './messagingLayout.module.css'; // Import CSS as styles
 import { useUnreadMessages } from '@/app/context/UnreadMessagesContext';
 
@@ -45,14 +46,7 @@ export default function MessagingLayout() {
         }
     }, [isAuthenticated, user]);
 
-    if (loading) return             <div
-    className="d-flex justify-content-center align-items-center vh-100"
-    style={{ marginTop: '-50px' }} // Adjust as needed for vertical alignment
->
-    <div className="spinner-border text-primary" role="status">
-        <span className="sr-only"></span>
-    </div>
-</div>; // Display loading message until user is loaded
+    if (loading) return <Loader />;
 
     return (
         <div className={styles.messagingLayout}>

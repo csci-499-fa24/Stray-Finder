@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/app/hooks/useAuth';
 import AnimalCard from '../components/cards/AnimalCard';
+import Loader from "../components/loader/Loader"
 import Navbar from '@/app/components/layouts/Navbar/Navbar';
 import Footer from '@/app/components/layouts/Footer/Footer';
 import styles from '@/app/profile/[id]/components/profile.module.css';
@@ -46,9 +47,7 @@ const MyListings = () => {
     }, [isAuthenticated, user, router]);
 
     if (loading) {
-        return <div className="spinner-border text-primary" role="status">
-            <span className="sr-only"></span>
-        </div>;
+        return <Loader />;
     }
 
     if (!userFound) {

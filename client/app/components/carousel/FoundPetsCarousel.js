@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
+import Loader from '../loader/Loader';
 import './FoundPetsCarousel.css';
 
 const FoundPetsCarousel = () => {
   const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const imagesToDisplay = 5;
   const isTransitioning = useRef(false);
@@ -12,6 +14,7 @@ const FoundPetsCarousel = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
+        setLoading(true);
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`);
         const data = await response.json();
 
@@ -33,6 +36,8 @@ const FoundPetsCarousel = () => {
         setReports(foundReports.filter(Boolean));
       } catch (error) {
         console.error('Error fetching found pets:', error);
+      } finally {
+        setLoading(false); // Set loading to false once fetching is complete
       }
     };
 
@@ -65,6 +70,10 @@ const FoundPetsCarousel = () => {
   // Get visible set of images, ensure only five display
   const visibleReports = reports.slice((currentPage % Math.ceil(reports.length / imagesToDisplay)) * imagesToDisplay, 
                                        ((currentPage % Math.ceil(reports.length / imagesToDisplay)) + 1) * imagesToDisplay);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="carousel-container">
