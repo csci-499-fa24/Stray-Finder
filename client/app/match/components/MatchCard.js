@@ -8,8 +8,8 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
     return (
         <div>
             <Link href={`/animal/${report_id}?from=${currentPath}`} className="card-link">
-            <div className="card">
-                <div className='image-container'>
+            <div className="match-card">
+                <div className='match-image-container'>
                     <img
                         className='image'
                         src={image || '/paw-pattern.jpg'}
@@ -19,7 +19,7 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
                 </div>
 
                 {/* Card Bottom Section */}
-                <div className="card-bottom">
+                <div className="match-card-bottom">
                     <div className="card-body">
                         <h5 className="card-title">{name}</h5>
                     </div>
