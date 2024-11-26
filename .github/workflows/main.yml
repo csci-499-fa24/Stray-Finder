@@ -16,6 +16,7 @@ jobs:
 
     env:
       MONGO_URI: ${{ secrets.MONGO_URI }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
       - name: Checkout repository
