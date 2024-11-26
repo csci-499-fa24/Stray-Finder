@@ -284,6 +284,23 @@ const ReportAnimal = () => {
         setLoading(true)
         setError('')
 
+        // Check if user location is available
+        if (userLocation) {
+            const distance = calculateDistance(
+                userLocation.lat,
+                userLocation.lng,
+                formData.coordinates.lat,
+                formData.coordinates.lng
+            );
+
+            // Validate the distance is within 10 miles
+            if (distance > 10) {
+                setLoading(false);
+                toast.error('You cannot report animals more than 10 miles away.');
+                return; // Stop submission if distance exceeds 10 miles
+            }
+        }
+
         const uploadData = new FormData()
         uploadData.append('reportType', formData.reportType)
         uploadData.append('name', formData.name)

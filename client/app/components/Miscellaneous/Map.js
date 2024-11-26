@@ -158,8 +158,15 @@ const fetchReports = async () => {
         if (reports.length > 0) {
             reports.forEach((report) => {
                 // Define fallback color based on report type
-                const fallbackColor = report.reportType === 'Stray' ? '#00ff00' : '#ff0000'; // Green for Stray, Red for Lost
-                
+                const fallbackColor =
+                    report.reportType === 'Stray'
+                        ? '#FFA500' // Orange/Yellow for Stray
+                        : report.reportType === 'Lost'
+                        ? '#FF0000' // Red for Lost
+                        : report.reportType === 'Found'
+                        ? '#00FF00' // Green for Found
+                        : '#000000'; // Default color (Black if report type is unknown)
+
                 // Create the circular icon using the fallback color
                 createCircularIcon(report.animal.imageUrl, fallbackColor, (iconUrl) => {
                     if (iconUrl) {
@@ -172,6 +179,7 @@ const fetchReports = async () => {
             });
         }
     }, [reports]);
+
 
 
     const handleFilterChange = (e) => {
