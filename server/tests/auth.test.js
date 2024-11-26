@@ -80,57 +80,41 @@ describe('Auth API', () => {
             expect(messages.length).toBe(1); // Ensure welcome message is created
         });
 
-/*        it('should not allow duplicate username or email', async () => {
-            const existingUser = {
-                username: 'testuser',
-                email: 'test@example.com',
-                password: 'password123',
-            };
+        it('should not allow duplicate username or email', async () => {
+        const existingUser = {
+            username: 'testuser',
+            email: 'test@example.com',
+            password: await bcrypt.hash('password123', 10),
+        };
 
-            users.push(existingUser);
+        // Mock User.findOne to return an existing user
+        User.findOne.mockResolvedValue(existingUser);
 
-            const response = await request(app)
-                .post('/register')
-                .send(existingUser);
+        const response = await request(app)
+            .post('/register')
+            .send(existingUser);
 
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('Username or email already exists');
+        expect(response.status).toBe(400);
+        expect(response.body.message).toBe('Username or email already exists');
         });
-    }); 
-    */
 
-/*    describe('POST /login', () => {
-        it('should log in an existing user and return a token', async () => {
-            const password = await bcrypt.hash('password123', 10);
-            users.push({
-                username: 'testuser',
-                password: password,
+        describe('POST /login', () => {
+            it('should log in an existing user and return a token', async () => {
+                const response = await request(app)
+                    .post('/login')
+                    .send({ username: 'testuser', password: 'password123' });
+                expect(response.status).toBe(200);  // Check for successful login
+                expect(response.body.message).toBe('Welcome testuser');
             });
 
-            const response = await request(app)
-                .post('/login')
-                .send({ username: 'testuser', password: 'password123' });
-
-            expect(response.status).toBe(200);
-            expect(response.body.message).toBe('Welcome testuser');
-            expect(response.headers['set-cookie']).toBeDefined(); // Ensure cookie is set
-        });
-*/
-/*      it('should return error for incorrect credentials', async () => {
-            const password = await bcrypt.hash('password123', 10);
-            users.push({
-                username: 'testuser',
-                password: password,
+            it('should return error for incorrect credentials', async () => {
+                const response = await request(app)
+                    .post('/login')
+                    .send({ username: 'wronguser', password: 'wrongpassword' });
+                expect(response.status).toBe(401);  // Check for failed login attempt
+                expect(response.body.message).toBe('Incorrect username or password');
             });
-
-            const response = await request(app)
-                .post('/login')
-                .send({ username: 'testuser', password: 'wrongpassword' });
-
-            expect(response.status).toBe(401);
-            expect(response.body.message).toBe('Incorrect username or password');
         });
-    */
     });
 
     describe('POST /logout', () => {
@@ -200,21 +184,5 @@ describe('Auth API', () => {
             expect(res.body.authenticated).toBe(false);
             expect(res.body.message).toBe('Invalid token');
         });
-
-/*        it('should pass and authenticate user if token is valid', async () => {
-            const validToken = jwt.sign(
-                { userId: 'testUserId' },
-                SECRET_KEY,
-                { expiresIn: '1h' } // Valid for 1 hour
-            );
-
-            const res = await request(server)
-                .get('/protected-route')
-                .set('Cookie', `token=${validToken}`);
-
-            expect(res.status).toBe(200);
-            expect(res.body.authenticated).toBe(true);
-            expect(res.body.user).toBeDefined();
-*/       });
     });
-
+});
