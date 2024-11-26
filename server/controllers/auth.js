@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const { sendEmail } = require('./email');
 const Message = require('../models/message');
+require('dotenv').config(); // Load environment variables
 
 // Register new user
 const register = async (req, res, next) => {
@@ -93,47 +94,44 @@ const register = async (req, res, next) => {
 
 // Login existing user
 const login = async (req, res, next) => {
-    const { username, password } = req.body
+    const { username, password } = req.body;
+    console.log("Login attempt:", username, password);
 
     try {
-        // Find user by username
-        const user = await User.findOne({ username })
+        const user = await User.findOne({ username });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' })
+            console.log("User not found");
+            return res.status(404).json({ message: 'User not found' });
         }
 
-        // Compare password
-        const passwordMatch = await user.comparePassword(password)
+        // Manually compare the password using bcrypt
+        const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Incorrect username or password' })
+            console.log("Password mismatch");
+            return res.status(401).json({ message: 'Incorrect username or password' });
         }
+        console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
-        // Sign JWT token
-        try {
-            const token = jwt.sign(
-                { userId: user._id },
-                process.env.SECRET_KEY,
-                {
-                    expiresIn: '2h',
-                }
-            )
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.SECRET_KEY,
+            { expiresIn: '2h' }
+        );
+        console.log("Token generated:", token);
 
-            res.cookie('token', token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production', // Secure flag for production
-                sameSite:
-                    process.env.NODE_ENV === 'production' ? 'None' : 'Strict', // 'None' for production, 'Strict' for localhost
-                maxAge: 60 * 60 * 1000, // 1 hour
-            })
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
+            maxAge: 60 * 60 * 1000,
+        });
 
-            res.status(200).json({ message: `Welcome ${user.username}` })
-        } catch (error) {
-            return next(error)
-        }
+        res.status(200).json({ message: `Welcome ${user.username}` });
     } catch (error) {
-        next(error)
+        console.error("Login error:", error);
+        next(error);
     }
-}
+};
 
 const logout = (req, res) => {
     res.clearCookie('token', {
