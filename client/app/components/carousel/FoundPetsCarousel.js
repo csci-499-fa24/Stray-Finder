@@ -84,8 +84,8 @@ const FoundPetsCarousel = () => {
         <div className={`carousel-items ${isTransitioning.current ? 'no-transition' : ''}`}>
           {visibleReports.map((report, index) => (
             <div className="carousel-item" key={index}>
-              <div className="image-name-container">
-                <div className="image-container">
+              <div className="carousel-image-name-container">
+                <div className="carousel-image-container">
                   <img
                     src={report.animalDetails.imageUrl}
                     alt={report.animalDetails.name}

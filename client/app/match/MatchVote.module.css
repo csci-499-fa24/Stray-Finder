@@ -1,4 +1,4 @@
-.container {
+.matchContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;  
@@ -12,7 +12,7 @@
     background-color:#ceb199;
 }
 
-.card{
+.matchCard{
     margin: 15px; /* Space between cards */
     padding: 20px; /* Padding inside the card */
 }

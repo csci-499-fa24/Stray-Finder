@@ -173,9 +173,9 @@ const MatchVote = () => {
                     </div>
                     <div className="row justify-content-center">
                         <div className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
-                            <div className={styles.container}>
+                            <div className={styles.matchContainer}>
                                 {/* Report1 Card */}
-                                <div className={styles.card}>
+                                <div className={styles.matchCard}>
                                     <AnimalCard
                                         report_id={currentMatch.report1._id}
                                         name={currentMatch.report1.animal.name}
@@ -186,7 +186,7 @@ const MatchVote = () => {
                                 <Map report1={currentMatch.report1} report2={currentMatch.report2}/>
 
                                 {/* Report2 Card */}
-                                <div className={styles.card}>
+                                <div className={styles.matchCard}>
                                     <AnimalCard
                                         report_id={currentMatch.report2._id}
                                         name={currentMatch.report2.animal.name}
