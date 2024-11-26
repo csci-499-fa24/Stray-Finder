@@ -43,13 +43,13 @@
     max-width: 220px;
   }
   
-  .image-name-container {
+  .carousel-image-name-container {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   
-  .image-container {
+  .carousel-image-container {
     width: 220px;
     height: 220px;
     border-radius: 50%;
@@ -60,7 +60,7 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
   
-  .image-container:hover {
+  .carousel-image-container:hover {
     transform: scale(1.05);
     border-color: #8D6E63;
   }

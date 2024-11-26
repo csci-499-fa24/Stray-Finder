@@ -11,7 +11,7 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
             <div className="match-card">
                 <div className='match-image-container'>
                     <img
-                        className='image'
+                        className='match-image'
                         src={image || '/paw-pattern.jpg'}
                         alt={name}
                         style={{ position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', objectFit: 'cover' }}
@@ -20,8 +20,8 @@ const AnimalCard = ({ report_id, animal_id, name, username, image, species, gend
 
                 {/* Card Bottom Section */}
                 <div className="match-card-bottom">
-                    <div className="card-body">
-                        <h5 className="card-title">{name}</h5>
+                    <div className="match-card-body">
+                        <h5 className="match-card-title">{name}</h5>
                     </div>
                 </div>
             </div>

@@ -33,6 +33,8 @@ const DeleteAnimalModal = ({ isOpen, onClose, report_id, animal_id }) => {
       if (!response1.ok || !response2.ok) {
         throw new Error("Failed to delete animal or animal report");
       }
+
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting animal or animal report data: ", error);
     } finally {

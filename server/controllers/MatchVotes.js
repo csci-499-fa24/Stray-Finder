@@ -118,4 +118,24 @@ const updateMatchVotes = async (req, res, matchVotesId, vote) => {
 
 };
 
-module.exports = { getMatchVotes, createMatchVotes, updateMatchVotes };
+const getVotingCompletion = async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ hasUnvotedMatches: false, message: "User not authenticated" });
+    }
+    
+    try {
+        const allHighMatches = await MatchVotes.find().select('_id'); // Fetch all match IDs
+        const userVotedMatchIds = req.user.matchVotes.map(vote => vote.matchVotesId.toString()); // User's voted match IDs
+
+        const allMatchIds = allHighMatches.map(match => match._id.toString()); // Extract all match IDs
+        const unvotedMatches = allMatchIds.filter(id => !userVotedMatchIds.includes(id)); // Matches the user hasn't voted on
+
+        const hasUnvotedMatches = unvotedMatches.length > 0; // Determine if there are remaining votes
+        res.status(200).json({ hasUnvotedMatches });
+    } catch (err) {
+        console.error('Error fetching voting completion status:', err);
+        res.status(500).json({ message: 'Failed to fetch voting completion status' });
+    }
+};
+
+module.exports = { getMatchVotes, createMatchVotes, updateMatchVotes, getVotingCompletion };

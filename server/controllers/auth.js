@@ -95,7 +95,6 @@ const register = async (req, res, next) => {
 // Login existing user
 const login = async (req, res, next) => {
     const { username, password } = req.body;
-    console.log("Login attempt:", username, password);
 
     try {
         const user = await User.findOne({ username });
@@ -110,14 +109,12 @@ const login = async (req, res, next) => {
             console.log("Password mismatch");
             return res.status(401).json({ message: 'Incorrect username or password' });
         }
-        console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
         const token = jwt.sign(
             { userId: user._id },
             process.env.SECRET_KEY,
             { expiresIn: '2h' }
         );
-        console.log("Token generated:", token);
 
         res.cookie('token', token, {
             httpOnly: true,

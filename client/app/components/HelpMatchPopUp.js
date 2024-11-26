@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from "react";
 import styles from "./HelpMatchPopUp.module.css";
 import Link from "next/link";
+import checkVotingCompletion from "../utils/votingCompletion";
 
 const HelpMatchPopUp = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [animationIndex, setAnimationIndex] = useState(0);
+  const [showPopup, setShowPopup] = useState(true);
 
   const animationData = [
     { image1: "/pet1.jpg", image2: "/pet1.jpg", match: true },
     { image1: "/pet1.jpg", image2: "/pet2.jpg", match: false },
   ];
+
+  useEffect(() => {
+    const checkCompletion = async () => {
+        const hasUnvotedMatches = await checkVotingCompletion(); // Fetch completion status
+        setShowPopup(hasUnvotedMatches); // Show popup only if there are unvoted matches
+    };
+
+    checkCompletion();
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 2000);
@@ -27,6 +38,8 @@ const HelpMatchPopUp = () => {
 
   const handleNotNow = () => setIsCollapsed(true);
   const togglePopup = () => setIsCollapsed((prev) => !prev);
+
+  if (!showPopup) return null;
 
   return (
     <div
