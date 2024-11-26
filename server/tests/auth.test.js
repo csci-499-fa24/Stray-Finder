@@ -127,7 +127,7 @@ describe('Auth API', () => {
 
     // Middleware test suite
     describe('Authenticate Middleware', () => {
-        const SECRET_KEY = process.env.SECRET_KEY; // Use a test secret key
+        const SECRET_KEY = 'test-secret-key'; // Use a test secret key
         let server;
 
         beforeAll(() => {
