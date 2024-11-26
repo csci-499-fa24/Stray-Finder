@@ -94,7 +94,7 @@ const MatchVote = () => {
                 !user.matchVotes.some(vote => vote.matchVotesId === match.id)
             );
             setUnvotedMatchIds(unvotedMatches);
-            
+
         } else {
             setUnvotedMatchIds(allMatches);
         }
@@ -155,7 +155,6 @@ const MatchVote = () => {
 
     const LoadNext = () => {
         setCurrentIndex(currentIndex + 1);
-        console.log(currentIndex);
     }
 
     if (isLoading || allMatches.length === 0) {
