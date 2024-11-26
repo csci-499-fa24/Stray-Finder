@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import AnimalCard from './MatchCard'
 import useAuth from "@/app/hooks/useAuth";
+import toast from 'react-hot-toast';
 import styles from '../MatchVote.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -134,18 +135,26 @@ const MatchVote = () => {
 
             const status = response.status;
             if(status === 201){
-                alert('vote successfully changed');
+                toast.success('vote successfully changed', {
+                    duration: 2000,
+                });
                 setCurrentIndex(currentIndex + 1);
             }
             else if(status === 202){
-                alert('vote successfully casted');
+                toast.success('vote successfully casted', {
+                    duration: 2000,
+                });
                 setCurrentIndex(currentIndex + 1);
             }
             else if(status === 401){
-                alert('login first');
+                toast.success('must be logged in to vote', {
+                    duration: 2000,
+                });
             }
             else if(status === 402){
-                alert('already casted this vote');
+                toast.success('same vote already casted', {
+                    duration: 2000,
+                });
             }
 
         } catch (error) {
