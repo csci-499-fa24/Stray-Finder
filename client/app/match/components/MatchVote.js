@@ -179,6 +179,11 @@ const MatchVote = () => {
                 <div>
                     <div className={styles.titleContainer}>
                         <h2 className={styles.heading}>Help us match these guys</h2>
+                        <p className={styles.p}>
+                            These animals have a high probability to be the same pet based on our algorithm.
+                            Would you help us and pet owners by comparing the images and voting if you think the two pets could be the same?
+                            Click on the images for more details.
+                        </p>
                     </div>
                     <div className="row justify-content-center">
                         <div className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
