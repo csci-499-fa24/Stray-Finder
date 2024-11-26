@@ -163,7 +163,7 @@ font-weight: bold;
 }
 
   /* Additional styles for screens 380px and below */
-  @media (max-width: 380px) {
+  @media (max-width: 390px) {
     .brand-text {
       font-size: 1.0rem;
       color: #333333; /* Dark gray to distinguish from nav links */
@@ -247,4 +247,68 @@ font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+/* For screens 420px or smaller */
+@media (max-width: 420px) {
+  .notification-icon-container {
+    position: absolute; /* Stick it to the top-right */
+    top: 0px; /* Move it up a bit to center it vertically */
+    right: 20px; /* Move it slightly left from the edge */
+    z-index: 20; /* Ensure it stays on top of other elements */
+  }
+
+  .notification-icon {
+    font-size: 1.3rem; /* Slightly smaller icon */
+  }
+
+  .notification-count {
+    top: -3px; /* Adjust bubble positioning */
+    right: -3px; /* Keep the count aligned properly */
+    width: 16px; /* Smaller notification bubble */
+    height: 16px; /* Adjust height */
+    font-size: 0.7rem; /* Make the count smaller */
+  }
+}
+/* For screens 345px or smaller */
+@media (max-width: 345px) {
+  /* Notification Icon Container */
+  .notification-icon-container {
+    position: absolute; /* Stick it to the top-right */
+    top: 0px; /* Move it up a bit to center it vertically */
+    right: 15px; /* Move it slightly left from the edge */
+    z-index: 20; /* Ensure it stays on top of other elements */
+  }
+
+  /* Notification Icon */
+  .notification-icon {
+    font-size: 1.1rem; /* Make the icon smaller */
+  }
+
+  /* Notification Count */
+  .notification-count {
+    top: -3px; /* Adjust bubble positioning */
+    right: -3px; /* Keep the count aligned properly */
+    width: 14px; /* Smaller notification bubble */
+    height: 14px; /* Adjust height */
+    font-size: 0.6rem; /* Make the count smaller */
+  }
+
+  /* Profile Icon and Container Adjustments */
+  .login-profile-container {
+    position: absolute;
+    top: 25px; /* Adjust top position to keep profile in line */
+    right: 10px; /* Adjust right positioning */
+    font-size: 0.9rem; /* Smaller font size for the profile icon */
+  }
+
+  /* Adjust Profile Icon Size */
+  .profile-icon {
+    font-size: 1.2rem; /* Reduce profile icon size */
+  }
+
+  /* Optional: Adjust padding of the profile button */
+  .login-button {
+    padding: 3px 8px; /* Smaller padding for profile button */
+    font-size: 0.7rem; /* Smaller font size */
+  }
 }

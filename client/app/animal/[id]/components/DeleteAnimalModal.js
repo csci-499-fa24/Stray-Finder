@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import Modal from "react-modal";
-import styles from "../AnimalReportProfile.module.css";
+import styles from "./DeleteAnimalProfile.module.css";
 
 const DeleteAnimalModal = ({ isOpen, onClose, report_id, animal_id }) => {
   const [loading, setLoading] = useState(false);
@@ -36,6 +35,9 @@ const DeleteAnimalModal = ({ isOpen, onClose, report_id, animal_id }) => {
       }
     } catch (error) {
       console.error("Error deleting animal or animal report data: ", error);
+    } finally {
+      setLoading(false);
+      onClose();
     }
   };
 
@@ -48,28 +50,29 @@ const DeleteAnimalModal = ({ isOpen, onClose, report_id, animal_id }) => {
         className={styles.customModal}
         ariaHideApp={false}
         style={{
-          overlay: { zIndex: 18 }, // Increase the z-index of the overlay
-          content: { zIndex: 19 }, // Increase the z-index of the modal content
+          overlay: { zIndex: 18 },
+          content: { zIndex: 19 },
         }}
       >
-        <div className="text-center">
-          <h1>Are you sure you want to delete this report?</h1>
-        </div>
-        <div
-          className="d-flex justify-content-between"
-          style={{ height: "75px" }}
-        >
-          <Link
-            onClick={handleDelete}
-            className="btn btn-danger mt-auto"
-            disabled={loading}
-            href="/"
-          >
-            {loading ? "Deleteing..." : "Delete"}
-          </Link>
-          <button className="btn btn-secondary mt-auto" onClick={onClose}>
-            Cancel
-          </button>
+        <div className={`${styles.modalContent}`}>
+          <h1 className={styles.modalTitle}>
+            Are you sure you want to delete this report?
+          </h1>
+          <div className={styles.modalButtons}>
+            <button
+              onClick={handleDelete}
+              className={`${styles.deleteButton} btn btn-danger`}
+              disabled={loading}
+            >
+              {loading ? "Deleting..." : "Delete"}
+            </button>
+            <button
+              className={`${styles.cancelButton} btn btn-secondary`}
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </Modal>
     </div>
