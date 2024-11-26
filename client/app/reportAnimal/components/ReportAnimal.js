@@ -7,8 +7,6 @@ import toast from 'react-hot-toast'
 import Loader from '../../components/loader/Loader'
 import styles from './reportAnimal.module.css'
 import { FaCamera } from 'react-icons/fa'
-import { Filter } from 'bad-words';
- 
 
 const ReportAnimal = () => {
     const router = useRouter()
@@ -286,20 +284,6 @@ const ReportAnimal = () => {
         setLoading(true)
         setError('')
 
-        const filter = new Filter();
-
-        // Validate `description` for profanity
-        if (filter.isProfane(formData.description)) {
-            setLoading(false);
-            toast.error(
-                'Your report description contains inappropriate language. Please revise it before submitting.'
-            );
-            return; // Stop submission if profanity is detected
-        }
-
-        // Sanitize the `description`
-        const sanitizedDescription = filter.clean(formData.description);
-
         // Check if user location is available
         if (userLocation) {
             const distance = calculateDistance(
@@ -308,7 +292,6 @@ const ReportAnimal = () => {
                 formData.coordinates.lat,
                 formData.coordinates.lng
             );
-
 
             // Validate the distance is within 10 miles
             if (distance > 10) {
