@@ -45,12 +45,31 @@ const getHighMatches = async (req, res) => {
 
         const highMatches = [];
 
-        for (const lostReport of allLostReports) {
-            for (const strayReport of allStrayReports) {
-                const score = await calculateMatchScore(lostReport, strayReport);
+        for (const report1 of allLostReports) {
+            for (const report2 of allStrayReports) {
+                const score = await calculateMatchScore(report1, report2);
                 if (score >= .90) { // only take matches with score >= .90 (90%)
-                    highMatches.push({ lostReport, strayReport, score });
+                    highMatches.push({ report1, report2, score });
                 }
+            }
+        }
+
+        for (const report1 of allStrayReports) {
+            for (const report2 of allStrayReports) {
+                if (report1 !== report2) {
+                    const exists = highMatches.some(match => // check if pair already in highMatches
+                        (match.report1 === report1 && match.report2 === report2) || 
+                        (match.report1 === report2 && match.report2 === report1)
+                    );
+                    if (!exists) {
+                        const score = await calculateMatchScore(report1, report2);
+                        
+                        if (score >= 0.90) {
+                            highMatches.push({ report1, report2, score });
+                            // console.log("High Matches:", highMatches);
+                        }
+                    }
+                }                
             }
         }
 
