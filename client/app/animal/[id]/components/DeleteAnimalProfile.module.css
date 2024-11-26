@@ -1,74 +1,97 @@
 .customModal {
-    background: #ffffff;
-    border-radius: 10px;
-    padding: 16px;
-    max-width: 500px;
-    margin: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.3s ease-in-out;
-  }
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 16px;
+  max-width: 500px;
+  width: 100%; /* Ensures modal width is responsive */
+  margin: 0; /* Remove any margin */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
   
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+  /* Flexbox centering */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the modal */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  
-  .modalContent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333333;
+  text-align: center;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.deleteButton {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.deleteButton:hover {
+  background-color: #ff1a1a;
+  transform: scale(1.05);
+}
+
+.cancelButton {
+  background-color: #cccccc;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.cancelButton:hover {
+  background-color: #aaaaaa;
+  transform: scale(1.05);
+}
+/* Mobile Adjustment */
+@media (max-width: 768px) {
+  .customModal {
+    max-width: 400px;  /* Make modal smaller */
+    padding: 8px;     /* Reduce padding */
   }
   
   .modalTitle {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333333;
-    text-align: center;
+    font-size: 18px;   /* Slightly smaller title font size */
   }
   
-  .modalButtons {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-  }
-  
-  .deleteButton {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .deleteButton:hover {
-    background-color: #ff1a1a;
-    transform: scale(1.05);
-  }
-  
+  .deleteButton,
   .cancelButton {
-    background-color: #cccccc;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    font-size: 12px;   /* Smaller button text */
+    padding: 6px 12px; /* Smaller button padding */
   }
-  
-  .cancelButton:hover {
-    background-color: #aaaaaa;
-    transform: scale(1.05);
-  }
-  
+}
