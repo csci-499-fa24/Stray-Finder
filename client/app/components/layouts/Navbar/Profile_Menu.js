@@ -40,9 +40,7 @@ const ProfileMenu = () => {
 
     // if (!isAuthenticated || !user) {
     //     return (
-    //       <Link href="/auth" className="login-link" style={{ color: '#67347a' }}>
-    //         Login
-    //       </Link>
+    //       <Link href="/auth" className="login-link" style={{ color: '#67347a' }}>Login</Link>
     //     );
     //   } REMOVING THIS TO AVOID LOGIN BUTTON/LINK RENDERING TWICE. IF ANYTHING BREAKS BRING THIS BACK!
       
