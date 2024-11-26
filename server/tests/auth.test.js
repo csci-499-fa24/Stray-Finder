@@ -1,3 +1,5 @@
+require('dotenv').config(); // Load environment variables
+
 const request = require('supertest'); // For HTTP request testing
 const express = require('express');
 const jwt = require('jsonwebtoken');
@@ -6,13 +8,13 @@ const auth = require('./auth'); // Import the auth routes
 const User = require('../models/user'); // Mock User model
 const Message = require('../models/message'); // Mock Message model
 const cookieParser = require('cookie-parser');
-const authenticate = require('../middleware/auth'); 
+const authenticate = require('../middleware/auth'); // Your authentication middleware
 
 // Mock implementations
 jest.mock('../models/user');
 jest.mock('../models/message');
 jest.mock('./email', () => ({
-    sendEmail: jest.fn(),
+    sendEmail: jest.fn(), // Mock email sending function
 }));
 
 // In-memory mock data
@@ -21,8 +23,9 @@ const messages = [];
 
 // Mock User methods
 User.findOne = jest.fn((query) => {
-    return Promise.resolve(users.find((user) => 
-        user.username === query.username || user.email === query.email));
+    return Promise.resolve(users.find((user) =>
+        user.username === query.username || user.email === query.email
+    ));
 });
 
 User.prototype.save = jest.fn(function () {
@@ -44,11 +47,12 @@ Message.prototype.save = jest.fn(function () {
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParser()); // To parse cookies for authentication
 
 // Add routes
-app.post('/register', auth.register);
-app.post('/login', auth.login);
-app.post('/logout', auth.logout);
+app.post('/register', auth.register); // Register route
+app.post('/login', auth.login); // Login route
+app.post('/logout', auth.logout); // Logout route
 
 // Test suites
 describe('Auth API', () => {
@@ -63,7 +67,7 @@ describe('Auth API', () => {
             const newUser = {
                 username: 'testuser',
                 email: 'test@example.com',
-                password: await bcrypt.hash('password123', 10),
+                password: await bcrypt.hash('password123', 10), // Hash the password
             };
 
             const response = await request(app)
@@ -72,7 +76,7 @@ describe('Auth API', () => {
 
             expect(response.status).toBe(201);
             expect(response.body.message).toBe('User successfully registered!');
-            expect(users.length).toBe(1);
+            expect(users.length).toBe(1); // Ensure the user is added
             expect(messages.length).toBe(1); // Ensure welcome message is created
         });
 
@@ -132,84 +136,83 @@ describe('Auth API', () => {
             const response = await request(app).post('/logout');
             expect(response.status).toBe(200);
             expect(response.body.message).toBe('Logout successful');
-            expect(response.headers['set-cookie']).toBeDefined();
+            expect(response.headers['set-cookie']).toBeDefined(); // Cookie should be cleared
         });
     });
-    
+
     // Middleware test suite
     describe('Authenticate Middleware', () => {
         const SECRET_KEY = 'test-secret-key'; // Use a test secret key
         let server;
-    
+
         beforeAll(() => {
             process.env.SECRET_KEY = SECRET_KEY;
-    
+
             const app = express();
             app.use(cookieParser());
-            app.use(authenticate);
-    
+            app.use(authenticate); // Your authentication middleware
+
             app.get('/protected-route', (req, res) => {
                 res.status(200).json({ authenticated: true, user: req.user });
             });
-    
+
             server = app.listen(3001); // Start server for middleware testing
         });
-    
+
         afterAll(() => {
             server.close();
         });
-    
+
         it('should return 401 if the token is expired', async () => {
             const expiredToken = jwt.sign(
                 { userId: 'testUserId' },
                 SECRET_KEY,
-                { expiresIn: -1 } // Immediately expired
+                { expiresIn: -1 } // Immediately expired token
             );
-    
+
             const res = await request(server)
                 .get('/protected-route')
                 .set('Cookie', `token=${expiredToken}`);
-    
+
             expect(res.status).toBe(401);
             expect(res.body.authenticated).toBe(false);
             expect(res.body.message).toBe('Token expired');
         });
-    
+
         it('should return 401 if no token is provided', async () => {
             const res = await request(server).get('/protected-route');
-    
+
             expect(res.status).toBe(401);
             expect(res.body.authenticated).toBe(false);
             expect(res.body.message).toBe('Authentication required');
         });
-    
+
         it('should return 401 if the token is invalid', async () => {
             const invalidToken = 'invalidTokenValue';
-    
+
             const res = await request(server)
                 .get('/protected-route')
                 .set('Cookie', `token=${invalidToken}`);
-    
+
             expect(res.status).toBe(401);
             expect(res.body.authenticated).toBe(false);
             expect(res.body.message).toBe('Invalid token');
         });
-    
+
         it('should pass and authenticate user if token is valid', async () => {
             const validToken = jwt.sign(
                 { userId: 'testUserId' },
                 SECRET_KEY,
                 { expiresIn: '1h' } // Valid for 1 hour
             );
-    
+
             const res = await request(server)
                 .get('/protected-route')
                 .set('Cookie', `token=${validToken}`);
-    
+
             expect(res.status).toBe(200);
             expect(res.body.authenticated).toBe(true);
             expect(res.body.user).toBeDefined();
         });
-    });    
-
+    });
 });

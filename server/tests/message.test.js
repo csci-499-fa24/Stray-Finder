@@ -1,3 +1,5 @@
+require('dotenv').config(); // Load environment variables
+
 const { sendMessage, getMessages, retrieveAllUsers, getLastMessages, markMessagesAsRead } = require('../controllers/message');
 const Message = require('../models/message');
 const User = require('../models/user');
@@ -116,7 +118,7 @@ describe('Message Controller', () => {
             await retrieveAllUsers(req, res);
 
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith([
+            expect(res.json).toHaveBeenCalledWith([ 
                 { id: '456', username: 'recipient', profileImage: null }
             ]);
         });
