@@ -66,7 +66,7 @@ const getHighMatches = async (req, res) => {
                         
                         if (score >= 0.90) {
                             highMatches.push({ report1, report2, score });
-                            console.log("High Matches:", highMatches);
+                            // console.log("High Matches:", highMatches);
                         }
                     }
                 }                
