@@ -37,12 +37,18 @@ const ProfileMenu = () => {
 
         checkUnreadMessages(); // Run the function on mount
     }, [isAuthenticated, user]);
-    
-    if (!isAuthenticated || !user) {
-        return (
-            <Link href="/auth" className="login-link" style={{ color: '#67347a' }}>Login</Link>
-        );
-    }
+
+    // if (!isAuthenticated || !user) {
+    //     return (
+    //       <Link href="/auth" className="login-link" style={{ color: '#67347a' }}>
+    //         Login
+    //       </Link>
+    //     );
+    //   } REMOVING THIS TO AVOID LOGIN BUTTON/LINK RENDERING TWICE. IF ANYTHING BREAKS BRING THIS BACK!
+      
+    if (!user) { //REPLACED THE ABOVE WITH THIS!!
+        return null; 
+      }      
 
     return (
         <div className="user-avatar dropdown">
