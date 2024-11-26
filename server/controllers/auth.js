@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const { sendEmail } = require('./email');
 const Message = require('../models/message');
+require('dotenv').config(); // Load environment variables
 
 // Register new user
 const register = async (req, res, next) => {
@@ -109,6 +110,7 @@ const login = async (req, res, next) => {
             console.log("Password mismatch");
             return res.status(401).json({ message: 'Incorrect username or password' });
         }
+        console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
         const token = jwt.sign(
             { userId: user._id },
