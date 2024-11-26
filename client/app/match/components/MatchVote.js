@@ -90,18 +90,11 @@ const MatchVote = () => {
 
     const checkForOverlaps = (allMatches, user) => {
         if(user){
-            // Iterate over allMatches
-            allMatches.forEach((match) => {
-                // Check if match.id exists in user.matchVotes
-                const isVoted = user.matchVotes.some(vote => vote.matchVotesId === match.id);
-                
-                // console.log(match.id);
-                // If no overlap, push match to unvotedMatchIds
-                if (!isVoted) {
-                    // console.log('hello');
-                    setUnvotedMatchIds(prev => [...prev, match]);
-                }
-            });
+            const unvotedMatches = allMatches.filter(match =>
+                !user.matchVotes.some(vote => vote.matchVotesId === match.id)
+            );
+            setUnvotedMatchIds(unvotedMatches);
+            
         } else {
             setUnvotedMatchIds(allMatches);
         }
@@ -162,6 +155,7 @@ const MatchVote = () => {
 
     const LoadNext = () => {
         setCurrentIndex(currentIndex + 1);
+        console.log(currentIndex);
     }
 
     if (isLoading || allMatches.length === 0) {
@@ -247,17 +241,15 @@ const MatchVote = () => {
                             </div>
                         </div>
                     </div>
-                    {currentIndex < allMatches.length && (
-                        <div className="text-center my-4">
-                            <button
-                                onClick={LoadNext}
-                                className="btn btn-primary"
-                                disabled={isLoading}
-                            >
-                                {isLoading ? 'Loading...' : 'Load More'}
-                            </button>
-                        </div>
-                    )}
+                    <div className="text-center my-4">
+                        <button
+                            onClick={LoadNext}
+                            className="btn btn-primary"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? 'Loading...' : 'Load More'}
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <p>There are no more pets to match! Thanks for helping us match all the pets!</p>
