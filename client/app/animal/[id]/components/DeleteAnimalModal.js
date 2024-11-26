@@ -47,6 +47,10 @@ const DeleteAnimalModal = ({ isOpen, onClose, report_id, animal_id }) => {
         contentLabel="Delete Prompt"
         className={styles.customModal}
         ariaHideApp={false}
+        style={{
+          overlay: { zIndex: 18 }, // Increase the z-index of the overlay
+          content: { zIndex: 19 }, // Increase the z-index of the modal content
+        }}
       >
         <div className="text-center">
           <h1>Are you sure you want to delete this report?</h1>

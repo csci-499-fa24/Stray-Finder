@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { GoogleMap, Marker, LoadScriptNext } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
+import Loader from "../../../components/loader/Loader";
 import styles from "../AnimalReportProfile.module.css";
 import EditAnimalModal from "./EditAnimalModal";
 import useAuth from "@/app/hooks/useAuth";
@@ -51,16 +52,7 @@ const AnimalReportProfile = ({ id }) => {
   const closeModal = () => setIsModalOpen(false);
 
   if (loading) {
-    return (
-      <div
-      className="d-flex justify-content-center align-items-center vh-100"
-      style={{ marginTop: '-50px' }} // Adjust as needed for vertical alignment
-  >
-      <div className="spinner-border text-primary" role="status">
-          <span className="sr-only"></span>
-      </div>
-  </div>
-    );
+    return  <Loader />;
   }
 
   return (
@@ -185,11 +177,7 @@ const AnimalReportProfile = ({ id }) => {
               <LoadScriptNext
                 googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
               >
-                {mapLoading && (
-                  <div className="spinner-border text-primary" role="status">
-                    <span className="sr-only"></span>
-                  </div>
-                )}
+                {mapLoading && <Loader />}
                 <GoogleMap
                   mapContainerStyle={{ height: "300px", width: "100%" }}
                   center={mapCenter}

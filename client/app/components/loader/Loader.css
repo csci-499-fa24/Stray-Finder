@@ -1,0 +1,17 @@
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full screen height */
+    background-color: #f8f1eb; /* Light background */
+    background: url('/bb7.jpg') no-repeat center center; /* Add your background image */
+    background-size: cover; /* Ensure the image covers the entire container */
+}
+
+.running-dog img {
+    width: 150px; /* Adjust the size of your loader */
+    height: 150px;
+    border-radius: 50%; /* Make it circular */
+    object-fit: cover; /* Ensure the image scales correctly */
+}

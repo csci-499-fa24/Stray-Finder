@@ -1,5 +1,6 @@
 import useAuth from '@/app/hooks/useAuth';
 import { useEffect, useState } from 'react';
+import Loader from '../../../components/loader/Loader';
 import styles from './profile.module.css';
 import { FaCamera } from 'react-icons/fa';
 
@@ -77,16 +78,7 @@ const UserProfile = ({ id }) => {
     };
     
     if (loading) {
-        return (
-            <div
-            className="d-flex justify-content-center align-items-center vh-100"
-            style={{ marginTop: '-50px' }} // Adjust as needed for vertical alignment
-        >
-            <div className="spinner-border text-primary" role="status">
-                <span className="sr-only"></span>
-            </div>
-        </div>
-        );
+        return <Loader />;
     }
 
     if (!userFound) {
