@@ -1,4 +1,5 @@
 import { useEffect, useState, memo } from 'react'
+import Loader from '../loader/Loader'
 import AnimalCard from './AnimalCard'
 
 const FeaturedStrays = () => {
