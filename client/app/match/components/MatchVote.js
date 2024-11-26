@@ -233,22 +233,39 @@ const MatchVote = () => {
                                                 Yes : No
                                             </p>
                                         </div>
-                                        <ProgressBar
-                                            max={100}
-                                        >
+                                        {currentMatch.matchVotes.yes && currentMatch.matchVotes.no ? (
                                             <ProgressBar
-                                            striped
-                                            variant="success"
-                                            now={(currentMatch.matchVotes.yes / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
-                                            }
-                                            />
+                                                max={100}
+                                            >
+                                                <ProgressBar
+                                                striped
+                                                variant="success"
+                                                now={(currentMatch.matchVotes.yes / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
+                                                }
+                                                />
+                                                <ProgressBar
+                                                striped
+                                                variant="danger"
+                                                now={(currentMatch.matchVotes.no / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
+                                                }
+                                                />
+                                            </ProgressBar>
+                                        ) : (
                                             <ProgressBar
-                                            striped
-                                            variant="danger"
-                                            now={(currentMatch.matchVotes.no / (currentMatch.matchVotes.yes + currentMatch.matchVotes.no)) * 100
-                                            }
-                                            />
-                                        </ProgressBar>
+                                                max={ 100 }
+                                            >
+                                                <ProgressBar
+                                                striped
+                                                variant="success"
+                                                now={ 50 }
+                                                />
+                                                <ProgressBar
+                                                striped
+                                                variant="danger"
+                                                now={ 50 }
+                                                />
+                                            </ProgressBar>
+                                        )}
                                     </div>)}
                                 </div>
                             </div>
