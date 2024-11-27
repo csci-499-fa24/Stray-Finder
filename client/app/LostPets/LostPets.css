@@ -29,3 +29,34 @@
 .tab-button:hover {
     background-color: #ddd; /* Slightly darker on hover */
 }
+
+/* Shared header container */
+.lostpets-header {
+    display: flex; /* Flexbox to align items horizontally */
+    justify-content: space-between; /* Space between the icon and filters */
+    align-items: center; /* Vertically align items */
+    margin-bottom: 15px; /* Add spacing below the header */
+}
+
+/* Info icon styling */
+.lostpets-info-icon-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.lostpets-info-icon {
+    font-size: 2rem; /* Larger size for better visibility */
+    color: #6c757d; /* Neutral dark gray */
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.lostpets-info-icon:hover {
+    color: #e85d04; /* Highlight color for hover effect */
+    transform: scale(1.1); /* Slight zoom effect */
+}
+
+/* Filters dropdown adjustment to align properly */
+.dropdown {
+    flex-grow: 1; /* Ensure it grows to fill space if needed */
+}
