@@ -21,6 +21,7 @@ app.use(cookieParser())
 app.use(
     cors({
         origin: process.env.NEXT_PUBLIC_CLIENT_URL,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true,
     })
 )
