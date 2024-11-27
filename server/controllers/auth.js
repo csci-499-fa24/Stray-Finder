@@ -116,12 +116,16 @@ const login = async (req, res, next) => {
             { expiresIn: '2h' }
         );
 
+        const isProduction = process.env.NODE_ENV === 'production'
+
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', 
-            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
-            maxAge: 60 * 60 * 1000,
-        });
+            secure: isProduction,
+            sameSite: isProduction ? 'None' : 'Strict',
+            domain: isProduction ? '.onrender.com' : undefined,
+            maxAge: 60 * 60 * 1000, // 1 hour
+        })
+
 
         res.status(200).json({ message: `Welcome ${user.username}` });
     } catch (error) {
