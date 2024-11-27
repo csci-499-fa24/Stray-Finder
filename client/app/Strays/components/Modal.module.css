@@ -1,0 +1,63 @@
+/* Modal overlay to darken the background */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal content container */
+.modal-content {
+    background: white;
+    padding: 20px 30px; /* Add padding for spacing */
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    text-align: left; /* Align all content to the left */
+}
+
+/* Center the modal header */
+.modal-content h2 {
+    text-align: center; /* Center-align the header */
+    margin-bottom: 20px; /* Add spacing below the header */
+}
+
+/* Close button styling */
+.modal-close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #f85d04; /* Custom color for the close button */
+    transition: color 0.3s ease;
+}
+
+.modal-close-button:hover {
+    color: #d43d01; /* Darker shade for hover effect */
+}
+
+/* Add spacing between paragraphs and the list */
+.modal-content p {
+    margin: 10px 0; /* Add vertical spacing */
+    line-height: 1.6; /* Improve readability */
+}
+
+.modal-content ul {
+    margin-left: 20px; /* Indent the list */
+    padding-left: 0; /* Remove default padding */
+}
+
+.modal-content li {
+    margin-bottom: 10px; /* Add space between list items */
+}

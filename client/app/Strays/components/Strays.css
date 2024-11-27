@@ -34,3 +34,35 @@
     color: white;
   }
   
+  /* Header container for alignment */
+.strays-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Unique class for the info icon container */
+.strays-info-icon-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Info icon styling */
+.strays-info-icon {
+  font-size: 2rem; /* Larger size for better visibility */
+  color: #6c757d; /* Matches the active tab color */
+  margin-right: 20px; /* Add spacing to the right */
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.strays-info-icon:hover {
+  color: #e85d04; /* Highlight on hover */
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+/* Ensure the filter dropdown aligns properly */
+.dropdown {
+  flex-grow: 1;
+}
