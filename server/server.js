@@ -48,7 +48,7 @@ const email = require('./routes/email')
 const profile = require('./routes/profile')
 const matchVotes = require('./routes/MatchVotes')
 const commentRoutes = require('./routes/comment')
-const notificationRoutes = require("./routes/notification");
+const notificationRoutes = require('./routes/notification');
 const { sendSummaryEmails } = require('./utils/notificationSummary')
 
 /**
