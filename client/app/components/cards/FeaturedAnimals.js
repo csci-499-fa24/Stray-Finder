@@ -73,7 +73,7 @@ const FeaturedStrays = () => {
 
     return (
         <div className="container text-end">
-            <div className="text-center h2 p-3">Featured Strays</div>
+            <div className="text-center h2 p-3">Strays Seen Near You</div>
             <hr />
 
             {/* Render the filters */}

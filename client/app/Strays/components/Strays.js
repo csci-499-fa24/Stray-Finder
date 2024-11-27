@@ -1,6 +1,8 @@
 import { useEffect, useState, memo } from 'react'
 import Loader from '../../components/loader/Loader';
 import AnimalCard from '../../components/cards/AnimalCard';
+import { FaInfoCircle } from 'react-icons/fa'; 
+import Modal from './Modal';
 import './Strays.css';
 
 const Strays = () => {
@@ -11,7 +13,8 @@ const Strays = () => {
         gender: '',
         name: '',
     }) // State to store selected filters
-    const [debouncedFilters, setDebouncedFilters] = useState(filters) // Debounced state for filtering
+    const [debouncedFilters, setDebouncedFilters] = useState(filters)
+    const [showInfo, setShowInfo] = useState(false);
 
     // Debounce the filters so the API is not called on every keypress or select
     useEffect(() => {
@@ -73,15 +76,51 @@ const Strays = () => {
         }))
     }
 
+    const handleInfoClick = () => {
+        setShowInfo(true); // Show the modal
+    };
+
+    const handleCloseInfo = () => {
+        setShowInfo(false); // Close the modal
+    };
+
     return (
         <div className="container text-end">
-            {/* Render the filters */}
-            <MemoizedFilters
-                filters={filters}
-                handleFilterChange={handleFilterChange}
-            />
+            <div className="strays-header">
+                <div className="strays-info-icon-container">
+                    <FaInfoCircle
+                        className="strays-info-icon"
+                        onClick={handleInfoClick}
+                        title="Click for more info"
+                    />
+                </div>
+
+                {/* Render the filters */}
+                <MemoizedFilters
+                    filters={filters}
+                    handleFilterChange={handleFilterChange}
+                />
+            </div>
 
             {loading ? <Loader /> : <ReportList reports={reports} />}
+
+            {showInfo && (
+                <Modal onClose={handleCloseInfo}>
+                    <h2>About This Page</h2>
+                    <p>
+                        This page lists pets that have been seen by users but do not belong to the user posting it.
+                        Click the <strong>Read More</strong> button on each post to view detailed information, including:
+                    </p>
+                    <ul>
+                        <li>Where the pet was last seen (on a map).</li>
+                        <li>Other details about the pet like species, breed, color, and gender.</li>
+                        <li>As well as contant the post owner by clicking the message button.</li>
+                    </ul>
+                    <p>
+                        Users can only contact the post owner if logged in. Messaging helps determine whether the owner has seen the pet or currently has it in their possession.
+                    </p>
+                </Modal>
+            )}
         </div>
     )
 }
