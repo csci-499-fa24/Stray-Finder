@@ -48,7 +48,7 @@ const email = require('./routes/email')
 const profile = require('./routes/profile')
 const matchVotes = require('./routes/MatchVotes')
 const commentRoutes = require('./routes/comment')
-const notificationRoutes = require('./routes/notification')
+const notificationRoutes = require("./routes/notification");
 const { sendSummaryEmails } = require('./utils/notificationSummary')
 
 /**
@@ -67,7 +67,7 @@ app.use('/api/email/', email)
 app.use('/api/profile/', profile)
 app.use('/api/match-votes/', matchVotes)
 app.use('/api/comments/', commentRoutes)
-app.use('/api/notifications', notificationRoutes)
+app.use("/api/notifications", notificationRoutes)
 ///////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////
