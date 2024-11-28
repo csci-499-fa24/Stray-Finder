@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { GoogleMap, Marker, LoadScriptNext } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import Loader from "../../../components/loader/Loader";
+import TruncatedDescription from '../../../components/TruncatedDescription/TruncatedDescription';
 import styles from "../AnimalReportProfile.module.css";
 import EditAnimalModal from "./EditAnimalModal";
 import useAuth from "@/app/hooks/useAuth";
@@ -69,7 +70,10 @@ const AnimalReportProfile = ({ id }) => {
             />
           </div>
 
-          <p className={styles.description}>{reportProfile?.description}</p>
+          <TruncatedDescription
+            description={reportProfile?.description || "No description available"}
+            className={styles.description}
+          />
 
           <button onClick={() => window.history.back()} className={styles.btn}>
               Go Back
