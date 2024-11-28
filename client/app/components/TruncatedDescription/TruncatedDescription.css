@@ -1,0 +1,42 @@
+.truncated-container {
+  margin-top: 10px;
+  text-align: left;
+  position: relative;
+  display: inline-block;
+}
+
+.truncated-text {
+  display: inline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  position: relative;
+}
+
+.truncated-expanded {
+  display: inline; /* Display full content */
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.truncated-toggle-button {
+  display: inline; /* Inline with text */
+  background: none;
+  border: none;
+  color: #555; /* Neutral color */
+  font-size: inherit; /* Match surrounding text */
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  text-decoration: none; /* Remove underline */
+  position: relative;
+  white-space: nowrap; /* Prevent wrapping */
+  margin-left: 5px;
+}
+
+.truncated-toggle-button:hover {
+  color: #000; /* Slight hover effect */
+}
