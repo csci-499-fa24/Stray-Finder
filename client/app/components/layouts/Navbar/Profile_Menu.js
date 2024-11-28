@@ -44,7 +44,7 @@ const ProfileMenu = () => {
     //     );
     //   } REMOVING THIS TO AVOID LOGIN BUTTON/LINK RENDERING TWICE. IF ANYTHING BREAKS BRING THIS BACK!
       
-    if (!user) { //REPLACED THE ABOVE WITH THIS!!
+    if (!isAuthenticated || !user) { //REPLACED THE ABOVE WITH THIS!!
         return null; 
       }      
 

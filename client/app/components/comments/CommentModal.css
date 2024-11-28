@@ -46,6 +46,12 @@
   border-right: 1px solid #ddd;
 }
 
+.comment-left-section p{
+  margin: 0 0 10px;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
 .comment-left-section img {
   width: 100%; 
   height: auto;
@@ -298,6 +304,16 @@
   color: gray;
   margin-left: 5px;
 }
+
+.no-comments-message {
+  text-align: center;
+  font-size: 1rem;
+  color: #555; /* Neutral color */
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+/* MOBILE SECTIONS*/
 @media screen and (max-width: 1000px) {
   .comment-modal-content {
     width: 90%;
