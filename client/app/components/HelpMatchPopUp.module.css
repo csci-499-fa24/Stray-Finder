@@ -204,3 +204,18 @@
         font-size: 0.9rem; /* Smaller font */
     }
 }
+
+/* Styling for the "Why?" link */
+.whyLink {
+    font-size: 0.9rem; /* Small but readable */
+    font-weight: bold;
+    color: #000000; /* Eye-catching orange */
+    cursor: pointer;
+    margin-top: 10px; /* Add spacing from buttons */
+    text-decoration: underline; /* Make it clear it's clickable */
+    transition: color 0.3s ease;
+}
+
+.whyLink:hover {
+    color: #e64a19; /* Slightly darker orange on hover */
+}

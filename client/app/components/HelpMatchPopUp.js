@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./HelpMatchPopUp.module.css";
 import Link from "next/link";
+import Modal from "./infoModal/Modal";
 import checkVotingCompletion from "../utils/votingCompletion";
 
 const HelpMatchPopUp = () => {
@@ -8,6 +9,7 @@ const HelpMatchPopUp = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [animationIndex, setAnimationIndex] = useState(0);
   const [showPopup, setShowPopup] = useState(true);
+  const [showInfo, setShowInfo] = useState(false);
 
   const animationData = [
     { image1: "/pet1.jpg", image2: "/pet1.jpg", match: true },
@@ -38,6 +40,8 @@ const HelpMatchPopUp = () => {
 
   const handleNotNow = () => setIsCollapsed(true);
   const togglePopup = () => setIsCollapsed((prev) => !prev);
+  const handleInfoClick = () => setShowInfo(true); 
+  const handleCloseInfo = () => setShowInfo(false); 
 
   if (!showPopup) return null;
 
@@ -83,9 +87,41 @@ const HelpMatchPopUp = () => {
                 Not Now
               </button>
             </div>
+            <p className={styles.whyLink} onClick={handleInfoClick}>
+              Why?
+            </p>
           </>
         )}
       </div>
+      {/* Modal for additional information */}
+      {showInfo && (
+        <Modal onClose={handleCloseInfo}>
+          <h2>Why Match Votes?</h2>
+          <p>
+            We ask for your help because our current system relies on details
+            like descriptions, species, and location to suggest potential matches. While effective, it's not perfect:
+          </p>
+          <ul>
+            <li>
+              Descriptions and breeds can vary widely, leading to misalignment.
+            </li>
+            <li>
+              Locations are approximate, and pets often travel far from where
+              they were lost or found.
+            </li>
+            <li>
+              Small but critical differences (e.g., unique markings) are
+              something only human judgment can validate.
+            </li>
+          </ul>
+          <p>
+            By casting your vote, you’re not just refining our matches—you’re completing the last, 
+            vital step in reuniting pets with their families.
+            Ensuring we notify owners only when there’s real potential for a
+            meaningful connection. <strong> You are the missing piece. 🐾 </strong>
+          </p>
+        </Modal>
+      )}
     </div>
   );
 };
