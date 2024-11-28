@@ -2,19 +2,19 @@
 .popupContainer {
     position: fixed;
     top: 50%;
-    right: -320px;
+    right: -220px; /* Smaller width for hidden state */
     transform: translateY(-50%);
     z-index: 5;
-    width: 300px;
-    height: 360px; /* Ensure explicit height */
+    width: 200px; /* Reduced width */
+    height: 240px; /* Reduced height */
     display: flex;
-    flex-direction: row; /* Align arrow and content side by side */
-    align-items: stretch; /* Stretch children to match container height */
+    flex-direction: row;
+    align-items: stretch;
     transition: right 0.8s ease-in-out, box-shadow 0.3s ease;
     background: url("/bb4.jpg") center/cover, linear-gradient(135deg, #fbf1de, #f2dcc4);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    border-radius: 15px 0 0 15px;
-    border: 1px solid rgba(255, 197, 143, 0.7);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px 0 0 10px;
+    border: 1px solid rgba(255, 197, 143, 0.6);
     overflow: hidden;
 }
 
@@ -23,12 +23,12 @@
 }
 
 .popupContainer.collapsed {
-    right: -265px; /* Partially hidden, showing only the arrow */
+    right: -180px; /* Partially hidden, showing only the arrow */
 }
 
 /* Arrow Section */
 .arrowSection {
-    width: 35px;
+    width: 25px;
     height: 100%; /* Fill the height of the parent container */
     background: transparent;
     display: flex;
@@ -41,7 +41,7 @@
     flex-shrink: 0; /* Prevent the arrow from shrinking */
     padding: 0; /* Remove any unwanted padding */
     margin: 0; /* Ensure it starts at the edge */
-    font-size: 2.1rem;
+    font-size: 1.5rem;
     color: orange;
 }
 
@@ -66,15 +66,15 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    gap: 15px; /* Space between images */
+    gap: 10px; /* Space between images */
     margin-bottom: 15px;
 }
 
 .petImage {
-    width: 80px; /* Larger pet images */
-    height: 80px;
+    width: 70px; /* Larger pet images */
+    height: 70px;
     border-radius: 50%;
-    border: 3px solid #ffcc80; /* More prominent border */
+    border: 2px solid #ffcc80; /* More prominent border */
     object-fit: cover;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Add depth */
 }
@@ -82,7 +82,7 @@
 .matchIcon,
 .unmatchIcon {
     position: absolute;
-    font-size: 2.5rem; /* Larger icons */
+    font-size: 1.2rem; /* Larger icons */
     color: #fff;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -104,11 +104,11 @@
 
 /* Popup Text */
 .popupText {
-    font-size: 1.2rem; /* Larger font for emphasis */
+    font-size: 0.9rem; /* Larger font for emphasis */
     font-weight: bold;
     color: #5d4037;
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.2;
     margin: 10px 0;
 }
 
@@ -116,15 +116,15 @@
 .buttonGroup {
     display: flex;
     justify-content: space-evenly; /* Evenly distribute buttons */
-    gap: 15px;
+    gap: 10px;
 }
 
 .helpButton,
 .closeButton {
-    width: 100px; /* Uniform button width */
-    padding: 10px 15px;
+    width: 80px; /* Uniform button width */
+    padding: 8px;
     border-radius: 10px; /* Softer button shapes */
-    font-size: 1rem; /* Balanced font size */
+    font-size: 0.8rem; /* Balanced font size */
     font-weight: bold;
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
