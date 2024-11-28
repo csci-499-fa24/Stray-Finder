@@ -114,7 +114,7 @@ const Strays = () => {
                     <ul>
                         <li>Where the pet was last seen (on a map).</li>
                         <li>Other details about the pet like species, breed, color, and gender.</li>
-                        <li>As well as contant the post owner by clicking the message button.</li>
+                        <li>As well as contact the post owner by clicking the message button.</li>
                     </ul>
                     <p>
                         Users can only contact the post owner if logged in. Messaging helps determine whether the owner has seen the pet or currently has it in their possession.

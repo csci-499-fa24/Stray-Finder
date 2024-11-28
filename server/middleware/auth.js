@@ -37,6 +37,7 @@ const authenticate = async (req, res, next) => {
                 .json({ authenticated: false, message: 'Invalid token' })
         }
     }
+
 }
 
 module.exports = authenticate

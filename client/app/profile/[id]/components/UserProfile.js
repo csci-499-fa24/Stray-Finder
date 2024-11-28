@@ -10,11 +10,15 @@ const UserProfile = ({ id }) => {
     const [userData, setUserData] = useState([]);
     const [userFound, setUserFound] = useState(false);
     const [selfProfile, setSelfProfile] = useState(false);
+     // New state for editing bio
+     const [bio, setBio] = useState('');
+     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         if (user && user._id === id) {
             setSelfProfile(true);
             setUserFound(true);
+            setBio(user.bio || '');
             setLoading(false);
         } else {
             fetchUser();
@@ -28,9 +32,9 @@ const UserProfile = ({ id }) => {
             if (!response.ok) {
                 throw new Error('User not found');
             }
-            console.log("Fetched User Data:", userInfo);
             setUserFound(true);
             setUserData(userInfo);
+            setBio(userInfo.bio || '');
         } catch (error) {
             console.log('Error fetching user:', error);
             setUserFound(false);
@@ -74,6 +78,36 @@ const UserProfile = ({ id }) => {
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
+        }
+    };
+
+    const handleBioSave = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', // To send cookies
+                body: JSON.stringify({ bio }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update bio');
+            }
+
+            const updatedUser = await response.json();
+            setUser((prevUser) => ({
+                ...prevUser,
+                bio: updatedUser.user.bio,
+            }));
+            setUserData((prevData) => ({
+                ...prevData,
+                bio: updatedUser.user.bio,
+            }));
+            setIsEditing(false); // Exit editing mode
+        } catch (error) {
+            console.error('Error updating bio:', error);
         }
     };
     
@@ -124,7 +158,36 @@ const UserProfile = ({ id }) => {
                     {/* About Me Section */}
                     <div className={styles.card}>
                         <h2 className={styles.cardTitle}>About Me</h2>
-                        <p className={styles.cardText}>{userData.bio || "Add a bio to tell others about yourself!"}</p>
+                        {selfProfile && isEditing ? (
+                            <div>
+                                <textarea
+                                    className={styles.bioInput}
+                                    value={bio}
+                                    onChange={(e) => setBio(e.target.value)}
+                                    maxLength={500}
+                                    placeholder="Write something about yourself..."
+                                ></textarea>
+                                <button className={styles.saveButton} onClick={handleBioSave}>
+                                    Save
+                                </button>
+                                <button
+                                    className={styles.cancelButton}
+                                    onClick={() => setIsEditing(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        ) : (
+                            <p className={styles.cardText}>{bio || "Add a bio to tell others about yourself!"}</p>
+                        )}
+                        {selfProfile && !isEditing && (
+                            <button
+                                className={styles.editButton}
+                                onClick={() => setIsEditing(true)}
+                            >
+                                Edit Bio
+                            </button>
+                        )}
                     </div>
 
                     {/* Achievements Section */}
