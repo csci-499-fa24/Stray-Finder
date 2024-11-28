@@ -1,6 +1,9 @@
 import { useEffect, useState, memo } from 'react';
 import Loader from '../../components/loader/Loader';
 import AnimalCard from '../../components/cards/AnimalCard';
+import Modal from '../../components/infoModal/Modal';
+import { FaInfoCircle } from 'react-icons/fa';
+import '../LostPets.css';
 
 const LostPets = () => {
     const [reports, setReports] = useState([]);
@@ -11,6 +14,7 @@ const LostPets = () => {
         name: '',
     });
     const [debouncedFilters, setDebouncedFilters] = useState(filters);
+    const [showInfo, setShowInfo] = useState(false);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -57,10 +61,48 @@ const LostPets = () => {
         }));
     };
 
+    const handleInfoClick = () => {
+        setShowInfo(true); // Show the modal
+    };
+
+    const handleCloseInfo = () => {
+        setShowInfo(false); // Close the modal
+    };
+
     return (
         <div className="container text-end">
-            <MemoizedFilters filters={filters} handleFilterChange={handleFilterChange} />
+            <div className="lostpets-header">
+                <div className="lostpets-info-icon-container">
+                    <FaInfoCircle
+                        className="lostpets-info-icon"
+                        onClick={handleInfoClick}
+                        title="Click for more info"
+                    />
+                </div>
+
+                <MemoizedFilters filters={filters} handleFilterChange={handleFilterChange} />
+            </div>
+
             {loading ? <Loader /> : <ReportList reports={reports} />}
+
+            {showInfo && (
+                <Modal onClose={handleCloseInfo}>
+                    <h2>About This Page</h2>
+                    <p>
+                        This page lists pets that have been reported lost by their owners.
+                        The owners are hoping that others can help locate their beloved pets. 
+                        Click the <strong>Read More</strong> button on each post to view detailed information, including:
+                    </p>
+                    <ul>
+                        <li>Where the pet was last seen (on a map).</li>
+                        <li>Details about the pet, such as species, breed, color, and gender.</li>
+                        <li>The option to contact the post owner by clicking the message button.</li>
+                    </ul>
+                    <p>
+                        Users can only contact the post owner if logged in. Your support can help reunite pets with their families!
+                    </p>
+                </Modal>
+            )}
         </div>
     );
 };

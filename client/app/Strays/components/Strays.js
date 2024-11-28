@@ -2,7 +2,7 @@ import { useEffect, useState, memo } from 'react'
 import Loader from '../../components/loader/Loader';
 import AnimalCard from '../../components/cards/AnimalCard';
 import { FaInfoCircle } from 'react-icons/fa'; 
-import Modal from './Modal';
+import Modal from '../../components/infoModal/Modal';
 import './Strays.css';
 
 const Strays = () => {
