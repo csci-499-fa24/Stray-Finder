@@ -84,7 +84,7 @@ const deleteUser = async (req, res) => {
 // Get user profile by ID (this is not a protected route)
 const getUserById = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).select('username') // Exclude password
+        const user = await User.findById(req.params.id).select('username bio profileImage') // Exclude password
         if (!user) {
             return res.status(404).json({ message: 'User not found' })
         }
