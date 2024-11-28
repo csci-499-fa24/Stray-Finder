@@ -84,7 +84,7 @@ const deleteUser = async (req, res) => {
 // Get user profile by ID (this is not a protected route)
 const getUserById = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).select('username bio profileImage') // Exclude password
+        const user = await User.findById(req.params.id).select('username bio profileImage banner') // Exclude password
         if (!user) {
             return res.status(404).json({ message: 'User not found' })
         }
@@ -124,4 +124,25 @@ const updateUserPreferences = async (req, res) => {
     }
 };
 
-module.exports = { getUserProfile, updateUser, updateUserPassword, deleteUser, getUserById, updateUserPreferences }
+const updateUserBanner = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const { banner } = req.body;
+        if (!banner) {
+            return res.status(400).json({ message: 'Banner URL is required' });
+        }
+
+        user.banner = banner;
+        await user.save();
+        res.status(200).json({ banner: user.banner });
+    } catch (error) {
+        console.error('Error updating banner:', error);
+        res.status(500).json({ message: 'Failed to update banner' });
+    }
+};
+
+module.exports = { getUserProfile, updateUser, updateUserPassword, deleteUser, getUserById, updateUserPreferences, updateUserBanner }

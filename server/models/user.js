@@ -55,6 +55,10 @@ const UserSchema = new mongoose.Schema(
             maxlength: 500, // Limit the bio to 500 characters
             default: '', 
         },
+        banner: {
+            type: String,
+            default: '//background-stray5.jpg',
+        },        
     },
     { timestamps: true }
 )

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Loader from '../../../components/loader/Loader';
 import styles from './profile.module.css';
 import { FaCamera } from 'react-icons/fa';
+import { MdImage } from 'react-icons/md';
 
 const UserProfile = ({ id }) => {
     const { isAuthenticated, user, setUser } = useAuth(); // Added setUser here
@@ -11,8 +12,18 @@ const UserProfile = ({ id }) => {
     const [userFound, setUserFound] = useState(false);
     const [selfProfile, setSelfProfile] = useState(false);
      // New state for editing bio
-     const [bio, setBio] = useState('');
-     const [isEditing, setIsEditing] = useState(false);
+    const [bio, setBio] = useState('');
+    const [isEditing, setIsEditing] = useState(false);
+    const [isBannerModalOpen, setBannerModalOpen] = useState(false);
+
+    const predefinedBanners = [
+        '/banners/banner1.jpg',
+        '/banners/banner2.jpg',
+        '/banners/banner3.jpg',
+        '/banners/banner4.jpg',
+        '/banners/banner5.jpg',
+        '/banners/banner6.jpg',
+    ];    
 
     useEffect(() => {
         if (user && user._id === id) {
@@ -110,6 +121,24 @@ const UserProfile = ({ id }) => {
             console.error('Error updating bio:', error);
         }
     };
+
+    const handleBannerClick = (bannerUrl) => {
+        // Update banner selection
+        fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/banner`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ banner: bannerUrl }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            setUser((prevUser) => ({ ...prevUser, banner: data.banner }));
+            setBannerModalOpen(false); // Close modal
+        })
+        .catch((error) => console.error('Error updating banner:', error));
+    };
     
     if (loading) {
         return <Loader />;
@@ -126,7 +155,36 @@ const UserProfile = ({ id }) => {
     return (
         <div className={styles.profileBackground}>
             <div className={styles.profileContainer}>
-                <div className={styles.profileBanner}></div>
+                <div
+                    className={styles.profileBanner}
+                    style={{ backgroundImage: `url(${userData.banner || '/background-stray5.jpg'})` }}
+                >
+                    <button
+                        className={styles.bannerChangeIcon}
+                        onClick={() => setBannerModalOpen(true)}
+                    >
+                        <MdImage />
+                    </button>
+
+                    {isBannerModalOpen && (
+                        <div className={styles.bannerModal}>
+                            <div className={styles.bannerGrid}>
+                            {predefinedBanners.map((banner, index) => (
+                                    <img
+                                        key={index}
+                                        src={banner}
+                                        className={styles.bannerPreview}
+                                        onClick={() => handleBannerClick(banner)}
+                                        alt={`Banner ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
+                            <button onClick={() => setBannerModalOpen(false)} className={styles.closeModal}>
+                                Close
+                            </button>
+                        </div>
+                    )}
+                </div>
 
                 {/* Profile Image and Camera Icon */}
                 <div className={styles.profileImageContainer}>
