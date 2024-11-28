@@ -8,6 +8,7 @@ const {
     deleteUser,
     getUserById,
     updateUserPreferences,
+    updateUserBanner
 } = require('../controllers/user')
 
 router
@@ -22,5 +23,6 @@ router
     .get(getUserById)
 
 router.post('/preferences', authenticate, updateUserPreferences);
+router.post('/banner', authenticate, updateUserBanner);
 
 module.exports = router
