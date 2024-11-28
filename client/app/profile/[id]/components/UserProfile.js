@@ -122,23 +122,31 @@ const UserProfile = ({ id }) => {
         }
     };
 
-    const handleBannerClick = (bannerUrl) => {
-        // Update banner selection
-        fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/banner`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({ banner: bannerUrl }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
+    const handleBannerClick = async (bannerUrl) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/banner`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({ banner: bannerUrl }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to update banner');
+            }
+    
+            const data = await response.json();
+    
+            // Update both user and userData states immediately
             setUser((prevUser) => ({ ...prevUser, banner: data.banner }));
-            setBannerModalOpen(false); // Close modal
-        })
-        .catch((error) => console.error('Error updating banner:', error));
-    };
+            setUserData((prevData) => ({ ...prevData, banner: data.banner }));
+            setBannerModalOpen(false); // Close the modal
+        } catch (error) {
+            console.error('Error updating banner:', error);
+        }
+    };    
     
     if (loading) {
         return <Loader />;

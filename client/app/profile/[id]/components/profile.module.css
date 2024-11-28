@@ -352,15 +352,17 @@
 }
 
 .bannerModal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute; /* Position relative to the icon */
+    top: 100%; /* Place it directly below the icon */
+    left: 0; /* Align it with the left edge of the button */
+    transform: translateY(10px); /* Add some space below the button */
     background: white;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
 
 .bannerGrid {
