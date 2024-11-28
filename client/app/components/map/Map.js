@@ -13,6 +13,7 @@ import CircleOverlay from './CircleOverlay'
 import { calculateBounds, calculateDistance } from './utils'
 import { createCircularIcon } from './CircularIcon'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import Loader from '../loader/Loader';
 
 const containerStyle = {
     width: '100%',
@@ -22,10 +23,6 @@ const containerStyle = {
 const center = {
     lat: 40.768,
     lng: -73.964,
-}
-
-const Loader = () => {
-    return <div>Loading...</div>
 }
 
 const Map = () => {
