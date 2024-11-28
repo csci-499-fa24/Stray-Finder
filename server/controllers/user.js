@@ -25,6 +25,7 @@ const updateUser = async (req, res) => {
         const fieldsToUpdate = [
             'username',
             'email',
+            'bio',
         ]
         fieldsToUpdate.forEach((field) => {
             if (req.body[field] !== undefined) {
