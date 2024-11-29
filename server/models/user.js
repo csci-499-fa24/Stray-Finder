@@ -57,7 +57,7 @@ const UserSchema = new mongoose.Schema(
         },
         banner: {
             type: String,
-            default: '//background-stray5.jpg',
+            default: '/background-stray5.jpg',
         },        
     },
     { timestamps: true }
