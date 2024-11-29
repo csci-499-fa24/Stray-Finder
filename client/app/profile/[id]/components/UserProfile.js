@@ -167,30 +167,35 @@ const UserProfile = ({ id }) => {
                     className={styles.profileBanner}
                     style={{ backgroundImage: `url(${userData.banner || '/background-stray5.jpg'})` }}
                 >
-                    <button
-                        className={styles.bannerChangeIcon}
-                        onClick={() => setBannerModalOpen(true)}
-                    >
-                        <MdImage />
-                    </button>
-
-                    {isBannerModalOpen && (
-                        <div className={styles.bannerModal}>
-                            <div className={styles.bannerGrid}>
-                            {predefinedBanners.map((banner, index) => (
-                                    <img
-                                        key={index}
-                                        src={banner}
-                                        className={styles.bannerPreview}
-                                        onClick={() => handleBannerClick(banner)}
-                                        alt={`Banner ${index + 1}`}
-                                    />
-                                ))}
-                            </div>
-                            <button onClick={() => setBannerModalOpen(false)} className={styles.closeModal}>
-                                Close
+                    {/* Only show the banner change icon for the user's own profile */}
+                    {selfProfile && (
+                        <>
+                            <button
+                                className={styles.bannerChangeIcon}
+                                onClick={() => setBannerModalOpen(true)}
+                            >
+                                <MdImage />
                             </button>
-                        </div>
+
+                            {isBannerModalOpen && (
+                                <div className={styles.bannerModal}>
+                                    <div className={styles.bannerGrid}>
+                                        {predefinedBanners.map((banner, index) => (
+                                            <img
+                                                key={index}
+                                                src={banner}
+                                                className={styles.bannerPreview}
+                                                onClick={() => handleBannerClick(banner)}
+                                                alt={`Banner ${index + 1}`}
+                                            />
+                                        ))}
+                                    </div>
+                                    <button onClick={() => setBannerModalOpen(false)} className={styles.closeModal}>
+                                        Close
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
 
