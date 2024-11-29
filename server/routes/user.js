@@ -8,8 +8,11 @@ const {
     deleteUser,
     getUserById,
     updateUserPreferences,
-    updateUserBanner
+    updateUserBanner,
+    getUserFoundCount,
 } = require('../controllers/user')
+
+router.get('/:id/found-count', getUserFoundCount);
 
 router
     .route('/')

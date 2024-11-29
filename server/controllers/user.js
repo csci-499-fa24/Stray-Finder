@@ -1,3 +1,4 @@
+const AnimalReport = require('../models/animalReport')
 const animal = require('../models/animal')
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
@@ -84,7 +85,7 @@ const deleteUser = async (req, res) => {
 // Get user profile by ID (this is not a protected route)
 const getUserById = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).select('username bio profileImage banner') // Exclude password
+        const user = await User.findById(req.params.id).select('username bio profileImage banner createdAt') // Exclude password
         if (!user) {
             return res.status(404).json({ message: 'User not found' })
         }
@@ -94,6 +95,20 @@ const getUserById = async (req, res) => {
         res.status(500).json({ message: 'Server error' })
     }
 }
+
+const getUserFoundCount = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const count = await AnimalReport.countDocuments({
+            reportedBy: userId,
+            reportType: 'Found',
+        });
+        res.status(200).json({ count });
+    } catch (error) {
+        console.error('Error fetching user found pets count:', error.message);
+        res.status(500).json({ message: 'Failed to fetch found pets count' });
+    }
+};
 
 const updateUserPreferences = async (req, res) => {
     try {
@@ -145,4 +160,4 @@ const updateUserBanner = async (req, res) => {
     }
 };
 
-module.exports = { getUserProfile, updateUser, updateUserPassword, deleteUser, getUserById, updateUserPreferences, updateUserBanner }
+module.exports = { getUserProfile, updateUser, updateUserPassword, deleteUser, getUserById, getUserFoundCount, updateUserPreferences, updateUserBanner }

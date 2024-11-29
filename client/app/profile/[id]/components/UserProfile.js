@@ -15,6 +15,8 @@ const UserProfile = ({ id }) => {
     const [bio, setBio] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [isBannerModalOpen, setBannerModalOpen] = useState(false);
+    const [foundPetsCount, setFoundPetsCount] = useState(0);
+    const [badge, setBadge] = useState('');
 
     const predefinedBanners = [
         '/banners/banner1.jpg',
@@ -36,6 +38,26 @@ const UserProfile = ({ id }) => {
         }
     }, [id, user]);
 
+    useEffect(() => {
+        const fetchFoundPetsCount = async () => {
+            try {
+                const response = await fetch(
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${id}/found-count`
+                );
+                const data = await response.json();
+                if (response.ok) {
+                    setFoundPetsCount(data.count);
+                } else {
+                    console.error('Failed to fetch found pets count:', data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching found pets count:', error.message);
+            }
+        };
+    
+        fetchFoundPetsCount();
+    }, [id]);
+
     const fetchUser = async () => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/${id}`);
@@ -46,6 +68,17 @@ const UserProfile = ({ id }) => {
             setUserFound(true);
             setUserData(userInfo);
             setBio(userInfo.bio || '');
+            // Calculate account age in days
+            const accountAgeInDays = (new Date() - new Date(userInfo.createdAt)) / (1000 * 60 * 60 * 24);
+
+            // Determine badge based on account age
+            if (accountAgeInDays <= 30) {
+                setBadge('Newbie'); // Newbie badge for accounts less than or equal to 30 days old
+            } else if (accountAgeInDays <= 180) {
+                setBadge('Explorer'); // Explorer badge for accounts between 31 and 180 days
+            } else {
+                setBadge('Veteran'); // Veteran badge for accounts older than 180 days
+            }
         } catch (error) {
             console.log('Error fetching user:', error);
             setUserFound(false);
@@ -202,7 +235,7 @@ const UserProfile = ({ id }) => {
                 {/* Profile Image and Camera Icon */}
                 <div className={styles.profileImageContainer}>
                     <img
-                        src={(selfProfile ? user.profileImage : userData.profileImage) || '/backgrounds-stray9.jpg'}
+                        src={(selfProfile ? user.profileImage : userData.profileImage) || '/no_pfp.jpg'}
                         alt={`${userData.username || user.username}'s profile`}
                         className={styles.profileImage}
                     />
@@ -265,8 +298,29 @@ const UserProfile = ({ id }) => {
                     <div className={styles.card}>
                         <h2 className={styles.cardTitle}>Achievements</h2>
                         <div className={styles.badges}>
-                            <span className={styles.badge}><i className={styles.badgeIcon}>★</i> Newbie</span>
-                            <span className={styles.badge}><i className={styles.badgeIcon}>🐾</i> Helper</span>
+                            {/* Badge based on account age */}
+                            {badge === 'Newbie' && (
+                                <span className={styles.badge}>
+                                    <i className={styles.badgeIcon}>🌟</i> Newbie
+                                </span>
+                            )}
+                            {badge === 'Explorer' && (
+                                <span className={styles.badge}>
+                                    <i className={styles.badgeIcon}>🧭</i> Explorer
+                                </span>
+                            )}
+                            {badge === 'Veteran' && (
+                                <span className={styles.badge}>
+                                    <i className={styles.badgeIcon}>🏆</i> Veteran
+                                </span>
+                            )}
+
+                            {/* Helper badge for users with at least one found pet */}
+                            {foundPetsCount > 0 && (
+                                <span className={styles.badge}>
+                                    <i className={styles.badgeIcon}>🐾</i> Helper
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -275,7 +329,7 @@ const UserProfile = ({ id }) => {
                         <h2 className={styles.cardTitle}>Profile Stats</h2>
                         <div className={styles.stats}>
                             <div className={styles.statItem}>
-                                <span className={styles.statNumber}>5</span>
+                                <span className={styles.statNumber}>{foundPetsCount}</span>
                                 <span className={styles.statLabel}>Strays Found</span>
                             </div>
                             <div className={styles.statItem}>

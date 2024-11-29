@@ -228,23 +228,51 @@
 .badges {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+    gap: 2rem; /* Space between badges */
+    margin-top: 1rem;
 }
 
 .badge {
     display: flex;
     align-items: center;
-    background-color: #a03751;
+    justify-content: center;
+    background: linear-gradient(135deg, #f76f8e, #a03751); /* Add a gradient */
     color: white;
-    padding: 0.4rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.9rem;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+    padding: 0.6rem 1rem; /* Increase padding for better prominence */
+    border-radius: 25px; /* Make it more rounded for a badge-like feel */
+    font-size: 1rem; /* Slightly larger font for emphasis */
+    font-weight: bold; /* Make the text bold */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Add a deeper shadow for a "floating" effect */
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.badge:hover {
+    transform: translateY(-3px); /* Lift effect on hover */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4); /* Enhance shadow on hover */
 }
 
 .badgeIcon {
-    margin-right: 5px;
+    margin-right: 8px; /* Adjust spacing between icon and text */
+    font-size: 1.2rem; /* Increase icon size for prominence */
+}
+
+.badge:before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 30px; /* Match the badge border radius */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.badge:hover:before {
+    opacity: 1; /* Glow effect on hover */
 }
 
 .stats {
@@ -343,7 +371,7 @@
     padding: 0.5rem;
     cursor: pointer;
     font-size: 1.2rem;
-    z-index: 10; /* Ensure it’s above other elements */
+    z-index: 5; /* Ensure it’s above other elements */
 }
 
 .bannerChangeIcon svg {
@@ -360,7 +388,7 @@
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+    z-index: 5;
     display: flex;
     flex-direction: column;
 }
