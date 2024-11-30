@@ -25,6 +25,14 @@ const InfoWindowDetails = ({ selectedReport, setSelectedReport }) => {
                     }}
                 />
                 <p>Breed: {selectedReport.animal.breed}</p>
+                <p>Color: {selectedReport.animal.color}</p>
+                <p>Gender: {selectedReport.animal.gender}</p>
+                <p>Report Type: {selectedReport.reportType}</p>
+                <p>Fixed Status: {selectedReport.animal.fixed}</p>
+                <p>Collar: {selectedReport.animal.collar ? "Yes" : "No"}</p>
+                <p>Date Reported: {new Date(selectedReport.dateReported).toLocaleDateString()}</p>
+                <p>Address: {selectedReport.location.address || 'Address not provided'}</p>
+
                 {/* Other details */}
             </div>
         </InfoWindow>
