@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const Notification = require("../models/notification");
-const { backfillMatchVoteNotifications } = require("../controllers/notification");
 
 //Get Pinned notification
 router.get('/pinned', auth, async (req, res) => {

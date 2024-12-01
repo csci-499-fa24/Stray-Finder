@@ -46,6 +46,5 @@ const notifyMatchVoteThreshold = async (matchVote) => {
 };
 
 module.exports = {
-    backfillMatchVoteNotifications,
     notifyMatchVoteThreshold,
 };
