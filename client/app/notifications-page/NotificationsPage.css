@@ -139,3 +139,9 @@
     margin-top: 50px;
   }
   
+  /* Pinned Notification */
+  .notification-item.pinned-notification {
+    border-left: 6px solid #ffd700; /* Gold border for pinned notifications */
+    background-color: #fff8e1; /* Light yellow background */
+  }
+  

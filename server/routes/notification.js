@@ -2,6 +2,22 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const Notification = require("../models/notification");
+const { backfillMatchVoteNotifications } = require("../controllers/notification");
+
+//Get Pinned notification
+router.get('/pinned', auth, async (req, res) => {
+  try {
+      const pinnedNotifications = await Notification.find({
+          userId: req.user.id,
+          pinned: true,
+      }).sort({ createdAt: -1 });
+
+      res.status(200).json({ notifications: pinnedNotifications });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error fetching pinned notifications' });
+  }
+});
 
 // Get user notifications
 router.get("/", auth, async (req, res) => {

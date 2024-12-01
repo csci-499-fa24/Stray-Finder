@@ -31,44 +31,74 @@ const NotificationsPage = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications`, {
-          credentials: "include",
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        // Fetch both pinned and regular notifications
+        const pinnedResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications/pinned`,
+          { credentials: "include" }
+        );
+        const allResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications`,
+          { credentials: "include" }
+        );
+  
+        if (!pinnedResponse.ok || !allResponse.ok) {
+          throw new Error("Failed to fetch notifications");
         }
-        const data = await response.json();
-        setNotifications(data.notifications || []);
+  
+        const pinnedData = await pinnedResponse.json();
+        const allData = await allResponse.json();
+  
+        // Combine pinned notifications with regular ones
+        const combinedNotifications = [
+          ...(pinnedData.notifications || []),
+          ...(allData.notifications || []),
+        ];
+  
+        setNotifications(combinedNotifications);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchNotifications();
-  }, []);
+  }, []);  
 
   // Helper to group notifications by time
-  const groupNotificationsByTime = (notifications) => {
-    const grouped = { Today: [], Yesterday: [], Earlier: [] };
-    const now = new Date();
+const groupNotificationsByTime = (notifications) => {
+  const pinned = [];
+  const grouped = { Today: [], Yesterday: [], Earlier: [] };
+  const now = new Date();
 
-    notifications.forEach((notification) => {
-      const notificationDate = new Date(notification.timestamp);
-      const isToday = now.toDateString() === notificationDate.toDateString();
+  // Iterate through notifications
+  notifications.forEach((notification) => {
+    if (notification.type === "match_vote" || notification.pinned) {
+      pinned.push(notification); // Collect pinned notifications
+      return;
+    }
 
-      const yesterdayDate = new Date(now);
-      yesterdayDate.setDate(now.getDate() - 1);
-      const isYesterday = yesterdayDate.toDateString() === notificationDate.toDateString();
+    const notificationDate = new Date(notification.timestamp);
+    const isToday = now.toDateString() === notificationDate.toDateString();
 
-      if (isToday) grouped.Today.push(notification);
-      else if (isYesterday) grouped.Yesterday.push(notification);
-      else grouped.Earlier.push(notification);
-    });
+    const yesterdayDate = new Date(now);
+    yesterdayDate.setDate(now.getDate() - 1);
+    const isYesterday = yesterdayDate.toDateString() === notificationDate.toDateString();
 
-    return grouped;
-  };
+    if (isToday) grouped.Today.push(notification);
+    else if (isYesterday) grouped.Yesterday.push(notification);
+    else grouped.Earlier.push(notification);
+  });
+
+  // Deduplicate pinned notifications after the loop
+  const deduplicatedPinned = [
+    ...new Map(
+      pinned.map((n) => [n.meta?.matchVoteId || n._id, n]) // Use matchVoteId or fallback to _id
+    ).values(),
+  ];
+
+  return { Pinned: deduplicatedPinned, ...grouped }; // Include deduplicated pinned notifications
+};
 
   const groupedNotifications = groupNotificationsByTime(notifications);
 
@@ -87,7 +117,9 @@ const NotificationsPage = () => {
                 {groupedNotifications[group].map((notification, index) => (
                   <div
                     key={index}
-                    className={`notification-item ${notification.read ? "read" : "unread"}`}
+                    className={`notification-item ${notification.read ? "read" : "unread"} ${
+                      notification.pinned ? "pinned-notification" : ""
+                    }`}
                   >
                     {/* Left Section: Commenter's Profile Image, Name, and Notification Message */}
                     <div className="notification-left">
@@ -103,12 +135,14 @@ const NotificationsPage = () => {
                         <div className="notification-header">
                           <span className="commenter-name">{notification.meta.commenterName}</span>
                           <span className="notification-message">
-                            {`New comment on your post captioned: "${notification.meta.postPreview?.description?.substring(0, 50)}${
-                              notification.meta.postPreview?.description.length > 50 ? "..." : ""
-                            }"`}
+                            {notification.type === "match_vote"
+                              ? notification.message
+                              : `New comment on your post captioned: "${notification.meta.postPreview?.description?.substring(0, 50)}${
+                                  notification.meta.postPreview?.description.length > 50 ? "..." : ""
+                                }"`}
                           </span>
                         </div>
-
+          
                         {/* Second Line: Latest Comment + Timestamp */}
                         {notification.meta.latestComment && (
                           <div className="notification-body">
@@ -122,7 +156,7 @@ const NotificationsPage = () => {
                         )}
                       </div>
                     </div>
-
+          
                     {/* Right Section: Post Preview */}
                     {notification.meta.postPreview && (
                       <div className="notification-right">
@@ -140,7 +174,7 @@ const NotificationsPage = () => {
                 ))}
               </div>
             </div>
-          ))
+          ))          
         ) : (
           <p className="no-notifications-message">You're all caught up! 🎉</p>
         )}

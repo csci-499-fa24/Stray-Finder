@@ -1,3 +1,4 @@
+const { notifyMatchVoteThreshold } = require('./notification');
 const MatchVotes = require('../models/MatchVotes');
 const User = require('../models/user');
 
@@ -94,6 +95,7 @@ const updateMatchVotes = async (req, res, matchVotesId, vote) => {
 
             await user.save(); // save changes
             await existingMatch.save();
+            await notifyMatchVoteThreshold(existingMatch);
 
             res.status(201).json({ message: 'vote changed successfully' });
         } else { // didn't vote yet

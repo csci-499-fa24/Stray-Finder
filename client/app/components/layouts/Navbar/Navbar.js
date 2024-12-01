@@ -46,9 +46,13 @@ const Navbar = () => {
 
   // Recalculate counts whenever notifications change
   useEffect(() => {
-    const totalUnread = notifications.filter((n) => !n.read).length;
-    setUnreadCount(totalUnread);
-    setNewNotificationsCount(totalUnread);
+    const uniqueUnread = [
+      ...new Map(
+        notifications.filter((n) => !n.read).map((n) => [n.meta?.matchVoteId || n._id, n])
+      ).values(),
+    ];
+    setUnreadCount(uniqueUnread.length);
+    setNewNotificationsCount(uniqueUnread.length);
   }, [notifications]);
 
   // Poll for new notifications periodically
@@ -61,14 +65,13 @@ const Navbar = () => {
           .then((res) => res.json())
           .then((data) => {
             const allNotifications = data.notifications || [];
-            const totalUnread = allNotifications.filter((n) => !n.read).length;
-            const newUnreadNotifications = allNotifications.filter(
-              (n) => !n.read && !notifications.find((old) => old._id === n._id)
-            );
+            const deduplicatedNotifications = [
+              ...new Map(allNotifications.map((n) => [n.meta?.matchVoteId || n._id, n])).values(),
+            ];
 
-            setNotifications(allNotifications);
-            setUnreadCount(totalUnread);
-            setNewNotificationsCount(newUnreadNotifications.length);
+            setNotifications(deduplicatedNotifications);
+            setUnreadCount(deduplicatedNotifications.filter((n) => !n.read).length);
+            setNewNotificationsCount(deduplicatedNotifications.length);
           })
           .catch((err) => {
             console.error("Error fetching new notifications:", err);
