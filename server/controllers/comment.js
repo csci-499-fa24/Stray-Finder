@@ -47,21 +47,21 @@ const saveComment = async (req, res) => {
         type: "comment",
       });
 
-      if (existingNotification) {
-        // Update the existing notification
-        existingNotification.message = `New comments on your post: "${animal.name}"`;
-        existingNotification.meta.commentCount += 1;
-        existingNotification.meta.latestComment = content;
-        existingNotification.meta.postPreview = {
-          name: animal.name,
-          description: animal.description,
-          species: animal.species,
-          imageUrl: animal.imageUrl,
-        };
-        existingNotification.updatedAt = Date.now();
-        await existingNotification.save();
+      // if (existingNotification) {
+      //   // Update the existing notification
+      //   existingNotification.message = `New comments on your post: "${animal.name}"`;
+      //   existingNotification.meta.commentCount += 1;
+      //   existingNotification.meta.latestComment = content;
+      //   existingNotification.meta.postPreview = {
+      //     name: animal.name,
+      //     description: animal.description,
+      //     species: animal.species,
+      //     imageUrl: animal.imageUrl,
+      //   };
+      //   existingNotification.updatedAt = Date.now();
+      //   await existingNotification.save();
 
-      } else {
+      // } else {
         // Create a new notification
         const newNotification = await Notification.create({
           userId: reportedBy,
@@ -81,7 +81,7 @@ const saveComment = async (req, res) => {
             commenterProfileImage: commenter.profileImage, // Add profile image
           },
         });
-      }
+        await newNotification.save();
     }
 
     res.status(201).json(comment);

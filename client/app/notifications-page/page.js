@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { FaThumbtack } from "react-icons/fa";
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import "./NotificationsPage.css";
 
@@ -38,7 +39,14 @@ const NotificationsPage = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setNotifications(data.notifications || []);
+
+        console.log(`Fetched Notifications Count: ${data.notifications.length}`);
+        console.log("Fetched Notifications Data:", data.notifications);
+        
+        const pinnedNotifications = data.notifications.filter((n) => n.isPinned);
+        const regularNotifications = data.notifications.filter((n) => !n.isPinned);
+        setNotifications([...pinnedNotifications, ...regularNotifications]);
+
       } catch (error) {
         console.error("Error fetching notifications:", error);
       } finally {
@@ -70,7 +78,9 @@ const NotificationsPage = () => {
     return grouped;
   };
 
-  const groupedNotifications = groupNotificationsByTime(notifications);
+  const groupedNotifications = groupNotificationsByTime(
+    notifications.filter((n) => !n.isPinned)
+  );
 
   return (
     <div className="notifications-page">
@@ -80,73 +90,115 @@ const NotificationsPage = () => {
         {loading ? (
           <p className="loading-message">Loading notifications...</p>
         ) : notifications.length > 0 ? (
-          Object.keys(groupedNotifications).map((group) => (
-            <div key={group}>
-              <h2 className="time-group-title">{group}</h2>
-              <div className="notifications-list">
-                {groupedNotifications[group].map((notification, index) => (
-                  <div
-                    key={index}
-                    className={`notification-item ${notification.read ? "read" : "unread"}`}
-                  >
-                    {/* Left Section: Commenter's Profile Image, Name, and Notification Message */}
-                    <div className="notification-left">
-                      <img
-                        src={
-                          notification.meta.commenterProfileImage ||
-                          "/no_pfp.jpg"
-                        }
-                        alt={notification.meta.commenterName}
-                        className="profile-image"
-                      />
-                      <div className="notification-content">
-                        <div className="notification-header">
-                          <span className="commenter-name">{notification.meta.commenterName}</span>
-                          <span className="notification-message">
-                            {`New comment on your post captioned: "${notification.meta.postPreview?.description?.substring(0, 50)}${
-                              notification.meta.postPreview?.description.length > 50 ? "..." : ""
-                            }"`}
-                          </span>
+          <>
+            {/* Display Pinned Notifications */}
+            {notifications.filter((n) => n.isPinned).length > 0 && (
+              <div>
+                <div className="notifications-list">
+                  {notifications
+                    .filter((n) => n.isPinned)
+                    .map((notification, index) => (
+                      <div
+                        key={index}
+                        className={`notification-item ${notification.read ? "read" : "unread"} ${
+                          notification.isPinned ? "pinned" : ""
+                        }`}
+                      >
+                        <div className="notification-left">
+                          <span className="notification-message">{notification.message}</span>
                         </div>
 
-                        {/* Second Line: Latest Comment + Timestamp */}
-                        {notification.meta.latestComment && (
-                          <div className="notification-body">
-                            <span className="latest-comment">
-                              <strong>Comment:</strong> {notification.meta.latestComment}
-                            </span>
-                            <span className="notification-timestamp">
-                                {formatRelativeTime(notification.timestamp)}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Right Section: Post Preview */}
-                    {notification.meta.postPreview && (
-                      <div className="notification-right">
-                        <img
-                          src={notification.meta.postPreview.imageUrl || "paw-pattern.jpg"}
-                          alt={notification.meta.postPreview.name}
-                          className="post-image"
-                        />
-                        <div className="post-info">
-                          <p className="post-name">{notification.meta.postPreview.name}</p>
+                        {/* Right Section: Pinned Icon */}
+                        <div className="notification-right">
+                          <FaThumbtack className="pinned-icon" title="Pinned" />
                         </div>
                       </div>
-                    )}
-                  </div>
-                ))}
+                    ))}
+                </div>
               </div>
-            </div>
-          ))
+            )}
+  
+            {/* Display Regular Notifications Grouped by Time */}
+            {Object.keys(groupedNotifications).map((group) => groupedNotifications[group].length > 0 && (
+              <div key={group}>
+                <h2 className="time-group-title">{group}</h2>
+                <div className="notifications-list">
+                  {groupedNotifications[group].map((notification, index) => (
+                    <div
+                      key={index}
+                      className={`notification-item ${notification.read ? "read" : "unread"}`}
+                    >
+                      {/* Render Based on Notification Type */}
+                      {notification.type === "match" && (
+                        <div className="notification-left">
+                          <span className="notification-message">{notification.message}</span>
+                        </div>
+                      )}
+
+                      {/* Left Section: Commenter's Profile Image, Name, and Notification Message */}
+                      {notification.type === "comment" && (
+                        <div className="notification-left">
+                          <img
+                            src={
+                              notification.meta.commenterProfileImage ||
+                              "/no_pfp.jpg"
+                            }
+                            alt={notification.meta.commenterName}
+                            className="profile-image"
+                          />
+                          <div className="notification-content">
+                            <div className="notification-header">
+                              <span className="commenter-name">{notification.meta.commenterName}</span>
+                              <span className="notification-message">
+                                {`New comment on your post captioned: "${notification.meta.postPreview?.description?.substring(
+                                  0,
+                                  50
+                                )}${
+                                  notification.meta.postPreview?.description.length > 50 ? "..." : ""
+                                }"`}
+                              </span>
+                            </div>
+    
+                            {/* Second Line: Latest Comment + Timestamp */}
+                            {notification.meta.latestComment && (
+                              <div className="notification-body">
+                                <span className="latest-comment">
+                                  <strong>Comment:</strong> {notification.meta.latestComment}
+                                </span>
+                                <span className="notification-timestamp">
+                                  {formatRelativeTime(notification.timestamp)}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+  
+                      {/* Right Section: Post Preview (only for comments)*/}
+                      {notification.type === "comment" && notification.meta.postPreview && (
+                        <div className="notification-right">
+                          <img
+                            src={notification.meta.postPreview.imageUrl || "paw-pattern.jpg"}
+                            alt={notification.meta.postPreview.name}
+                            className="post-image"
+                          />
+                          <div className="post-info">
+                            <p className="post-name">{notification.meta.postPreview.name}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </>
         ) : (
           <p className="no-notifications-message">You're all caught up! 🎉</p>
         )}
       </main>
     </div>
-  );
+  );  
 };
 
 export default NotificationsPage;
