@@ -125,14 +125,24 @@ const Matches = ({ reportId }) => {
                                         />
                                     </div>
                                     {/* Match Score */}
-                                    <div className="col-md-2 text-center">
-                                        <h2 className="mb-0 font-weight-bold">
-                                            {Math.round(score * 100)}%
-                                        </h2>
-                                        <p className="text-muted">
-                                            Match Score
-                                        </p>
-                                    </div>
+                                        <div className="col-md-2 text-center">
+                                            <h2 className="mb-0 font-weight-bold">
+                                                {Math.round(score * 100)}%
+                                            </h2>
+                                            <p className="text-muted">
+                                                Match Score
+                                            </p>
+                                            {score > .90 && (
+                                                <div>
+                                                    <h2 className="mb-0 font-weight-bold">
+                                                        {Math.round(score * 100)}%
+                                                    </h2>
+                                                    <p className="text-muted">
+                                                        Hello
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
                                     {/* Matched Report Card */}
                                     <div className="col-md-5">
                                         <AnimalCard
