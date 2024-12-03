@@ -22,7 +22,6 @@ const createMatchVotes = async (req, res) => {
         return res.status(404).json({ message: 'User not found' });
     }
 
-
     try {
         const existingMatch = await MatchVotes.findOne({
             $or: [
