@@ -138,7 +138,13 @@ const NotificationsPage = () => {
                       {/* Render Based on Notification Type */}
                       {notification.type === "match" && (
                         <div className="notification-left">
-                          <span className="notification-message">{notification.message}</span>
+                          {notification.meta?.matchedReportId ? (
+                            <Link href={`/animal/${notification.meta.matchedReportId}`} className="notification-link">
+                              <span className="notification-message">{notification.message}</span>
+                            </Link>
+                          ) : (
+                            <span className="notification-message">{notification.message}</span>
+                          )}
                         </div>
                       )}
 
