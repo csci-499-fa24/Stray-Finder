@@ -185,7 +185,7 @@ const Matches = ({ reportId }) => {
                                             </p>
                                             {score > .90 && (
                                                 <div>
-                                                    <p>Are the two images the same animal?</p>
+                                                    <p>same pet?</p>
                                                     <div className={styles.buttonContainer}>
                                                         <FontAwesomeIcon 
                                                             icon={faCircleCheck}
