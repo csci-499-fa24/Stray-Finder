@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
+import toast from 'react-hot-toast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import AnimalCard from '@/app/components/cards/AnimalCard'
+import styles from '../AnimalReportProfile.module.css'
 
 const Matches = ({ reportId }) => {
     const [targetReport, setTargetReport] = useState(null) // Store the target report
@@ -70,6 +74,53 @@ const Matches = ({ reportId }) => {
         setPage(nextPage)
     }
 
+    const handleClick = async ({report1, report2, vote}) => {
+        try {
+            const sendData = {
+                report1: report1._id,
+                report2: report2._id,
+                vote
+            }
+
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/match-votes/`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify(sendData),
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: "include",
+                }
+            )
+
+            const status = response.status;
+            if(status === 201){
+                toast.success('vote successfully changed', {
+                    duration: 2000,
+                });
+                setCurrentIndex(currentIndex + 1);
+            }
+            else if(status === 202){
+                toast.success('vote successfully casted', {
+                    duration: 2000,
+                });
+                setCurrentIndex(currentIndex + 1);
+            }
+            else if(status === 401){
+                toast.error('must be logged in to vote', {
+                    duration: 2000,
+                });
+            }
+            else if(status === 402){
+                toast.error('same vote already casted', {
+                    duration: 2000,
+                });
+            }
+
+        } catch (error) {
+            console.log("failed to create match,", error);
+        }
+    }
+
     useEffect(() => {
         loadMatches()
     }, [filter])
@@ -134,12 +185,19 @@ const Matches = ({ reportId }) => {
                                             </p>
                                             {score > .90 && (
                                                 <div>
-                                                    <h2 className="mb-0 font-weight-bold">
-                                                        {Math.round(score * 100)}%
-                                                    </h2>
-                                                    <p className="text-muted">
-                                                        Hello
-                                                    </p>
+                                                    <p>Are the two images the same animal?</p>
+                                                    <div className={styles.buttonContainer}>
+                                                        <FontAwesomeIcon 
+                                                            icon={faCircleCheck}
+                                                            onClick={() => handleClick({report1: targetReport, report2: report, vote: 'yes'})}
+                                                            className={styles.iconCheckButton}
+                                                        />
+                                                        <FontAwesomeIcon 
+                                                            icon={faCircleXmark}
+                                                            onClick={() => handleClick({report1: targetReport, report2: report, vote: 'no'})}
+                                                            className={styles.iconXButton}
+                                                        />
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>

@@ -147,12 +147,12 @@ const MatchVote = () => {
                 setCurrentIndex(currentIndex + 1);
             }
             else if(status === 401){
-                toast.success('must be logged in to vote', {
+                toast.error('must be logged in to vote', {
                     duration: 2000,
                 });
             }
             else if(status === 402){
-                toast.success('same vote already casted', {
+                toast.error('same vote already casted', {
                     duration: 2000,
                 });
             }
