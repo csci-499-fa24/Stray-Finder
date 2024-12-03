@@ -76,6 +76,7 @@ app.use('/api/notifications', notificationRoutes)
  */
 const createStoryFromHighMatch = require('./utils/matchChecker')
 app.use('/special/route/for/demo/', createStoryFromHighMatch)
+setInterval(createStoryFromHighMatch, 20 * 60 * 1000) // check for stories every 20 minutes
 
 ///////////////////////////////////////////////////////////////////////////
 /**
