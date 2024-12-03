@@ -30,14 +30,14 @@ const LostPetsPage = () => {
                     >
                         Lost Pets
                     </button>
-                    <button
+                    {/* <button
                         className={`tab-button ${
                             activeTab === 'matches' ? 'active' : ''
                         }`}
                         onClick={() => handleTabClick('matches')}
                     >
                         Matches
-                    </button>
+                    </button> */}
                 </div>
 
                 <div className="tab-content">
