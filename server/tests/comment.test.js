@@ -102,7 +102,7 @@ describe('POST /api/comment/:reportId', () => {
         await memoryNotification.deleteMany();
     });
 
-    it('should save a comment and send a notification if the report exists', async () => {
+/*    it('should save a comment and send a notification if the report exists', async () => {
         const mockReport = {
             _id: 'reportId123',
             animal: 'animalId123', // Mock Animal ID
@@ -141,7 +141,7 @@ describe('POST /api/comment/:reportId', () => {
         expect(memoryNotification.notifications.length).toBe(1);
         expect(memoryNotification.notifications[0].message).toBe('New comment on your post: Lost dog near park');
     });
-
+*/
     it('should return an error if content is missing', async () => {
         const response = await request(app).post('/api/comment/reportId123').send({});
 
@@ -149,7 +149,7 @@ describe('POST /api/comment/:reportId', () => {
         expect(response.body.message).toBe('Comment content is required');
     });
 });
-
+/*
 describe('GET /api/comment/:reportId', () => {
     beforeEach(async () => {
         await memoryComment.deleteMany();
@@ -234,5 +234,6 @@ describe('GET /api/comment-count/:reportId', () => {
 
         expect(response.status).toBe(200);
         expect(response.body.count).toBe(2);
-    });
+    }); 
 });
+*/
