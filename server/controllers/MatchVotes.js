@@ -17,6 +17,12 @@ const createMatchVotes = async (req, res) => {
         return res.status(400).json({ message: 'missing required fields' });
     }
 
+    const user = await User.findById(req.user.id); // check if user
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+
     try {
         const existingMatch = await MatchVotes.findOne({
             $or: [
@@ -43,10 +49,6 @@ const createMatchVotes = async (req, res) => {
 
         const matchVotes = new MatchVotes(matchVotesData);
 
-        const user = await User.findById(req.user.id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
         user.matchVotes.push({ matchVotesId: matchVotes._id, vote});
         await matchVotes.save();
         await user.save();
