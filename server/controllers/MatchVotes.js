@@ -58,7 +58,7 @@ const createMatchVotes = async (req, res) => {
                 userId: report1Owner.reportedBy._id,
                 message: "Your post has been matched with another post by 10+ users.",
                 type: "match",
-                meta: { reportId1: report1, reportId2: report2 },
+                meta: { reportId: report1, matchedReportId: report2 },
                 isPinned: true,
             });
 
@@ -66,7 +66,7 @@ const createMatchVotes = async (req, res) => {
                 userId: report2Owner.reportedBy._id,
                 message: "Your post has been matched with another post by 10+ users.",
                 type: "match",
-                meta: { reportId1: report1, reportId2: report2 },
+                meta: { reportId: report2, matchedReportId: report1 },
                 isPinned: true,
             });
         }
