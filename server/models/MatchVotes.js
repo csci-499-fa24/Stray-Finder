@@ -21,11 +21,6 @@ const MatchVotesSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
-    unsure: {
-        type: Number,
-        required: true,
-        min: 0,
-    }
 });
 
 module.exports = mongoose.model('MatchVotes', MatchVotesSchema);
