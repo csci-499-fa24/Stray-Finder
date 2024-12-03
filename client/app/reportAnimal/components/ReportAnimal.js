@@ -149,35 +149,46 @@ const ReportAnimal = () => {
 
     useEffect(() => {
         if (isAuthenticated === false) {
-            router.push('/auth')
+            router.push('/auth');
         }
-
+    
+        const storedLocation = localStorage.getItem('userLocation');
+        if (storedLocation) {
+            const parsedLocation = JSON.parse(storedLocation);
+            setUserLocation(parsedLocation);
+            setFormData((prevData) => ({
+                ...prevData,
+                coordinates: parsedLocation,
+                location: `Lat: ${parsedLocation.lat}, Lng: ${parsedLocation.lng}`,
+            }));
+            return;
+        }
+    
         if (isAuthenticated && navigator.geolocation && !locationAsked) {
-            const askForLocation = window.confirm(
-                'Would you like to share your location?'
-            )
+            const askForLocation = window.confirm('Would you like to share your location?');
             if (askForLocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        const { latitude, longitude } = position.coords
-                        setUserLocation({ lat: latitude, lng: longitude })
+                        const { latitude, longitude } = position.coords;
+                        const locationData = { lat: latitude, lng: longitude };
+                        localStorage.setItem('userLocation', JSON.stringify(locationData));
+                        setUserLocation(locationData);
                         setFormData((prevData) => ({
                             ...prevData,
-                            coordinates: { lat: latitude, lng: longitude },
+                            coordinates: locationData,
                             location: `Lat: ${latitude}, Lng: ${longitude}`,
-                        }))
+                        }));
                     },
                     (error) => {
-                        console.error('Error getting location:', error)
-                        alert(
-                            'Unable to retrieve your location. Please enter it manually.'
-                        )
+                        console.error('Error getting location:', error);
+                        alert('Unable to retrieve your location. Please enter it manually.');
                     }
-                )
+                );
             }
-            setLocationAsked(true)
+            setLocationAsked(true);
         }
-    }, [isAuthenticated, locationAsked, router])
+    }, [isAuthenticated, locationAsked, router]);
+    
 
     if (isAuthenticated === null) {
         return <Loader />;
@@ -381,6 +392,18 @@ const ReportAnimal = () => {
             location: `Lat: ${lat}, Lng: ${lng}`,
         }))
     }
+
+    const clearLocation = () => {
+    localStorage.removeItem('userLocation');
+    setUserLocation(null);
+    setFormData((prevData) => ({
+        ...prevData,
+        coordinates: DEFAULT_CENTER,
+        location: '',
+    }));
+    toast.success('Location data cleared!');
+    };
+    
 
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     return (
@@ -628,6 +651,14 @@ const ReportAnimal = () => {
                                     </GoogleMap>
                                 </LoadScriptNext>
                             </div>
+                            <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={clearLocation}
+                                style={{ marginTop: '10px' }}
+                            >
+                                Clear Location
+                            </button>
                             <button
                                 type="submit"
                                 className={styles.submitButton}

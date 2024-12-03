@@ -14,6 +14,7 @@ import { calculateBounds, calculateDistance } from './utils'
 import { createCircularIcon } from './CircularIcon'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Loader from '../loader/Loader';
+import toast from 'react-hot-toast';
 
 const containerStyle = {
     width: '100%',
@@ -117,46 +118,58 @@ const Map = () => {
 
     useEffect(() => {
         if (!isInitialized) {
-            const requestLocationPermission = () => {
-                const confirmPermission = window.confirm(
-                    'This site would like to use your location. Would you like to allow it?'
-                );
-                if (confirmPermission) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            setUserLocation({
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude,
-                            });
-                            setRadius(10);
-                            setIsInitialized(true);
-                        },
-                        (error) => {
-                            console.error('Geolocation error:', error);
-                            alert('Unable to fetch your location. Defaulting to default location.');
-                            setUserLocation(center);
-                            setRadius(10);
-                            setIsInitialized(true);
-                        }
+            const storedLocation = localStorage.getItem('userLocation');
+            
+            if (storedLocation) {
+                // Use stored location if available
+                setUserLocation(JSON.parse(storedLocation));
+                setRadius(10);
+                setIsInitialized(true);
+            } else if (navigator.geolocation) {
+                // Ask for user's consent
+                const requestLocationPermission = async () => {
+                    const confirmPermission = window.confirm(
+                        'This site would like to use your location. Would you like to allow it?'
                     );
-                } else {
-                    alert('Location access denied. Using default location.');
-                    setUserLocation(center);
-                    setRadius(10);
-                    setIsInitialized(true);
-                }
-            };
+                    if (confirmPermission) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const locationData = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude,
+                                };
+                                localStorage.setItem('userLocation', JSON.stringify(locationData));
+                                setUserLocation(locationData);
+                                setRadius(10);
+                                setIsInitialized(true); // Mark as initialized
+                            },
+                            (error) => {
+                                console.error('Geolocation error:', error);
+                                alert('Unable to fetch your location. Defaulting to default location.');
+                                setUserLocation(center);
+                                setRadius(10);
+                                setIsInitialized(true); // Mark as initialized
+                            }
+                        );
+                    } else {
+                        alert('Location access denied. Using default location.');
+                        setUserLocation(center);
+                        setRadius(10);
+                        setIsInitialized(true); // Mark as initialized
+                    }
+                };
     
-            if (navigator.geolocation) {
                 requestLocationPermission();
             } else {
                 alert('Geolocation is not supported by your browser. Using default location.');
                 setUserLocation(center);
                 setRadius(10);
-                setIsInitialized(true);
+                setIsInitialized(true); // Mark as initialized
             }
         }
     }, [isInitialized]);
+    
+    
     
     
 
@@ -241,6 +254,13 @@ const Map = () => {
         return <Loader />
     }
 
+    const clearLocation = () => {
+    localStorage.removeItem('userLocation');
+    setUserLocation(null);
+    setIsInitialized(false);
+    toast.success('Location data cleared!');
+    };
+
     return (
         <>
             <Filters
@@ -299,6 +319,14 @@ const Map = () => {
                     />
                 )}
             </GoogleMap>
+            <button
+                type="button"
+                className="btn btn-danger"
+                onClick={clearLocation}
+                style={{ margin: '10px' }}
+            >
+                Clear Location
+            </button>
         </>
     )
 }
