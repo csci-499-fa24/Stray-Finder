@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { FaInfoCircle } from "react-icons/fa";
+import Modal from "@/app/components/infoModal/Modal";
 import AnimalCard from '@/app/components/cards/AnimalCard'
 import styles from '../AnimalReportProfile.module.css'
 
@@ -12,6 +14,7 @@ const Matches = ({ reportId }) => {
     const [page, setPage] = useState(1) // Track pages for local pagination
     const [isLoading, setIsLoading] = useState(false)
     const [filter, setFilter] = useState('both') // Default filter to 'both'
+    const [showInfo, setShowInfo] = useState(false);
 
     const limit = 20 // Number of items to show per page
 
@@ -121,13 +124,47 @@ const Matches = ({ reportId }) => {
         }
     }
 
+    const handleInfoClick = () => {
+        setShowInfo(true); // Show the modal
+    };
+
+    const handleCloseInfo = () => {
+        setShowInfo(false); // Close the modal
+    };
+
     useEffect(() => {
         loadMatches()
     }, [filter])
 
     return (
         <div className="container my-4">
-            <h3 className="text-center mb-4">Matching Results</h3>
+            <div className="d-flex justify-content-center align-items-center mb-4">
+                <h3 className="mb-0 d-flex align-items-center gap-2">
+                    Matching Results
+                    <FaInfoCircle
+                        className="matches-info-icon"
+                        onClick={handleInfoClick}
+                        title="Click for more info"
+                    />
+                </h3>
+            </div>
+
+            {/* Info Modal */}
+            {showInfo && (
+                <Modal onClose={handleCloseInfo}>
+                    <h2>About Matching Results</h2>
+                    <p>
+                        This section displays matches for the current report based ONLY on
+                        attributes like species, gender, color, and location. Matches with a
+                        high percentage indicate a closer match. 
+                        <strong>These are NOT based on facial recognition.</strong>
+                    </p>
+                    <p>
+                        Use the provided filters to refine your search or vote if you
+                        think the matched report represents the same pet.
+                    </p>
+                </Modal>
+            )}
 
             {/* Filter Dropdown */}
             <div className="text-center mb-4">

@@ -441,3 +441,21 @@
   transform: scale(1.2);
   color: rgb(180, 4, 4);
 }
+
+.matches-info-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.matches-info-icon {
+  font-size: 2rem;
+  color: #6c757d;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.matches-info-icon:hover {
+  color: #e85d04;
+  transform: scale(1.1);
+}
