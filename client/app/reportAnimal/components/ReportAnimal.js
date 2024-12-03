@@ -393,7 +393,7 @@ const ReportAnimal = () => {
         }))
     }
 
-    const clearLocation = () => {
+    /*const clearLocation = () => {
     localStorage.removeItem('userLocation');
     setUserLocation(null);
     setFormData((prevData) => ({
@@ -402,7 +402,7 @@ const ReportAnimal = () => {
         location: '',
     }));
     toast.success('Location data cleared!');
-    };
+    };*/
     
 
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
@@ -651,14 +651,14 @@ const ReportAnimal = () => {
                                     </GoogleMap>
                                 </LoadScriptNext>
                             </div>
-                            <button
+                            {/*<button
                                 type="button"
                                 className="btn btn-danger"
                                 onClick={clearLocation}
                                 style={{ marginTop: '10px' }}
                             >
                                 Clear Location
-                            </button>
+                                    </button>*/}
                             <button
                                 type="submit"
                                 className={styles.submitButton}

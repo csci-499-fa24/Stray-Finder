@@ -254,12 +254,12 @@ const Map = () => {
         return <Loader />
     }
 
-    const clearLocation = () => {
+    /*const clearLocation = () => {
     localStorage.removeItem('userLocation');
     setUserLocation(null);
     setIsInitialized(false);
     toast.success('Location data cleared!');
-    };
+    };*/
 
     return (
         <>
@@ -319,14 +319,14 @@ const Map = () => {
                     />
                 )}
             </GoogleMap>
-            <button
+            {/*<button
                 type="button"
                 className="btn btn-danger"
                 onClick={clearLocation}
                 style={{ margin: '10px' }}
             >
                 Clear Location
-            </button>
+                </button>*/}
         </>
     )
 }
