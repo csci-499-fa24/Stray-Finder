@@ -116,29 +116,48 @@ const Map = () => {
 
     useEffect(() => {
         if (!isInitialized) {
+            const requestLocationPermission = () => {
+                const confirmPermission = window.confirm(
+                    'This site would like to use your location. Would you like to allow it?'
+                );
+                if (confirmPermission) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            setUserLocation({
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude,
+                            });
+                            setRadius(10);
+                            setIsInitialized(true);
+                        },
+                        (error) => {
+                            console.error('Geolocation error:', error);
+                            alert('Unable to fetch your location. Defaulting to default location.');
+                            setUserLocation(center);
+                            setRadius(10);
+                            setIsInitialized(true);
+                        }
+                    );
+                } else {
+                    alert('Location access denied. Using default location.');
+                    setUserLocation(center);
+                    setRadius(10);
+                    setIsInitialized(true);
+                }
+            };
+    
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        setUserLocation({
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude,
-                        })
-                        setRadius(10)
-                        setIsInitialized(true)
-                    },
-                    (error) => {
-                        console.error('Geolocation error:', error)
-                        alert(
-                            'Unable to fetch your location. Defaulting to default location.'
-                        )
-                        setUserLocation(center)
-                        setRadius(10)
-                        setIsInitialized(true)
-                    }
-                )
+                requestLocationPermission();
+            } else {
+                alert('Geolocation is not supported by your browser. Using default location.');
+                setUserLocation(center);
+                setRadius(10);
+                setIsInitialized(true);
             }
         }
-    }, [isInitialized])
+    }, [isInitialized]);
+    
+    
 
     const handleMapLoad = (map) => {
         mapRef.current = map
