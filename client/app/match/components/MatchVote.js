@@ -233,7 +233,7 @@ const MatchVote = () => {
                                                 Yes : No
                                             </p>
                                         </div>
-                                        {currentMatch.matchVotes.yes && currentMatch.matchVotes.no ? (
+                                        {currentMatch.matchVotes.yes || currentMatch.matchVotes.no ? (
                                             <ProgressBar
                                                 max={100}
                                             >
