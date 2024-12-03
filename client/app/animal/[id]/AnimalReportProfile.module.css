@@ -408,3 +408,36 @@
     right: 10px;
   }
 }
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 10px 0px 10px;
+}
+
+.iconCheckButton {
+  cursor: pointer;
+  color: rgb(0, 222, 0);
+  font-size: 40px;
+  margin: 10px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.iconCheckButton:hover {
+  transform: scale(1.2);
+  color: rgb(0, 180, 0);
+}
+
+.iconXButton {
+  cursor: pointer;
+  color: rgb(222, 2, 2);
+  font-size: 40px;
+  margin: 0px 10px 0px 10px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.iconXButton:hover {
+  transform: scale(1.2);
+  color: rgb(180, 4, 4);
+}
