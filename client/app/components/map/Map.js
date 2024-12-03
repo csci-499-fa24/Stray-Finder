@@ -113,6 +113,7 @@ const Map = () => {
             })
         }
     }, [reports])
+    
 
     useEffect(() => {
         if (!isInitialized) {
