@@ -5,6 +5,8 @@ const notificationSchema = new mongoose.Schema(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // User receiving the notification
     message: { type: String, required: true }, // The main notification text
     read: { type: Boolean, default: false }, // Whether the notification has been read
+    isPinned: { type: Boolean, default: false },
+    type: { type: String, required: true },
     timestamp: { type: Date, default: Date.now }, // The creation timestamp
     meta: {
       reportId: { type: mongoose.Schema.Types.ObjectId, ref: "AnimalReport" }, // Reference to the report (for comment notifications)

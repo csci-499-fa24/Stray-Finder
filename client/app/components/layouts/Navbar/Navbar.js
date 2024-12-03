@@ -32,9 +32,14 @@ const Navbar = () => {
         .then((res) => res.json())
         .then((data) => {
           const allNotifications = data.notifications || [];
-          const totalUnread = allNotifications.filter((n) => !n.read).length;
+          const pinnedNotifications = allNotifications.filter((n) => n.isPinned); // Extract pinned notifications
+          const regularNotifications = allNotifications.filter((n) => !n.isPinned); // Extract non-pinned notifications
 
-          setNotifications(allNotifications);
+          const sortedNotifications = [...pinnedNotifications, ...regularNotifications]; // Prioritize pinned notifications
+
+          const totalUnread = sortedNotifications.filter((n) => !n.read).length;
+
+          setNotifications(sortedNotifications);
           setUnreadCount(totalUnread);
           setNewNotificationsCount(totalUnread); // Initialize with total unread on load
         })
