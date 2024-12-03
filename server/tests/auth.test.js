@@ -94,6 +94,15 @@ describe('Auth API', () => {
 
     // Login endpoint tests
     test('should log in an existing user and return a token', async () => {
+        const validUser = {
+            username: 'testuser',
+            email: 'test@example.com',
+            password: await bcrypt.hash('password123', 10),
+        };
+
+        User.findOne.mockResolvedValue(validUser); // Mocking successful user lookup
+        User.prototype.comparePassword.mockResolvedValue(true); // Mocking successful password comparison
+
         const response = await request(app)
             .post('/login')
             .send({ username: 'testuser', password: 'password123' });
@@ -114,14 +123,22 @@ describe('Auth API', () => {
     });
 
     test('should return error for incorrect credentials', async () => {
+        const validUser = {
+            username: 'testuser',
+            email: 'test@example.com',
+            password: await bcrypt.hash('password123', 10),
+        };
+
+        User.findOne.mockResolvedValue(validUser);
+        User.prototype.comparePassword.mockResolvedValue(false); // Mock password mismatch
+
         const response = await request(app)
             .post('/login')
-            .send({ username: 'wronguser', password: 'wrongpassword' });
+            .send({ username: 'testuser', password: 'wrongpassword' });
 
         expect(response.status).toBe(401);
         expect(response.body.message).toBe('Incorrect username or password');
     });
-
 
     // Logout endpoint tests
     test('should clear the authentication token cookie', async () => {
