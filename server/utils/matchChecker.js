@@ -1,14 +1,11 @@
 const Story = require('../models/story')
 const MatchVotes = require('../models/MatchVotes')
 
-// Core logic for processing matches and creating stories
 const processHighMatches = async () => {
     try {
         const matches = await MatchVotes.find()
 
         for (const match of matches) {
-            console.log('Processing match:', match)
-
             // Validate match criteria
             if (match.yes / match.no < 1.75) continue
 
@@ -43,8 +40,8 @@ const processHighMatches = async () => {
     }
 }
 
-// Middleware wrapper for HTTP request to use in demo
-const createStoryFromHighMatch = async (req, res, next) => {
+// HTTP route handler for demo
+const createStoryFromHighMatch = async (req, res) => {
     try {
         await processHighMatches() // Call the shared logic
         res.status(200).send('Task completed')
@@ -54,5 +51,15 @@ const createStoryFromHighMatch = async (req, res, next) => {
     }
 }
 
-// Export the middleware
+const cronJob = async () => {
+    try {
+        await processHighMatches()
+        console.log('Cron job completed successfully')
+    } catch (error) {
+        console.error('Error running cron job for high matches:', error)
+    }
+}
+
+setInterval(cronJob, 20 * 60 * 1000) // Runs every 20 minutes
+
 module.exports = createStoryFromHighMatch

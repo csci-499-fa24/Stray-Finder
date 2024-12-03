@@ -16,6 +16,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Loader from '../loader/Loader';
 import toast from 'react-hot-toast';
 
+
 const containerStyle = {
     width: '100%',
     height: '500px',
@@ -27,12 +28,13 @@ const center = {
 }
 
 const Map = () => {
-    const { isLoaded } = useLoadScript({
+    const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+        libraries: ['places'],
     })
 
     const mapRef = useRef(null)
-    const polylineRef = useRef(null) // Reference to manage the polyline
+    const polylineRef = useRef(null)
     const [reports, setReports] = useState([])
     const [stories, setStories] = useState([])
     const [loading, setLoading] = useState(true)
@@ -209,57 +211,77 @@ const Map = () => {
     }, [reports, userLocation, radius])
 
     const storyPath = useMemo(() => {
-        if (!activeStory) return []
-
+        if (!activeStory || !isLoaded) return []
         const relatedStory = stories.find((story) =>
             story.animalReports.some((report) => report._id === activeStory)
         )
-
         if (!relatedStory) return []
-
         const sortedReports = relatedStory.animalReports.sort((a, b) =>
             new Date(a.dateReported) > new Date(b.dateReported) ? 1 : -1
         )
-
         return sortedReports.map((report) => ({
             lat: report.location.coordinates.coordinates[1],
             lng: report.location.coordinates.coordinates[0],
         }))
-    }, [stories, activeStory])
+    }, [stories, activeStory, isLoaded])
 
-    // Effect to manage the polyline lifecycle
+    const arrowSymbol = {
+        path: 'M 0,-1 0,1',
+        strokeColor: '#0000FF',
+        strokeOpacity: 1,
+        scale: 4,
+    }
+
     useEffect(() => {
+        let animationInterval
+
         if (polylineRef.current) {
-            // If a polyline already exists, remove it
             polylineRef.current.setMap(null)
             polylineRef.current = null
         }
 
         if (activeStory && storyPath.length > 1 && radius >= 5) {
-            // If there is an active story and it has a valid path, create a new polyline
             const newPolyline = new window.google.maps.Polyline({
                 path: storyPath,
                 geodesic: true,
-                strokeColor: '#FF0000',
-                strokeOpacity: 0.8,
+                strokeColor: '#0000FF',
+                strokeOpacity: 0.5,
                 strokeWeight: 2,
+                icons: [
+                    {
+                        icon: arrowSymbol,
+                        offset: '0%',
+                        repeat: '20px',
+                    },
+                ],
             })
 
             newPolyline.setMap(mapRef.current)
             polylineRef.current = newPolyline
+
+            let offset = 0
+            animationInterval = setInterval(() => {
+                offset = (offset + 2) % 100
+                polylineRef.current.set('icons', [
+                    {
+                        icon: arrowSymbol,
+                        offset: `${offset}%`,
+                        repeat: '20px',
+                    },
+                ])
+            }, 100)
+        }
+
+        return () => {
+            if (animationInterval) {
+                clearInterval(animationInterval)
+            }
         }
     }, [activeStory, storyPath, radius])
 
     if (!isLoaded || loading) {
         return <Loader />
     }
-
-    /*const clearLocation = () => {
-    localStorage.removeItem('userLocation');
-    setUserLocation(null);
-    setIsInitialized(false);
-    toast.success('Location data cleared!');
-    };*/
 
     return (
         <>
@@ -273,8 +295,8 @@ const Map = () => {
                 mapContainerStyle={containerStyle}
                 center={userLocation || center}
                 zoom={zoomLevel}
-                onLoad={handleMapLoad}
-                onZoomChanged={handleZoomChanged}
+                onLoad={(map) => handleMapLoad(map)}
+                onZoomChanged={() => setZoomLevel(mapRef.current?.getZoom())}
             >
                 <CircleOverlay
                     center={userLocation || center}
@@ -298,7 +320,7 @@ const Map = () => {
                                 lng: report.location.coordinates.coordinates[0],
                             }}
                             icon={{
-                                path: google.maps.SymbolPath.CIRCLE,
+                                path: window.google.maps.SymbolPath.CIRCLE,
                                 fillColor: 'blue',
                                 fillOpacity: 1,
                                 strokeWeight: 0,
