@@ -30,7 +30,7 @@ const center = {
 
 
 const Map = () => {
-   const { isLoaded } = useLoadScript({
+  const { isLoaded } = useLoadScript({
        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
    })
 
@@ -355,7 +355,7 @@ const Map = () => {
                </button>*/}
        </>
    )
-}
 
+}
 
 export default Map
