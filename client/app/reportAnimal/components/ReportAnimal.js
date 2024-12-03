@@ -1,361 +1,714 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
-import './Map.css'
-import {
-   GoogleMap,
-   useLoadScript,
-   Polyline,
-   Marker,
-} from '@react-google-maps/api'
-import Filters from './Filters'
-import Markers from './Markers'
-import InfoWindowDetails from './InfoWindowDetails'
-import CircleOverlay from './CircleOverlay'
-import { calculateBounds, calculateDistance } from './utils'
-import { createCircularIcon } from './CircularIcon'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import Loader from '../loader/Loader';
-import toast from 'react-hot-toast';
+import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+import { GoogleMap, LoadScriptNext, Marker } from '@react-google-maps/api'
+import { useRouter } from 'next/navigation'
+import useAuth from '@/app/hooks/useAuth'
+import toast from 'react-hot-toast'
+import Loader from '../../components/loader/Loader'
+import styles from './reportAnimal.module.css'
+import { FaCamera } from 'react-icons/fa'
+import { Filter } from 'bad-words';
 
 
-const containerStyle = {
-   width: '100%',
-   height: '500px',
-}
+const ReportAnimal = () => {
+   const router = useRouter()
+   const { isAuthenticated, user } = useAuth()
+   const DEFAULT_CENTER = { lat: 40.768, lng: -73.964 } // Default coordinates (e.g., NYC)
 
 
-const center = {
-   lat: 40.768,
-   lng: -73.964,
-}
-
-
-const Map = () => {
-   const { isLoaded } = useLoadScript({
-       googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-   })
-
-
-   const mapRef = useRef(null)
-   const polylineRef = useRef(null) // Reference to manage the polyline
-   const [reports, setReports] = useState([])
-   const [stories, setStories] = useState([])
-   const [loading, setLoading] = useState(true)
-   const [selectedReport, setSelectedReport] = useState(null)
-   const [iconUrls, setIconUrls] = useState({})
-   const [filters, setFilters] = useState({
-       gender: '',
-       species: '',
+   const [formData, setFormData] = useState({
        reportType: '',
-       fixed: '',
-       collar: '',
+       name: '',
+       species: '',
        breed: '',
+       color: '',
+       gender: 'Unknown',
+       fixed: 'Unknown',
+       collar: false,
+       description: '',
+       location: '',
+       coordinates: DEFAULT_CENTER,
    })
-   const [radius, setRadius] = useState(10)
+
+
+   const [file, setFile] = useState(null) // Store the image file
+   const [isOtherBreed, setIsOtherBreed] = useState(false)
+   const [commonBreeds, setCommonBreeds] = useState([])
    const [userLocation, setUserLocation] = useState(null)
-   const [isInitialized, setIsInitialized] = useState(false)
-   const [activeStory, setActiveStory] = useState(null)
-   const [zoomLevel, setZoomLevel] = useState(13)
+   const [locationAsked, setLocationAsked] = useState(false)
+   const [loading, setLoading] = useState(false)
+   const [error, setError] = useState('')
+
+
+   const speciesOptions = [
+       {
+           value: 'Dog',
+           label: 'Dog',
+           breeds: [
+               'Labrador Retriever',
+               'German Shepherd',
+               'Golden Retriever',
+               'Bulldog',
+               'Beagle',
+               'Poodle',
+               'Rottweiler',
+               'Yorkshire Terrier',
+               'Dachshund',
+               'Boxer',
+               "I don't know",
+           ],
+       },
+       {
+           value: 'Cat',
+           label: 'Cat',
+           breeds: [
+               'Persian',
+               'Maine Coon',
+               'Siamese',
+               'Ragdoll',
+               'Bengal',
+               'Sphynx',
+               'British Shorthair',
+               "I don't know",
+           ],
+       },
+       {
+           value: 'Rabbit',
+           label: 'Rabbit',
+           breeds: [
+               'Holland Lop',
+               'Netherland Dwarf',
+               'Mini Rex',
+               'Lionhead',
+               'Flemish Giant',
+               "I don't know",
+           ],
+       },
+       {
+           value: 'Hamster',
+           label: 'Hamster',
+           breeds: [
+               'Syrian',
+               'Dwarf',
+               'Roborovski',
+               'Chinese',
+               "I don't know",
+           ],
+       },
+       {
+           value: 'Guinea Pig',
+           label: 'Guinea Pig',
+           breeds: [
+               'American',
+               'Abyssinian',
+               'Peruvian',
+               'Silkie',
+               "I don't know",
+           ],
+       },
+       {
+           value: 'Lizard',
+           label: 'Lizard',
+           breeds: [
+               'Leopard Gecko',
+               'Bearded Dragon',
+               'Crested Gecko',
+               'Chameleon',
+               "I don't know",
+           ],
+       },
+       {
+           value: 'Pig',
+           label: 'Pig',
+           breeds: [
+               'Miniature',
+               'Teacup',
+               'Pot-bellied',
+               "I don't know",
+           ],
+       },
+       {
+           value: 'Bird',
+           label: 'Bird',
+           breeds: [
+               'Parakeet',
+               'Cockatiel',
+               'Canary',
+               'Lovebird',
+               "I don't know",
+           ],
+       },
+       {
+           value: 'Ferret',
+           label: 'Ferret',
+           breeds: ["I don't know"], // Ferrets don't have many distinct breeds
+       },
+       {
+           value: 'Unknown',
+           label: "I don't know",
+           breeds: []
+       },
+   ];   
 
 
    useEffect(() => {
-       const fetchReports = async () => {
-           try {
-               const queryParams = new URLSearchParams(filters)
-               const response = await fetch(
-                   `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report?${queryParams}`
-               )
-               const data = await response.json()
-               setReports(data.reports)
-               setLoading(false)
-           } catch (error) {
-               console.error('Failed to fetch reports', error)
-               setLoading(false)
-           }
+       if (isAuthenticated === false) {
+           router.push('/auth');
        }
-
-
-       fetchReports()
-   }, [filters])
-
-
-   useEffect(() => {
-       const fetchStories = async () => {
-           try {
-               const response = await fetch(
-                   `${process.env.NEXT_PUBLIC_SERVER_URL}/api/story`
-               )
-               const data = await response.json()
-               setStories(data)
-           } catch (error) {
-               console.error('Failed to fetch stories', error)
-           }
+  
+       const storedLocation = localStorage.getItem('userLocation');
+       if (storedLocation) {
+           const parsedLocation = JSON.parse(storedLocation);
+           setUserLocation(parsedLocation);
+           setFormData((prevData) => ({
+               ...prevData,
+               coordinates: parsedLocation,
+               location: `Lat: ${parsedLocation.lat}, Lng: ${parsedLocation.lng}`,
+           }));
+           return;
        }
-
-
-       fetchStories()
-   }, [])
-
-
-   useEffect(() => {
-       if (reports.length > 0) {
-           reports.forEach((report) => {
-               const fallbackColor =
-                   report.reportType === 'Stray'
-                       ? '#FFA500'
-                       : report.reportType === 'Lost'
-                       ? '#FF0000'
-                       : report.reportType === 'Found'
-                       ? '#00FF00'
-                       : '#000000'
-
-
-               createCircularIcon(
-                   report.animal.imageUrl,
-                   fallbackColor,
-                   (iconUrl) => {
-                       if (iconUrl) {
-                           setIconUrls((prev) => ({
-                               ...prev,
-                               [report._id]: iconUrl,
-                           }))
-                       }
+  
+       if (isAuthenticated && navigator.geolocation && !locationAsked) {
+           const askForLocation = window.confirm('Would you like to share your location?');
+           if (askForLocation) {
+               navigator.geolocation.getCurrentPosition(
+                   (position) => {
+                       const { latitude, longitude } = position.coords;
+                       const locationData = { lat: latitude, lng: longitude };
+                       localStorage.setItem('userLocation', JSON.stringify(locationData));
+                       setUserLocation(locationData);
+                       setFormData((prevData) => ({
+                           ...prevData,
+                           coordinates: locationData,
+                           location: `Lat: ${latitude}, Lng: ${longitude}`,
+                       }));
+                   },
+                   (error) => {
+                       console.error('Error getting location:', error);
+                       alert('Unable to retrieve your location. Please enter it manually.');
                    }
-               )
-           })
-       }
-   }, [reports])
-  
-
-
-   useEffect(() => {
-       if (!isInitialized) {
-           const storedLocation = localStorage.getItem('userLocation');
-          
-           if (storedLocation) {
-               // Use stored location if available
-               setUserLocation(JSON.parse(storedLocation));
-               setRadius(10);
-               setIsInitialized(true);
-           } else if (navigator.geolocation) {
-               // Ask for user's consent
-               const requestLocationPermission = async () => {
-                   const confirmPermission = window.confirm(
-                       'This site would like to use your location. Would you like to allow it?'
-                   );
-                   if (confirmPermission) {
-                       navigator.geolocation.getCurrentPosition(
-                           (position) => {
-                               const locationData = {
-                                   lat: position.coords.latitude,
-                                   lng: position.coords.longitude,
-                               };
-                               localStorage.setItem('userLocation', JSON.stringify(locationData));
-                               setUserLocation(locationData);
-                               setRadius(10);
-                               setIsInitialized(true); // Mark as initialized
-                           },
-                           (error) => {
-                               console.error('Geolocation error:', error);
-                               alert('Unable to fetch your location. Defaulting to default location.');
-                               setUserLocation(center);
-                               setRadius(10);
-                               setIsInitialized(true); // Mark as initialized
-                           }
-                       );
-                   } else {
-                       alert('Location access denied. Using default location.');
-                       setUserLocation(center);
-                       setRadius(10);
-                       setIsInitialized(true); // Mark as initialized
-                   }
-               };
-  
-               requestLocationPermission();
-           } else {
-               alert('Geolocation is not supported by your browser. Using default location.');
-               setUserLocation(center);
-               setRadius(10);
-               setIsInitialized(true); // Mark as initialized
+               );
            }
+           setLocationAsked(true);
        }
-   }, [isInitialized]);
-  
-  
-  
+   }, [isAuthenticated, locationAsked, router]);
   
 
 
-   const handleMapLoad = (map) => {
-       mapRef.current = map
+   if (isAuthenticated === null) {
+       return <Loader />;
    }
 
 
-   const handleZoomChanged = () => {
-       if (mapRef.current) {
-           setZoomLevel(mapRef.current.getZoom())
-       }
+   if (isAuthenticated === false) {
+       return null // Return nothing if the user is not authenticated (will redirect)
    }
 
 
-   useEffect(() => {
-       if (mapRef.current && userLocation && radius) {
-           const bounds = calculateBounds(userLocation, radius)
-           mapRef.current.fitBounds(bounds)
-       }
-   }, [userLocation, radius])
+   const handleChange = (e) => {
+       const { name, value, type, checked } = e.target
 
 
-   const filteredReports = useMemo(() => {
-       return reports.filter((report) => {
-           const { location } = report
-           const baseLocation = userLocation || center
-           if (location && location.coordinates) {
-               const [lng, lat] = location.coordinates.coordinates
-               const distance = calculateDistance(
-                   baseLocation.lat,
-                   baseLocation.lng,
-                   lat,
-                   lng
-               )
-               return distance <= radius
-           }
-           return false
-       })
-   }, [reports, userLocation, radius])
-
-
-   const storyPath = useMemo(() => {
-       if (!activeStory) return []
-
-
-       const relatedStory = stories.find((story) =>
-           story.animalReports.some((report) => report._id === activeStory)
-       )
-
-
-       if (!relatedStory) return []
-
-
-       const sortedReports = relatedStory.animalReports.sort((a, b) =>
-           new Date(a.dateReported) > new Date(b.dateReported) ? 1 : -1
-       )
-
-
-       return sortedReports.map((report) => ({
-           lat: report.location.coordinates.coordinates[1],
-           lng: report.location.coordinates.coordinates[0],
+       setFormData((prevData) => ({
+           ...prevData,
+           [name]: type === 'checkbox' ? checked : value,
        }))
-   }, [stories, activeStory])
 
 
-   // Effect to manage the polyline lifecycle
-   useEffect(() => {
-       if (polylineRef.current) {
-           // If a polyline already exists, remove it
-           polylineRef.current.setMap(null)
-           polylineRef.current = null
+       if (name === 'species') {
+           const selectedSpecies = speciesOptions.find(
+               (species) => species.value === value
+           )
+           setCommonBreeds(selectedSpecies ? selectedSpecies.breeds : [])
+           setFormData((prevData) => ({
+               ...prevData,
+               breed: '', // Reset breed when species changes
+           }))
+           setIsOtherBreed(false) // Reset Other option when species changes
        }
 
 
-       if (activeStory && storyPath.length > 1 && radius >= 5) {
-           // If there is an active story and it has a valid path, create a new polyline
-           const newPolyline = new window.google.maps.Polyline({
-               path: storyPath,
-               geodesic: true,
-               strokeColor: '#FF0000',
-               strokeOpacity: 0.8,
-               strokeWeight: 2,
+       if (name === 'breed') {
+           if (value === 'Other') {
+               setIsOtherBreed(true)
+               setFormData((prevData) => ({
+                   ...prevData,
+                   breed: 'Other', // Keep "Other" as the dropdown value
+               }))
+           } else {
+               setIsOtherBreed(false)
+               setFormData((prevData) => ({
+                   ...prevData,
+                   breed: value, // Update with selected dropdown value
+               }))
+           }
+       }
+   }
+
+
+   const handleFileChange = (e) => {
+       setFile(e.target.files[0]) // Store the selected file
+   }
+
+
+   const calculateDistance = (lat1, lon1, lat2, lon2) => {
+       const R = 3959 // Radius of Earth in miles
+       const dLat = ((lat2 - lat1) * Math.PI) / 180
+       const dLon = ((lon2 - lon1) * Math.PI) / 180
+       const a =
+           Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+           Math.cos((lat1 * Math.PI) / 180) *
+               Math.cos((lat2 * Math.PI) / 180) *
+               Math.sin(dLon / 2) *
+               Math.sin(dLon / 2)
+       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+       return R * c // Distance in miles
+   }
+
+
+   const handleCameraCapture = async () => {
+       try {
+           const cameraCapture = await navigator.mediaDevices.getUserMedia({
+               video: true,
            })
 
 
-           newPolyline.setMap(mapRef.current)
-           polylineRef.current = newPolyline
+           // Create a video element to capture the snapshot
+           const video = document.createElement('video')
+           video.srcObject = cameraCapture
+           video.play()
+
+
+           // Create a canvas to hold the captured image
+           const canvas = document.createElement('canvas')
+           canvas.width = 640 // Set canvas size
+           canvas.height = 480
+
+
+           // Wait for a moment to allow the video to load
+           setTimeout(() => {
+               const context = canvas.getContext('2d')
+               context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+
+               // Convert the canvas image to a blob and set it as the file
+               canvas.toBlob((blob) => {
+                   const capturedImage = new File(
+                       [blob],
+                       'captured_image.jpg',
+                       { type: 'image/jpeg' }
+                   )
+                   setFile(capturedImage) // Update the state
+               })
+
+
+               // Stop the video stream
+               video.srcObject.getTracks().forEach((track) => track.stop())
+           }, 1000)
+       } catch (error) {
+           console.error('Error accessing camera:', error)
+           toast.error('Unable to access the camera. Please try again.')
        }
-   }, [activeStory, storyPath, radius])
+   }
+   const handleSubmit = async (e) => {
+       e.preventDefault()
+       setLoading(true)
+       setError('')
 
 
-   if (!isLoaded || loading) {
-       return <Loader />
+       const filter = new Filter();
+
+
+       // Validate `description` for profanity
+       if (filter.isProfane(formData.description)) {
+           setLoading(false);
+           toast.error(
+               'Your report description contains inappropriate language. Please revise it before submitting.'
+           );
+           return; // Stop submission if profanity is detected
+       }
+
+
+       // Sanitize the `description`
+       const sanitizedDescription = filter.clean(formData.description);
+
+
+       // Check if user location is available
+       if (userLocation) {
+           const distance = calculateDistance(
+               userLocation.lat,
+               userLocation.lng,
+               formData.coordinates.lat,
+               formData.coordinates.lng
+           );
+
+
+
+
+           // Validate the distance is within 10 miles
+           if (distance > 10) {
+               setLoading(false);
+               toast.error('You cannot report animals more than 10 miles away.');
+               return; // Stop submission if distance exceeds 10 miles
+           }
+       }
+
+
+       const uploadData = new FormData()
+       uploadData.append('reportType', formData.reportType)
+       uploadData.append('name', formData.name)
+       uploadData.append('species', formData.species)
+       uploadData.append('breed', formData.breed)
+       uploadData.append('color', formData.color)
+       uploadData.append('gender', formData.gender)
+       uploadData.append('fixed', formData.fixed) // Ensure "fixed" is added
+       uploadData.append('collar', formData.collar) // Ensure "collar" is added
+       uploadData.append('description', formData.description)
+       uploadData.append('reportedBy', user._id)
+
+
+       const locationData = {
+           address: formData.location || 'Unknown',
+           coordinates: {
+               type: 'Point',
+               coordinates: [
+                   formData.coordinates.lng,
+                   formData.coordinates.lat,
+               ],
+           },
+       }
+
+
+       uploadData.append('location', JSON.stringify(locationData))
+
+
+       if (file) {
+           uploadData.append('image', file)
+       }
+
+
+       try {
+           const response = await fetch(
+               `${process.env.NEXT_PUBLIC_SERVER_URL}/api/animal-report`,
+               {
+                   method: 'POST',
+                   body: uploadData,
+                   credentials: 'include',
+               }
+           )
+
+
+           if (!response.ok) {
+               throw new Error(`Error: ${response.statusText}`)
+           }
+
+
+           const result = await response.json()
+           toast.success('Report submitted successfully!')
+           router.push('/')
+       } catch (error) {
+           setError(error.message)
+           toast.error('An error occurred while submitting the report.')
+       } finally {
+           setLoading(false)
+       }
+   }
+
+
+   const handleMapClick = (event) => {
+       const lat = event.latLng.lat()
+       const lng = event.latLng.lng()
+       setFormData((prevData) => ({
+           ...prevData,
+           coordinates: { lat, lng },
+           location: `Lat: ${lat}, Lng: ${lng}`,
+       }))
    }
 
 
    /*const clearLocation = () => {
    localStorage.removeItem('userLocation');
    setUserLocation(null);
-   setIsInitialized(false);
+   setFormData((prevData) => ({
+       ...prevData,
+       coordinates: DEFAULT_CENTER,
+       location: '',
+   }));
    toast.success('Location data cleared!');
    };*/
+  
 
 
+   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
    return (
-       <>
-           <Filters
-               filters={filters}
-               setFilters={setFilters}
-               setRadius={setRadius}
-               radius={radius}
-           />
-           <GoogleMap
-               mapContainerStyle={containerStyle}
-               center={userLocation || center}
-               zoom={zoomLevel}
-               onLoad={handleMapLoad}
-               onZoomChanged={handleZoomChanged}
-           >
-               <CircleOverlay
-                   center={userLocation || center}
-                   radius={radius}
-               />
-               <Markers
-                   reports={filteredReports}
-                   iconUrls={iconUrls}
-                   setSelectedReport={setSelectedReport}
-               />
-               {filteredReports.map((report) =>
-                   stories.some((story) =>
-                       story.animalReports.some(
-                           (animalReport) => animalReport._id === report._id
-                       )
-                   ) ? (
-                       <Marker
-                           key={`button-marker-${report._id}`}
-                           position={{
-                               lat: report.location.coordinates.coordinates[1],
-                               lng: report.location.coordinates.coordinates[0],
-                           }}
-                           icon={{
-                               path: google.maps.SymbolPath.CIRCLE,
-                               fillColor: 'blue',
-                               fillOpacity: 1,
-                               strokeWeight: 0,
-                               scale: 6,
-                           }}
-                           onClick={() =>
-                               activeStory === report._id
-                                   ? setActiveStory(null)
-                                   : setActiveStory(report._id)
-                           }
-                       />
-                   ) : null
-               )}
-               {selectedReport && (
-                   <InfoWindowDetails
-                       selectedReport={selectedReport}
-                       setSelectedReport={setSelectedReport}
-                   />
-               )}
-           </GoogleMap>
-           {/*<button
-               type="button"
-               className="btn btn-danger"
-               onClick={clearLocation}
-               style={{ margin: '10px' }}
-           >
-               Clear Location
-               </button>*/}
-       </>
+       <div className={`container ${styles.container}`}>
+           <div className="row justify-content-center">
+               <div className="col-md-8">
+                   <div className={`${styles.reportFormContainer}`}>
+                       <h2 className={styles.h2}>Report an Animal</h2>
+                       {error && (
+                           <div className={styles.errorMessage}>{error}</div>
+                       )}
+                       <form
+                           onSubmit={handleSubmit}
+                           encType="multipart/form-data"
+                       >
+                           {/* Select fields */}
+                           <div className={styles.formGroup}>
+                               <label
+                                   htmlFor="reportType"
+                                   className={styles.formLabel}
+                               >
+                                   Report Type
+                               </label>
+                               <select
+                                   className={styles.formSelect}
+                                   id="reportType"
+                                   name="reportType"
+                                   value={formData.reportType}
+                                   onChange={handleChange}
+                                   required
+                               >
+                                   <option value="">Select report type</option>
+                                   <option value="Lost">Lost</option>
+                                   <option value="Stray">Stray</option>
+                                   <option value="Found">Found</option>
+                               </select>
+                           </div>
+
+
+                           <div className="mb-3">
+                               <label htmlFor="name" className="form-label">
+                                   Name
+                               </label>
+                               <input
+                                   type="text"
+                                   className="form-control"
+                                   id="name"
+                                   name="name"
+                                   value={formData.name}
+                                   onChange={handleChange}
+                                   required
+                               />
+                           </div>
+
+
+                           <div className="mb-3">
+                               <label htmlFor="species" className="form-label">
+                                   Species
+                               </label>
+                               <select
+                                   className="form-select"
+                                   id="species"
+                                   name="species"
+                                   value={formData.species}
+                                   onChange={handleChange}
+                                   required
+                               >
+                                   <option value="">Select species</option>
+                                   {speciesOptions.map((species) => (
+                                       <option
+                                           key={species.value}
+                                           value={species.value}
+                                       >
+                                           {species.label}
+                                       </option>
+                                   ))}
+                               </select>
+                           </div>
+                           <div className="mb-3">
+                               <label htmlFor="breed" className="form-label">
+                                   Breed
+                               </label>
+                               <select
+                                   className="form-select"
+                                   id="breed"
+                                   name="breed"
+                                   value={
+                                       isOtherBreed ? 'Other' : formData.breed
+                                   } // Keep "Other" selected in dropdown
+                                   onChange={handleChange}
+                                   required
+                               >
+                                   <option value="">Select breed</option>
+                                   {commonBreeds.map((breed) => (
+                                       <option key={breed} value={breed}>
+                                           {breed}
+                                       </option>
+                                   ))}
+                                   <option value="Other">Other</option>
+                               </select>
+                               {isOtherBreed && (
+                                   <input
+                                       type="text"
+                                       className="form-control mt-2"
+                                       placeholder="Please specify other breed"
+                                       value={
+                                           formData.breed !== 'Other'
+                                               ? formData.breed
+                                               : ''
+                                       } // Show the custom input value
+                                       onChange={(e) =>
+                                           setFormData((prevData) => ({
+                                               ...prevData,
+                                               breed: e.target.value, // Update formData with the custom input value
+                                           }))
+                                       }
+                                       required
+                                   />
+                               )}
+                           </div>
+                           <div className="mb-3">
+                               <label htmlFor="color" className="form-label">
+                                   Color
+                               </label>
+                               <input
+                                   type="text"
+                                   className="form-control"
+                                   id="color"
+                                   name="color"
+                                   value={formData.color}
+                                   onChange={handleChange}
+                                   required
+                               />
+                           </div>
+                           <div className="mb-3">
+                               <label htmlFor="gender" className="form-label">
+                                   Gender
+                               </label>
+                               <select
+                                   className="form-select"
+                                   id="gender"
+                                   name="gender"
+                                   value={formData.gender}
+                                   onChange={handleChange}
+                               >
+                                   <option value="Unknown">Unknown</option>
+                                   <option value="Male">Male</option>
+                                   <option value="Female">Female</option>
+                               </select>
+                           </div>
+                           <div className="mb-3">
+                               <label htmlFor="fixed" className="form-label">
+                                   Is the animal fixed?
+                               </label>
+                               <select
+                                   className="form-select"
+                                   id="fixed"
+                                   name="fixed"
+                                   value={formData.fixed}
+                                   onChange={handleChange}
+                               >
+                                   <option value="Unknown">Unknown</option>
+                                   <option value="Yes">Yes</option>
+                                   <option value="No">No</option>
+                               </select>
+                           </div>
+                           <div className="mb-3">
+                               <label htmlFor="collar" className="form-label">
+                                   Does the animal have a collar?
+                               </label>
+                               <input
+                                   type="checkbox"
+                                   id="collar"
+                                   name="collar"
+                                   checked={formData.collar}
+                                   onChange={handleChange}
+                               />
+                           </div>
+                           <div className="mb-3">
+                               <label
+                                   htmlFor="description"
+                                   className="form-label"
+                               >
+                                   Description
+                               </label>
+                               <textarea
+                                   className="form-control"
+                                   id="description"
+                                   name="description"
+                                   rows="3"
+                                   value={formData.description}
+                                   onChange={handleChange}
+                                   required
+                               ></textarea>
+                           </div>
+                           <div className="mb-3">
+                               <label
+                                   htmlFor="location"
+                                   className="form-label"
+                               >
+                                   Location
+                               </label>
+                               <input
+                                   type="text"
+                                   className="form-control"
+                                   id="location"
+                                   name="location"
+                                   value={formData.location}
+                                   onChange={handleChange}
+                                   required
+                               />
+                           </div>
+                           <div className={styles.imageUploadContainer}>
+                               <button
+                                   type="button"
+                                   className={styles.imageUploadButton}
+                                   onClick={handleCameraCapture}
+                               >
+                                   <FaCamera className={styles.cameraIcon} />
+                                   <span>Take a Picture</span>
+                               </button>
+                               <input
+                                   type="file"
+                                   className={`${styles.formControl} ${styles.fileInput}`}
+                                   id="file"
+                                   name="file"
+                                   accept="image/*"
+                                   capture="user"
+                                   onChange={handleFileChange}
+                               />
+                           </div>
+                           {/* Map */}
+                           <div className={styles.mapContainer}>
+                               <LoadScriptNext googleMapsApiKey={apiKey}>
+                                   <GoogleMap
+                                       mapContainerStyle={{
+                                           height: '100%',
+                                           width: '100%',
+                                       }}
+                                       center={formData.coordinates}
+                                       zoom={12}
+                                       onClick={handleMapClick}
+                                   >
+                                       <Marker
+                                           position={formData.coordinates}
+                                       />
+                                   </GoogleMap>
+                               </LoadScriptNext>
+                           </div>
+                           {/*<button
+                               type="button"
+                               className="btn btn-danger"
+                               onClick={clearLocation}
+                               style={{ marginTop: '10px' }}
+                           >
+                               Clear Location
+                                   </button>*/}
+                           <button
+                               type="submit"
+                               className={styles.submitButton}
+                               disabled={loading}
+                           >
+                               {loading ? 'Submitting...' : 'Submit'}
+                           </button>
+                       </form>
+                   </div>
+               </div>
+           </div>
+       </div>
    )
 }
 
 
-export default Map
+export default ReportAnimal
