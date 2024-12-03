@@ -4,7 +4,7 @@ import useAuth from "@/app/hooks/useAuth";
 import toast from 'react-hot-toast';
 import styles from '../MatchVote.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faCircleXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Map from './MatchMap';
 
@@ -220,6 +220,11 @@ const MatchVote = () => {
                                         icon={faCircleXmark}
                                         onClick={() => handleClick({report1: currentMatch.report1, report2: currentMatch.report2, vote: 'no'})}
                                         className={styles.iconXButton}
+                                    />
+                                    <FontAwesomeIcon 
+                                        icon={faCircleQuestion}
+                                        onClick={() => handleClick({report1: currentMatch.report1, report2: currentMatch.report2, vote: 'unsure'})}
+                                        className={styles.iconQuestionButton}
                                     />
                                 </div>
                                 <div style={{ width: '100%', margin: '0 auto' }}>
