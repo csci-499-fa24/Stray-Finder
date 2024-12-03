@@ -81,6 +81,19 @@
     color: rgb(180, 4, 4);
 }
 
+.iconQuestionButton {
+    cursor: pointer;
+    color: rgb(171, 171, 171);
+    font-size: 50px;
+    margin: 0px 10px 0px 10px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+  
+.iconQuestionButton:hover {
+    transform: scale(1.2);
+    color: rgb(133, 133, 133);
+}
+
 .slider {
     height: 5px;
     background-color: #ddd;

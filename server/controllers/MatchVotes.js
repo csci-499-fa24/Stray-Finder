@@ -17,6 +17,12 @@ const createMatchVotes = async (req, res) => {
         return res.status(400).json({ message: 'missing required fields' });
     }
 
+    const user = await User.findById(req.user.id); // check if user
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+
     try {
         const existingMatch = await MatchVotes.findOne({
             $or: [
@@ -31,20 +37,18 @@ const createMatchVotes = async (req, res) => {
 
         const yes = vote === 'yes' ? 1 : 0;
         const no = vote === 'no' ? 1 : 0;
+        const unsure = vote === 'unsure' ? 1 : 0;
 
         const matchVotesData = {
             report1,
             report2,
             yes,
             no,
+            unsure,
         }
 
         const matchVotes = new MatchVotes(matchVotesData);
 
-        const user = await User.findById(req.user.id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
         user.matchVotes.push({ matchVotesId: matchVotes._id, vote});
         await matchVotes.save();
         await user.save();
@@ -97,20 +101,40 @@ const updateMatchVotes = async (req, res, matchVotesId, vote) => {
     try {
         const userVoteIndex = user.matchVotes.findIndex(vote => vote.matchVotesId.toString() === matchVotesId.toString());
         if (userVoteIndex !== -1) { // already voted
+            console.log(vote, user.matchVotes[userVoteIndex].vote)
             const previousVote = user.matchVotes[userVoteIndex].vote;
 
             if (previousVote === vote) { // don't need to update vote bc is same (could honestly just -- prev vote instead of checking, but w/e)
                 return res.status(402).json({ message: 'you have already cast this vote' });
             }
 
+            const OGVote = user.matchVotes[userVoteIndex].vote;
             user.matchVotes[userVoteIndex].vote = vote; // change vote on User schema
 
             if (vote === 'yes') { // change vote on MatchVotes schema
-                existingMatch.yes++;
-                existingMatch.no = Math.max(existingMatch.no - 1, 0);
+                if(OGVote === 'no') {
+                    existingMatch.yes++;
+                    existingMatch.no = Math.max(existingMatch.no - 1, 0);
+                } else {
+                    existingMatch.yes++;
+                    existingMatch.unsure = Math.max(existingMatch.unsure - 1, 0);
+                }
             } else if (vote === 'no') {
-                existingMatch.no++;
-                existingMatch.yes = Math.max(existingMatch.yes - 1, 0);
+                if(OGVote === 'yes') {
+                    existingMatch.no++;
+                    existingMatch.yes = Math.max(existingMatch.yes - 1, 0);
+                } else {
+                    existingMatch.no++;
+                    existingMatch.unsure = Math.max(existingMatch.unsure - 1, 0);
+                }
+            } else if (vote === 'unsure') {
+                if(OGVote === 'yes') {
+                    existingMatch.unsure++;
+                    existingMatch.yes = Math.max(existingMatch.yes - 1, 0);
+                } else {
+                    existingMatch.unsure++;
+                    existingMatch.no = Math.max(existingMatch.no - 1, 0);
+                }
             } else { // remove vote to be added 
                 return res.status(400).json({ message: 'invalid vote' });
             }
@@ -124,6 +148,8 @@ const updateMatchVotes = async (req, res, matchVotesId, vote) => {
                 existingMatch.yes++;
             } else if (vote === 'no') {
                 existingMatch.no++;
+            } else if (vote === 'unsure') {
+                existingMatch.unsure++;
             } else { // remove vote to be added 
                 return res.status(400).json({ message: 'invalid vote' });
             }
