@@ -10,6 +10,7 @@ const notificationSchema = new mongoose.Schema(
     timestamp: { type: Date, default: Date.now }, // The creation timestamp
     meta: {
       reportId: { type: mongoose.Schema.Types.ObjectId, ref: "AnimalReport" }, // Reference to the report (for comment notifications)
+      matchedReportId: { type: mongoose.Schema.Types.ObjectId, ref: "AnimalReport" },
       commentCount: { type: Number, default: 0 }, // Number of comments (for batched notifications)
       latestComment: { type: String }, // The latest comment text
       postPreview: {

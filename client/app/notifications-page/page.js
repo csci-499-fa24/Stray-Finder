@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { FaThumbtack } from "react-icons/fa";
 import Navbar from "@/app/components/layouts/Navbar/Navbar";
 import "./NotificationsPage.css";
@@ -105,7 +106,13 @@ const NotificationsPage = () => {
                         }`}
                       >
                         <div className="notification-left">
-                          <span className="notification-message">{notification.message}</span>
+                          {notification.meta?.matchedReportId ? (
+                            <Link href={`/animal/${notification.meta.matchedReportId}`} className="notification-link">
+                              <span className="notification-message">{notification.message}</span>
+                            </Link>
+                          ) : (
+                            <span className="notification-message">{notification.message}</span>
+                          )}
                         </div>
 
                         {/* Right Section: Pinned Icon */}

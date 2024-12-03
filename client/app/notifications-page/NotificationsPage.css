@@ -158,3 +158,10 @@
     margin-top: 50px;
   }
   
+  .notification-link {
+    text-decoration: none;
+    color: inherit; 
+    cursor: pointer; 
+  }
+
+  
