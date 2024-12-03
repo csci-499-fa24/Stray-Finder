@@ -21,8 +21,7 @@ const AnimalReportProfile = ({ id }) => {
   const [mapLoading, setMapLoading] = useState(true);
   const [showMessagingInterface, setShowMessagingInterface] = useState(false);
 
-  const adminUserId = '67380f3303b2a7f7d8a8543c'; // Load admin ID from env
-
+  const adminUserId = '67380f3303b2a7f7d8a8543c';
   useEffect(() => {
     const fetchReportData = async () => {
       try {

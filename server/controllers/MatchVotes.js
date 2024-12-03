@@ -48,6 +48,29 @@ const createMatchVotes = async (req, res) => {
         user.matchVotes.push({ matchVotesId: matchVotes._id, vote});
         await matchVotes.save();
         await user.save();
+
+        // Add Notification Logic
+        if (matchVotes.yes >= 10) {
+            const report1Owner = await Report.findById(report1).populate("reportedBy");
+            const report2Owner = await Report.findById(report2).populate("reportedBy");
+
+            await createNotification({
+                userId: report1Owner.reportedBy._id,
+                message: "Your post has been matched with another post by 10+ users.",
+                type: "match",
+                meta: { reportId1: report1, reportId2: report2 },
+                isPinned: true,
+            });
+
+            await createNotification({
+                userId: report2Owner.reportedBy._id,
+                message: "Your post has been matched with another post by 10+ users.",
+                type: "match",
+                meta: { reportId1: report1, reportId2: report2 },
+                isPinned: true,
+            });
+        }
+
         res.status(202).json({ matchVotes });
 
     }
