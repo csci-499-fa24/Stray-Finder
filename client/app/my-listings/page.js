@@ -73,7 +73,7 @@ const MyListings = () => {
                             image={report?.animal?.imageUrl}
                             species={report?.animal?.species}
                             gender={report?.animal?.gender}
-                            state="Unknown"  // Replace with actual state if available
+                            state={report.reportType}
                             description={report?.animal?.description}
                         />
                     ))}
