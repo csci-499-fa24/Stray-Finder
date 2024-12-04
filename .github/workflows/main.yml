@@ -31,10 +31,7 @@ jobs:
       - name: Install server dependencies
         working-directory: ./server
         run: npm install
-      
-      - name: Ensure CLOUDINARY_URL is set
-        run: echo "CLOUDINARY_URL=${{ secrets.CLOUDINARY_URL }}" >> $GITHUB_ENV
-      
+
       - name: Run Jest tests with coverage
         working-directory: ./server
         run: npm test -- --coverage
