@@ -439,7 +439,7 @@ const ReportAnimal = () => {
   
 
 
-   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
    return (
        <div className={`container ${styles.container}`}>
            <div className="row justify-content-center">
@@ -475,8 +475,7 @@ const ReportAnimal = () => {
                                    <option value="Found">Found</option>
                                </select>
                            </div>
-
-
+   
                            <div className="mb-3">
                                <label htmlFor="name" className="form-label">
                                    Name
@@ -491,8 +490,7 @@ const ReportAnimal = () => {
                                    required
                                />
                            </div>
-
-
+   
                            <div className="mb-3">
                                <label htmlFor="species" className="form-label">
                                    Species
@@ -651,21 +649,12 @@ const ReportAnimal = () => {
                                />
                            </div>
                            <div className={styles.imageUploadContainer}>
-                               <button
-                                   type="button"
-                                   className={styles.imageUploadButton}
-                                   onClick={handleCameraCapture}
-                               >
-                                   <FaCamera className={styles.cameraIcon} />
-                                   <span>Take a Picture</span>
-                               </button>
                                <input
                                    type="file"
                                    className={`${styles.formControl} ${styles.fileInput}`}
                                    id="file"
                                    name="file"
                                    accept="image/*"
-                                   capture="user"
                                    onChange={handleFileChange}
                                />
                            </div>
@@ -687,14 +676,6 @@ const ReportAnimal = () => {
                                    </GoogleMap>
                                </LoadScriptNext>
                            </div>
-                           {/*<button
-                               type="button"
-                               className="btn btn-danger"
-                               onClick={clearLocation}
-                               style={{ marginTop: '10px' }}
-                           >
-                               Clear Location
-                                   </button>*/}
                            <button
                                type="submit"
                                className={styles.submitButton}
@@ -707,8 +688,6 @@ const ReportAnimal = () => {
                </div>
            </div>
        </div>
-   )
-}
-
-
-export default ReportAnimal
+   );}
+   
+   export default ReportAnimal;
