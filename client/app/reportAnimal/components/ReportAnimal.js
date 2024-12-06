@@ -651,14 +651,6 @@ const ReportAnimal = () => {
                                />
                            </div>
                            <div className={styles.imageUploadContainer}>
-                               <button
-                                   type="button"
-                                   className={styles.imageUploadButton}
-                                   onClick={handleCameraCapture}
-                               >
-                                   <FaCamera className={styles.cameraIcon} />
-                                   <span>Take a Picture</span>
-                               </button>
                                <input
                                    type="file"
                                    className={`${styles.formControl} ${styles.fileInput}`}
