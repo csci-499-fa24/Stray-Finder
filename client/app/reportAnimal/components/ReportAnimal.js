@@ -655,6 +655,7 @@ const ReportAnimal = () => {
                                    id="file"
                                    name="file"
                                    accept="image/*"
+                                   capture="user"
                                    onChange={handleFileChange}
                                />
                            </div>
@@ -676,6 +677,14 @@ const ReportAnimal = () => {
                                    </GoogleMap>
                                </LoadScriptNext>
                            </div>
+                            {/*<button
+                               type="button"
+                               className="btn btn-danger"
+                               onClick={clearLocation}
+                               style={{ marginTop: '10px' }}
+                           >
+                               Clear Location
+                                   </button>*/}
                            <button
                                type="submit"
                                className={styles.submitButton}
