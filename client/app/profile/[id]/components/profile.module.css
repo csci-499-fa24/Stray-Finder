@@ -25,6 +25,7 @@
 	position: absolute;           /* Position the heading absolutely */
     left: 50%;                   /* Align it to the center of the container */
     transform: translateX(-50%); /* Offset it back to truly center it */
+    margin-top: auto;
 }
 
 .h1.userName {
@@ -32,6 +33,7 @@
     color: #34495e;             /* A softer color for username */
 	flex: 1; /* Allow the heading to take up available space */
     text-align: center; /* Center the text */
+    margin-top: 30px;
 }
 
 .h1.report-title {
