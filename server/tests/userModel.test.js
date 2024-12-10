@@ -62,7 +62,7 @@ describe('User API', () => {
     it('should create a user with valid fields', async () => {
         const userData = {
             username: 'testuser',
-            email: 'testuser@example.com',
+            email: 'testuser@example.com1',
             password: 'Password@123',
         };
 
