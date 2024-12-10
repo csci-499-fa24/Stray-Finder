@@ -656,13 +656,15 @@ const ReportAnimal = () => {
                                />
                            </div>
                            <div className={styles.imageUploadContainer}>
+                            <label htmlFor="file" className={styles.formLabel}
+                                >Upload an Image (optional)
+                            </label>
                                <input
                                    type="file"
                                    className={`${styles.formControl} ${styles.fileInput}`}
                                    id="file"
                                    name="file"
                                    accept="image/*"
-                                   capture="user"
                                    onChange={handleFileChange}
                                />
                            </div>
