@@ -16,6 +16,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Loader from '../loader/Loader'
 import Cookies from 'js-cookie';
 
+
 const containerStyle = {
     width: '100%',
     height: '500px',
@@ -29,8 +30,9 @@ const center = {
 const Map = () => {
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-        libraries: ['places'],
+        libraries: ['places', 'visualization'],
     })
+
 
     const mapRef = useRef(null)
     const polylineRef = useRef(null)
@@ -52,6 +54,17 @@ const Map = () => {
     const [isInitialized, setIsInitialized] = useState(false)
     const [activeStory, setActiveStory] = useState(null)
     const [zoomLevel, setZoomLevel] = useState(13)
+    
+
+    const markersData = useMemo(() => {
+        return reports.map((report) => ({
+            position: {
+                lat: report.location.coordinates.coordinates[1],
+                lng: report.location.coordinates.coordinates[0],
+            },
+        }));
+    }, [reports]);
+    
 
     useEffect(() => {
         const fetchReports = async () => {
@@ -117,17 +130,15 @@ const Map = () => {
     }, [reports])
 
     useEffect(() => {
-        if (typeof window !== 'undefined') { // Ensure this runs only on the client side
+        if (typeof window !== 'undefined') {
             if (!isInitialized) {
-                const storedLocation = localStorage.getItem('userLocation');
+                const storedLocation = Cookies.get('userLocation'); // Use cookies instead of localStorage
     
                 if (storedLocation) {
-                    // Use stored location if available
                     setUserLocation(JSON.parse(storedLocation));
                     setRadius(10);
                     setIsInitialized(true);
                 } else if (navigator.geolocation) {
-                    // Ask for user's location
                     const requestLocationPermission = async () => {
                         const confirmPermission = window.confirm(
                             'This site would like to use your location. Would you like to allow it?'
@@ -139,24 +150,24 @@ const Map = () => {
                                         lat: position.coords.latitude,
                                         lng: position.coords.longitude,
                                     };
-                                    localStorage.setItem('userLocation', JSON.stringify(locationData));
+                                    Cookies.set('userLocation', JSON.stringify(locationData)); // Set cookies
                                     setUserLocation(locationData);
                                     setRadius(10);
-                                    setIsInitialized(true); // Mark as initialized
+                                    setIsInitialized(true);
                                 },
                                 (error) => {
                                     console.error('Geolocation error:', error);
                                     alert('Unable to fetch your location. Defaulting to default location.');
                                     setUserLocation(center);
                                     setRadius(10);
-                                    setIsInitialized(true); // Mark as initialized
+                                    setIsInitialized(true);
                                 }
                             );
                         } else {
                             alert('Location access denied. Using default location.');
                             setUserLocation(center);
                             setRadius(10);
-                            setIsInitialized(true); // Mark as initialized
+                            setIsInitialized(true);
                         }
                     };
     
@@ -165,11 +176,12 @@ const Map = () => {
                     alert('Geolocation is not supported by your browser. Using default location.');
                     setUserLocation(center);
                     setRadius(10);
-                    setIsInitialized(true); // Mark as initialized
+                    setIsInitialized(true);
                 }
             }
         }
     }, [isInitialized]);
+    
     
 
     const handleMapLoad = (map) => {
@@ -308,10 +320,10 @@ const Map = () => {
 
     if (loadError) return <div>Error loading maps</div>
     if (!isLoaded) return <Loader />
+    
 
     /*const clearLocation = () => {
         Cookies.remove('userLocation');
-        localStorage.removeItem('userLocation'); // Clear from localStorage as well
         setUserLocation(null);
         setFormData((prevData) => ({
             ...prevData,
@@ -338,6 +350,7 @@ const Map = () => {
                 onLoad={handleMapLoad}
                 onZoomChanged={handleZoomChanged}
             >
+
                 <CircleOverlay
                     center={userLocation || center}
                     radius={radius}
