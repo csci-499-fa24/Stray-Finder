@@ -6,7 +6,7 @@ const Comment = require('../models/comment'); // Import the Comment model
 const AnimalReport = require('../models/animalReport'); // Import the AnimalReport model 
 const User = require('../models/user'); // Import the User model 
 require('dotenv').config();
-
+//TEST PR
 // Express app setup
 const app = express();
 
@@ -21,7 +21,7 @@ app.use(
 
 // Connect to a test database
 beforeAll(async () => {
-  const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI || 'mongodb://localhost:27017/test';
+  const mongoUri = process.env.MONGO_URI_TEST || 'mongodb://localhost:27017/test';
     await mongoose.connect(mongoUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
