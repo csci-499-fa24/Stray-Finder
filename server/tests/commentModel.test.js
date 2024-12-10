@@ -65,8 +65,8 @@ describe('Comment API', () => {
     it('should create a comment with valid fields', async () => {
       // Create a valid user
       const userData = {
-          username: 'testuser',
-          email: 'testuser@example.com',
+        username: `testuser_${Date.now()}`,  // Use a timestamp to ensure uniqueness
+        email: 'testuser@example.com',
           password: 'Password@123',
       };
   
