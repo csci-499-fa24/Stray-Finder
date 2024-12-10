@@ -127,6 +127,26 @@ const Filters = ({ filters, setFilters, setRadius, radius }) => {
                 <option value="false">Without Collar</option>
             </select>
 
+            {/* Time Filter */}
+            <select
+                name="reportTime"
+                value={filters.reportTime || ''}
+                onChange={(e) =>
+                    setFilters((prevFilters) => ({
+                        ...prevFilters,
+                        reportTime: e.target.value, // Save the selected value directly
+                    }))
+                }
+                className="filter-dropdown"
+            >
+                <option value="">Reported Time</option>
+                <option value="24h">Last 24 Hours</option>
+                <option value="7d">Last Week</option>
+                <option value="30d">Last Month</option>
+                <option value="all">Any Time</option>
+            </select>
+
+
             {/* Radius Filter */}
             <label htmlFor="radius">Search Radius</label>
             <input

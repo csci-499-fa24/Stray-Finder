@@ -14,6 +14,7 @@ import { calculateBounds, calculateDistance } from './utils'
 import { createCircularIcon } from './CircularIcon'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Loader from '../loader/Loader'
+import Cookies from 'js-cookie';
 
 const containerStyle = {
     width: '100%',
@@ -116,64 +117,60 @@ const Map = () => {
     }, [reports])
 
     useEffect(() => {
-        if (!isInitialized) {
-            const storedLocation = localStorage.getItem('userLocation')
-
-            if (storedLocation) {
-                // Use stored location if available
-                setUserLocation(JSON.parse(storedLocation))
-                setRadius(10)
-                setIsInitialized(true)
-            } else if (navigator.geolocation) {
-                // Ask for user's consent
-                const requestLocationPermission = async () => {
-                    const confirmPermission = window.confirm(
-                        'This site would like to use your location. Would you like to allow it?'
-                    )
-                    if (confirmPermission) {
-                        navigator.geolocation.getCurrentPosition(
-                            (position) => {
-                                const locationData = {
-                                    lat: position.coords.latitude,
-                                    lng: position.coords.longitude,
+        if (typeof window !== 'undefined') { // Ensure this runs only on the client side
+            if (!isInitialized) {
+                const storedLocation = localStorage.getItem('userLocation');
+    
+                if (storedLocation) {
+                    // Use stored location if available
+                    setUserLocation(JSON.parse(storedLocation));
+                    setRadius(10);
+                    setIsInitialized(true);
+                } else if (navigator.geolocation) {
+                    // Ask for user's location
+                    const requestLocationPermission = async () => {
+                        const confirmPermission = window.confirm(
+                            'This site would like to use your location. Would you like to allow it?'
+                        );
+                        if (confirmPermission) {
+                            navigator.geolocation.getCurrentPosition(
+                                (position) => {
+                                    const locationData = {
+                                        lat: position.coords.latitude,
+                                        lng: position.coords.longitude,
+                                    };
+                                    localStorage.setItem('userLocation', JSON.stringify(locationData));
+                                    setUserLocation(locationData);
+                                    setRadius(10);
+                                    setIsInitialized(true); // Mark as initialized
+                                },
+                                (error) => {
+                                    console.error('Geolocation error:', error);
+                                    alert('Unable to fetch your location. Defaulting to default location.');
+                                    setUserLocation(center);
+                                    setRadius(10);
+                                    setIsInitialized(true); // Mark as initialized
                                 }
-                                localStorage.setItem(
-                                    'userLocation',
-                                    JSON.stringify(locationData)
-                                )
-                                setUserLocation(locationData)
-                                setRadius(10)
-                                setIsInitialized(true) // Mark as initialized
-                            },
-                            (error) => {
-                                console.error('Geolocation error:', error)
-                                alert(
-                                    'Unable to fetch your location. Defaulting to default location.'
-                                )
-                                setUserLocation(center)
-                                setRadius(10)
-                                setIsInitialized(true) // Mark as initialized
-                            }
-                        )
-                    } else {
-                        alert('Location access denied. Using default location.')
-                        setUserLocation(center)
-                        setRadius(10)
-                        setIsInitialized(true) // Mark as initialized
-                    }
+                            );
+                        } else {
+                            alert('Location access denied. Using default location.');
+                            setUserLocation(center);
+                            setRadius(10);
+                            setIsInitialized(true); // Mark as initialized
+                        }
+                    };
+    
+                    requestLocationPermission();
+                } else {
+                    alert('Geolocation is not supported by your browser. Using default location.');
+                    setUserLocation(center);
+                    setRadius(10);
+                    setIsInitialized(true); // Mark as initialized
                 }
-
-                requestLocationPermission()
-            } else {
-                alert(
-                    'Geolocation is not supported by your browser. Using default location.'
-                )
-                setUserLocation(center)
-                setRadius(10)
-                setIsInitialized(true) // Mark as initialized
             }
         }
-    }, [isInitialized])
+    }, [isInitialized]);
+    
 
     const handleMapLoad = (map) => {
         mapRef.current = map
@@ -194,21 +191,51 @@ const Map = () => {
 
     const filteredReports = useMemo(() => {
         return reports.filter((report) => {
-            const { location } = report
-            const baseLocation = userLocation || center
+            const { location, dateReported } = report;
+            const baseLocation = userLocation || center;
+    
+            // Log report data for debugging
+            console.log("Processing report:", report);
+    
+            // Check radius
             if (location && location.coordinates) {
-                const [lng, lat] = location.coordinates.coordinates
+                const [lng, lat] = location.coordinates.coordinates;
                 const distance = calculateDistance(
                     baseLocation.lat,
                     baseLocation.lng,
                     lat,
                     lng
-                )
-                return distance <= radius
+                );
+                if (distance > radius) return false;
             }
-            return false
-        })
-    }, [reports, userLocation, radius])
+    
+            // Check report time filter
+            if (filters.reportTime) {
+                const reportDate = new Date(dateReported);
+                if (isNaN(reportDate)) {
+                    console.error("Invalid dateReported format:", dateReported);
+                    return false;
+                }
+                const now = new Date();
+    
+                if (filters.reportTime === '24h') {
+                    const timeDiff = now - reportDate;
+                    if (timeDiff > 24 * 60 * 60 * 1000) return false;
+                } else if (filters.reportTime === '7d') {
+                    const timeDiff = now - reportDate;
+                    if (timeDiff > 7 * 24 * 60 * 60 * 1000) return false;
+                } else if (filters.reportTime === '30d') {
+                    const timeDiff = now - reportDate;
+                    if (timeDiff > 30 * 24 * 60 * 60 * 1000) return false;
+                }
+            }
+    
+            return true;
+        });
+    }, [reports, userLocation, radius, filters]);
+    
+
+    
 
     const storyPath = useMemo(() => {
         if (!activeStory || !isLoaded) return []
@@ -282,6 +309,20 @@ const Map = () => {
     if (loadError) return <div>Error loading maps</div>
     if (!isLoaded) return <Loader />
 
+    /*const clearLocation = () => {
+        Cookies.remove('userLocation');
+        localStorage.removeItem('userLocation'); // Clear from localStorage as well
+        setUserLocation(null);
+        setFormData((prevData) => ({
+            ...prevData,
+            coordinates: DEFAULT_CENTER,
+            location: '',
+        }));
+        setIsInitialized(false); // Ensure reinitialization logic can run again
+        toast.success('Location data cleared!');
+    };*/
+    
+
     return (
         <>
             <Filters
@@ -340,6 +381,14 @@ const Map = () => {
                     />
                 )}
             </GoogleMap>
+            {/*<button
+            type="button"
+            className="btn btn-danger"
+            onClick={clearLocation}
+            style={{ marginTop: '10px' }}
+            >
+            Clear Location
+                </button>*/}
         </>
     )
 }

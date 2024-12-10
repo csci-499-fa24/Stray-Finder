@@ -8,6 +8,7 @@ import Loader from '../../components/loader/Loader'
 import styles from './reportAnimal.module.css'
 import { FaCamera } from 'react-icons/fa'
 import { Filter } from 'bad-words';
+import Cookies from 'js-cookie';
 
 
 const ReportAnimal = () => {
@@ -310,6 +311,7 @@ const ReportAnimal = () => {
            toast.error('Unable to access the camera. Please try again.')
        }
    }
+   
    const handleSubmit = async (e) => {
        e.preventDefault()
        setLoading(true)
@@ -426,16 +428,19 @@ const ReportAnimal = () => {
    }
 
 
-   /*const clearLocation = () => {
-   localStorage.removeItem('userLocation');
-   setUserLocation(null);
-   setFormData((prevData) => ({
-       ...prevData,
-       coordinates: DEFAULT_CENTER,
-       location: '',
-   }));
-   toast.success('Location data cleared!');
-   };*/
+    /*const clearLocation = () => {
+    Cookies.remove('userLocation');
+    localStorage.removeItem('userLocation'); // Clear from localStorage as well
+    setUserLocation(null);
+    setFormData((prevData) => ({
+        ...prevData,
+        coordinates: DEFAULT_CENTER,
+        location: '',
+    }));
+    setIsInitialized(false); // Ensure reinitialization logic can run again
+    toast.success('Location data cleared!');
+    };*/
+
   
 
 
