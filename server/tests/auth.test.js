@@ -6,7 +6,7 @@ const auth = require('../controllers/auth'); // Import the auth routes
 const User = require('../models/user'); // Mock User model
 const Message = require('../models/message'); // Mock Message model
 const cookieParser = require('cookie-parser');
-const authenticate = require('../middleware/auth'); // Your authentication middleware
+const authenticate = require('../middleware/auth'); 
 require('dotenv').config(); // Load environment variables
 
 // Mock implementations
