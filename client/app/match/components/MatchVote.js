@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import AnimalCard from './MatchCard'
+import AnimalCard from './MatchCard';
+import InspectCard from './InspectCard';
 import useAuth from "@/app/hooks/useAuth";
 import toast from 'react-hot-toast';
 import styles from '../MatchVote.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck, faCircleXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faCircleXmark, faCircleQuestion, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Map from './MatchMap';
 
@@ -15,6 +16,7 @@ const MatchVote = () => {
     const [allMatchesWithId, setAllMatchesWithId] = useState([])
     const [unvotedMatchIds, setUnvotedMatchIds] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    // const [isInspect, setIsInspect] = useState(false);
 
     const loadMatches = async () => {
         setIsLoading(true);
@@ -162,8 +164,24 @@ const MatchVote = () => {
         }
     }
 
+    // const handleInspectClick = (state) => {
+    //     toast.success('toggled inspect', {
+    //         duration: 1000,
+    //     });
+    //     console.log(isInspect);
+    //     setIsInspect(state);
+    // }
+
+    const LoadPrev = () => {
+        setCurrentIndex(currentIndex - 1);
+    }
+
     const LoadNext = () => {
         setCurrentIndex(currentIndex + 1);
+    }
+
+    const LoadFirst = () => {
+        setCurrentIndex(0);
     }
 
     if (isLoading || allMatches.length === 0) {
@@ -182,32 +200,35 @@ const MatchVote = () => {
                         <p className={styles.p}>
                             These animals have a high probability to be the same pet based on our algorithm.
                             Would you help us and pet owners by comparing the images and voting if you think the two pets could be the same?
-                            Click on the images for more details.
                         </p>
+                    </div>
+                    <div className={styles.centerContainer2}>
+                        <button
+                            onClick={LoadPrev}
+                            className={styles.loadButton}
+                            disabled={isLoading || currentIndex <= 0}
+                        >
+                            {isLoading ? 'Loading...' : 'Load Prev'}
+                        </button>
+                        <p>Match {currentIndex + 1} of {unvotedMatchIds.length}</p>
+                        <button
+                            onClick={LoadNext}
+                            className={styles.loadButton}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? 'Loading...' : 'Load Next'}
+                        </button>
                     </div>
                     <div className="row justify-content-center">
                         <div className={`col-12 col-lg-10 mb-4 ${styles.bigContainer}`}>
-                            <div className={styles.matchContainer}>
-                                {/* Report1 Card */}
-                                <div className={styles.matchCard}>
-                                    <AnimalCard
-                                        report_id={currentMatch.report1._id}
-                                        name={currentMatch.report1.animal.name}
-                                        image={currentMatch.report1.animal.imageUrl}
-                                    />
+                                <div>
+                                    {/* <FontAwesomeIcon 
+                                        icon={faMagnifyingGlass}
+                                        onClick={() => handleInspectClick(false)}
+                                        className={styles.iconInspectButton}
+                                    /> */}
+                                    <InspectCard report1={currentMatch?.report1} report2={currentMatch?.report2}/>
                                 </div>
-
-                                <Map report1={currentMatch.report1} report2={currentMatch.report2}/>
-
-                                {/* Report2 Card */}
-                                <div className={styles.matchCard}>
-                                    <AnimalCard
-                                        report_id={currentMatch.report2._id}
-                                        name={currentMatch.report2.animal.name}
-                                        image={currentMatch.report2.animal.imageUrl}
-                                    />
-                                </div>
-                            </div>
                             <div className={styles.centerContainer}>
                                 <p>Are the two images the same animal?</p>
                                 <div className={styles.buttonContainer}>
@@ -276,18 +297,32 @@ const MatchVote = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="text-center my-4">
+                </div>
+            ) : (
+                <div>
+                    <div className={styles.titleContainer}>
+                        <h2 className={styles.heading}>Thanks</h2>
+                        <p className={styles.p}>
+                            There are no more pets to match! Thanks for helping us match all the pets!
+                        </p>
+                    </div>
+                    <div className={styles.centerContainer2}>
                         <button
-                            onClick={LoadNext}
-                            className="btn btn-primary"
+                                onClick={LoadPrev}
+                                className={styles.loadButton}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Loading...' : 'Load Prev'}
+                            </button>
+                        <button
+                            onClick={LoadFirst}
+                            className={styles.loadButton}
                             disabled={isLoading}
                         >
-                            {isLoading ? 'Loading...' : 'Load More'}
+                            {isLoading ? 'Loading...' : 'Load First'}
                         </button>
                     </div>
                 </div>
-            ) : (
-                <p>There are no more pets to match! Thanks for helping us match all the pets!</p>
             )}
         </div>
     );

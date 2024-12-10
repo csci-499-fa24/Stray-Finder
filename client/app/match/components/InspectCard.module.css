@@ -1,0 +1,466 @@
+.container {
+    min-height: 100vh; /* Full viewport height */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #fef4e8;
+    padding: 0.25rem; /* Reduced padding */
+}
+.matchContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.container2{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+  .card {
+    border: 1px solid #ddd7c0;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, #fefaf2 0%, #f5e9dc 100%);
+    background-image: url('/paw-pattern.jpg');
+    padding: 0.5rem; /* Reduced padding for tighter fit */
+    width: 30%;
+    margin: 0.25rem auto; /* Reduced margin */
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem; /* Reduced gap */
+  }
+  
+  .cardTitle {
+    font-size: 2.8rem;
+    color: #5a4a34;
+    font-family: 'Georgia', serif; /* Classic serif for warmth */
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+  }
+  
+  .imageBorder {
+    border-radius: 15px;
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #4a4a4a;
+    text-align: center;
+    padding: 1rem;
+    background-color: #fdf8f3; /* Light sand/cream */
+    border-radius: 10px;
+    border: 1px solid #ddd7c0;
+  }
+  
+  .listGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .listGroupItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .4rem;
+    background-color: #fdf8f3;
+    border: 1px solid #ddd7c0;
+    border-top: 3px solid #e0cab1; /* Thin border on top for separation */
+    border-radius: 8px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+  }
+  
+  .listGroupItem:hover {
+    background-color: #f7eee4;
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1); /* Enhanced inner shadow on hover */
+  }
+  
+  .label {
+    font-size: 0.9rem;
+    color: #6e5d48;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+  }
+  
+  .label::before {
+    content: '•'; /* Add bullet point or replace with icon */
+    margin-right: 0.5rem;
+    color: #e0cab1; /* Subtle sand color for icon */
+    font-size: 1.2rem;
+  }
+  
+  .value {
+    font-size: 1.1rem;
+    color: #3a3a3a;
+    font-weight: 500;
+  }
+  
+  /* .statusBadge */
+  .statusBadge {
+    background: linear-gradient(135deg, #ffaf91, #f97b1a); /* Soft salmon gradient */
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Light shadow for pop */
+  }
+  
+  .btn {
+    background: linear-gradient(135deg, #ffaf91, #e69778);
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    text-align: center;
+    width: 30%;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(230, 151, 120, 0.2);
+    right: 100%;
+  }
+  
+  .btn:hover {
+    background: #e69778;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(230, 151, 120, 0.3); /* Enhanced shadow on hover */
+  }
+  
+  .editBtn {
+    background-color: #9b6cc0;
+  }
+  
+  .mapContainer {
+    margin-top: 1.5rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2d9f3;
+  }
+  
+  .reportedByContent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .reporterLink {
+    color: #7b4ba4;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .messageBtn {
+    background: linear-gradient(135deg, #df542a, #d11f0b);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .messageBtn:hover {
+    background: #e3a8a2;
+    transform: translateY(-1px);
+  }
+  
+  .spinnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .overlayContent {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .messageContainer {
+    position: relative;
+    width: 100%;
+  }
+  
+  .closeButton {
+    background: #ffaf91;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.2s ease;
+  }
+  
+  .closeButton:hover {
+    background: #e69778;
+    transform: translateY(-1px);
+  }
+  
+  .divider {
+    width: 100%;
+    height: 1px;
+    background-color: #e0cab1;
+    margin: 1rem 0;
+  }
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .container {
+      min-height: 100vh; /* Full viewport height */
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background-color: #fef4e8;
+      padding: 0.25rem; /* Reduced padding */
+    }
+  
+    .card {
+      border: 1px solid #ddd7c0;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      background: linear-gradient(135deg, #fefaf2 0%, #f5e9dc 100%);
+      background-image: url('/paw-pattern.jpg');
+      padding: 0.5rem; /* Reduced padding for tighter fit */
+      width: 100%;
+      max-width: 100%;
+      margin: 0.25rem auto; /* Reduced margin */
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem; /* Reduced gap */
+    }
+  
+    /* Image section */
+    .imageWrapper img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+      margin-bottom: 0.25rem; /* Reduced margin-bottom */
+    }
+  
+    /* Title section */
+    .cardTitle {
+      font-size: 1.3rem; /* Smaller font size */
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 0.5rem; /* Reduced margin */
+    }
+  
+    .description {
+      font-size: 0.8rem; /* Smaller font size */
+      color: #4a4a4a;
+      text-align: center;
+      padding: 0.3rem; /* Reduced padding */
+      background-color: #fdf8f3;
+      border-radius: 10px;
+      border: 1px solid #ddd7c0;
+    }
+  
+    /* Button */
+    .btn {
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem; /* Reduced padding */
+      font-size: 0.8rem; /* Smaller font size */
+      cursor: pointer;
+      margin: 0.1rem top 0.1rem bottom; /* Reduced margin */
+      width: 100%;
+      max-width: 200px; /* Reduced width */
+    }
+  
+    /* Right Section */
+    .rightSection {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem; /* Reduced gap */
+      width: 100%;
+      margin: 0.5rem 0; /* Reduced margin */
+    }
+  
+    .listGroupItem {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 0.4rem; /* Reduced padding */
+      border-radius: 5px;
+      margin-bottom: 0.25rem; /* Reduced margin */
+      font-size: 0.8rem; /* Smaller font size */
+      border: 1px solid #ddd7c0;
+    }
+  
+    .label {
+      font-weight: bold;
+      color: #555;
+    }
+  
+    .value, .statusBadge {
+      font-weight: normal;
+      color: #333;
+    }
+  
+    .statusBadge {
+      background-color: #ff6f61;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem; /* Smaller font size */
+    }
+  
+    /* Map */
+    .mapContainer {
+      width: 100%;
+      height: 50vh; /* Reduced height for better fitting */
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+  
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    .overlayContent {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 350px; /* Reduced width for compactness */
+    }
+  
+    /* Close Button */
+    .closeButton {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: #333;
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 10px 0px 10px;
+  }
+  
+  .iconCheckButton {
+    cursor: pointer;
+    color: rgb(0, 222, 0);
+    font-size: 40px;
+    margin: 10px;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  
+  .iconCheckButton:hover {
+    transform: scale(1.2);
+    color: rgb(0, 180, 0);
+  }
+  
+  .iconXButton {
+    cursor: pointer;
+    color: rgb(222, 2, 2);
+    font-size: 40px;
+    margin: 0px 10px 0px 10px;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  
+  .iconXButton:hover {
+    transform: scale(1.2);
+    color: rgb(180, 4, 4);
+  }
+  
+  .matches-info-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  
+  .matches-info-icon {
+    font-size: 2rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .matches-info-icon:hover {
+    color: #e85d04;
+    transform: scale(1.1);
+  }
+
+.link{
+    text-decoration: none; /* Removes underlines */
+    color: inherit;        /* Ensures it uses the parent text color */
+    display: block;        /* Ensures it behaves like a block element */
+}
