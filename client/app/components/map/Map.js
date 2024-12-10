@@ -279,7 +279,7 @@ const Map = () => {
     if (loadError) return <div>Error loading maps</div>
     if (!isLoaded) return <Loader />
 
-    const clearLocation = () => {
+    /*const clearLocation = () => {
         Cookies.remove('userLocation');
         localStorage.removeItem('userLocation'); // Clear from localStorage as well
         setUserLocation(null);
@@ -290,7 +290,7 @@ const Map = () => {
         }));
         setIsInitialized(false); // Ensure reinitialization logic can run again
         toast.success('Location data cleared!');
-    };
+    };*/
     
 
     return (
@@ -351,14 +351,14 @@ const Map = () => {
                     />
                 )}
             </GoogleMap>
-            {<button
+            {/*<button
             type="button"
             className="btn btn-danger"
             onClick={clearLocation}
             style={{ marginTop: '10px' }}
             >
             Clear Location
-            </button>}
+                </button>*/}
         </>
     )
 }
