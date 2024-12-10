@@ -24,7 +24,7 @@ app.use(
 
 // Connect to a test database
 beforeAll(async () => {
-  const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/test';
+  const mongoUri = process.env.MONGO_URI_TEST || 'mongodb://localhost:27017/test';
   await mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -52,7 +52,7 @@ describe('Email Controller', () => {
         // Create test data
         const animal = await Animal.create({ name: 'Buddy', species: 'Dog', gender: 'Male' });
         const user = await User.create({
-          username: 'testuser',
+          username: `testuser_${Date.now()}`,  // Use a timestamp to ensure uniqueness
           email: 'test@example.com',
           password: 'Password1!', // Added password field
         });
@@ -130,7 +130,7 @@ describe('Email Controller', () => {
   describe('sendReportsEmail', () => {
     it('should send emails to users with reports', async () => {
       const user = await User.create({
-        username: 'testuser',
+        username: `testuser_${Date.now()}`,  // Use a timestamp to ensure uniqueness
         email: 'test@example.com',
         password: 'Password1!', // Added password field
         notificationPreference: 'daily',
@@ -173,7 +173,7 @@ describe('Email Controller', () => {
 
     it('should return a message if no reports exist', async () => {
         await User.create({
-          username: 'testuser',
+          username: `testuser_${Date.now()}`,  // Use a timestamp to ensure uniqueness
           email: 'test@example.com',
           password: 'Password1!', // Added password field
         });

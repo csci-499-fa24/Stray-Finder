@@ -14,7 +14,7 @@ const fetchAllRecentAnimals = async (req, res) => {
 
         // Search for the user by userId
         if (userId) {
-            query.reportedBy = userId;
+            query.reportedBy = userId; 
         }
 
         // Animal query for filtering by gender and species
@@ -24,9 +24,9 @@ const fetchAllRecentAnimals = async (req, res) => {
 
         // If there are filters for animals, fetch their IDs
         if (Object.keys(animalQuery).length > 0) {
-            const animals = await Animal.find(animalQuery).select('_id');
+            const animals = await Animal.find(animalQuery).select('_id'); //line 27
             const animalIds = animals.map((animal) => animal._id);
-            query.animal = { $in: animalIds };
+            query.animal = { $in: animalIds }; //line29
         }
 
         // Calculate the date one week ago
