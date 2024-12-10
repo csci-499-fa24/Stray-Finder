@@ -22,11 +22,11 @@ const compareLocation = (location1, location2) => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     const distance = R * c
 
-    if (distance <= 0.2) return 1
-    else if (distance <= 0.5) return 0.9
-    else if (distance <= 1) return 0.7
-    else if (distance <= 2) return 0.4 // Sharper drop
-    else if (distance <= 3) return 0.25 // Further drop for distances
+    if (distance <= 0.5) return 1
+    else if (distance <= 1) return 0.9
+    else if (distance <= 1.5) return 0.7
+    else if (distance <= 3) return 0.4 // Sharper drop
+    else if (distance <= 5) return 0.25 // Further drop for distances
     else return Math.max(0, 0.25 - (distance - 3) * 0.1) // Steady decline after 3 miles
 }
 

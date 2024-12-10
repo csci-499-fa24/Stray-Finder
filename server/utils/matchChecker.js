@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb') // Import ObjectId from the mongodb package
 const Story = require('../models/story')
 const MatchVotes = require('../models/MatchVotes')
 
@@ -5,35 +6,64 @@ const processHighMatches = async () => {
     try {
         const matches = await MatchVotes.find()
 
+        // Collect all unique report pairs
+        const allReportPairs = []
+
         for (const match of matches) {
             // Validate match criteria
             if (match.yes / match.no < 1.75) continue
 
-            // Extract report IDs (no need for ._id since they are ObjectIds directly)
             const reportIds = [match.report1, match.report2]
+            allReportPairs.push(reportIds)
+        }
 
-            console.log('Checking existing story for reports:', reportIds)
+        // Flatten and deduplicate report pairs into a single array of unique IDs
+        const allReports = Array.from(
+            new Set(allReportPairs.flat().map(String)) // Convert ObjectIds to strings to ensure proper deduplication
+        ).map((id) => new ObjectId(id)) // Convert back to ObjectId
 
-            // Check if a story already exists for these reports
-            const existingStory = await Story.findOne({
-                animalReports: { $all: reportIds },
+        console.log('Checking existing stories for reports:', allReports)
+
+        // Check for existing stories that overlap with the reports
+        const overlappingStories = await Story.find({
+            animalReports: { $in: allReports },
+        })
+
+        // Consolidate all overlapping story reports into a single set
+        const existingReports = new Set(
+            overlappingStories.flatMap((story) =>
+                story.animalReports.map(String)
+            )
+        )
+
+        // Combine existing reports with new reports
+        const combinedReports = Array.from(
+            new Set([...existingReports, ...allReports.map(String)])
+        ).map((id) => new ObjectId(id)) // Convert back to ObjectId
+
+        if (overlappingStories.length > 0) {
+            // Update the first overlapping story with the combined reports
+            const primaryStory = overlappingStories[0]
+            primaryStory.animalReports = combinedReports
+            await primaryStory.save()
+
+            console.log(
+                `Updated story ${primaryStory._id} with consolidated reports.`
+            )
+        } else if (combinedReports.length > 0) {
+            // Create a new story if no overlapping stories exist
+            const newStory = new Story({
+                animalReports: combinedReports,
+                description: `Story created from reports: ${combinedReports.join(
+                    ', '
+                )}`,
+                dateCreated: new Date(),
             })
 
-            if (!existingStory) {
-                // Create a new story if it doesn't exist
-                const newStory = new Story({
-                    animalReports: reportIds,
-                    description: `Story created from reports ${reportIds[0]} and ${reportIds[1]}`,
-                    dateCreated: new Date(),
-                })
-
-                await newStory.save()
-                console.log(`New story created: ${newStory._id}`)
-            } else {
-                console.log(
-                    `Story already exists for reports ${reportIds[0]} and ${reportIds[1]}`
-                )
-            }
+            await newStory.save()
+            console.log(`New story created: ${newStory._id}`)
+        } else {
+            console.log('All reports are already covered by existing stories.')
         }
     } catch (error) {
         console.error('Error processing high matches:', error)

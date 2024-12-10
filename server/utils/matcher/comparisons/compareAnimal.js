@@ -141,12 +141,12 @@ const compareCollarStatus = (collar1, collar2) => {
 // Aggregation function with weighting
 const aggregateAnimalScores = (scores) => {
     const weights = {
-        speciesScore: 0.5, // Highest weight for species
-        breedScore: 0.2, // Second most important
-        colorScore: 0.15, // Moderate importance
-        genderScore: 0.05,
-        fixedScore: 0.05,
-        collarScore: 0.05, // Least important (for now)
+        speciesScore: 0.5,
+        breedScore: 0.25,
+        colorScore: 0.17,
+        genderScore: 0.02,
+        fixedScore: 0.01,
+        collarScore: 0.05,
     }
 
     // Calculate the weighted score by multiplying each score by its weight
