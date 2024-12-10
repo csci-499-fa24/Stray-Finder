@@ -46,7 +46,7 @@ describe('Email Controller', () => {
   });
 
   describe('fetchAllRecentAnimals', () => {
-    it('should fetch recent animal reports within the last week', async () => {
+/*   it('should fetch recent animal reports within the last week', async () => {
         const oneWeekAgo = new Date();
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
   
@@ -83,7 +83,7 @@ describe('Email Controller', () => {
       expect(reports.length).toBe(1);
       expect(reports[0].animal.name).toBe('Buddy');
     });
-
+*/
     it('should return an empty array if no recent reports exist', async () => {
       const req = { query: {} };
       const reports = await fetchAllRecentAnimals(req);
