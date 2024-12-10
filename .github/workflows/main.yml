@@ -16,6 +16,7 @@ jobs:
 
     env:
       MONGO_URI: ${{ secrets.MONGO_URI }}
+      MONGO_URI_TEST: ${{ secrets.MONGO_URI_TEST }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
 
