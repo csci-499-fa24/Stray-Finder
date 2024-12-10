@@ -127,6 +127,24 @@ const Filters = ({ filters, setFilters, setRadius, radius }) => {
                 <option value="false">Without Collar</option>
             </select>
 
+            {/* Time Filter */}
+            <select
+                name="last24Hours"
+                value={filters.last24Hours || ''}
+                onChange={(e) =>
+                    setFilters((prevFilters) => ({
+                        ...prevFilters,
+                        last24Hours: e.target.value === 'true', // Convert string to boolean
+                    }))
+                }
+                className="filter-dropdown"
+            >
+                <option value="">Reported Time</option>
+                <option value="true">Last 24 Hours</option>
+                <option value="false">Any Time</option>
+            </select>
+
+
             {/* Radius Filter */}
             <label htmlFor="radius">Search Radius</label>
             <input

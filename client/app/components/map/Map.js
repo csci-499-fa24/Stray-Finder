@@ -191,21 +191,33 @@ const Map = () => {
 
     const filteredReports = useMemo(() => {
         return reports.filter((report) => {
-            const { location } = report
-            const baseLocation = userLocation || center
+            const { location, dateReported } = report;
+            const baseLocation = userLocation || center;
+    
+            // Check radius
             if (location && location.coordinates) {
-                const [lng, lat] = location.coordinates.coordinates
+                const [lng, lat] = location.coordinates.coordinates;
                 const distance = calculateDistance(
                     baseLocation.lat,
                     baseLocation.lng,
                     lat,
                     lng
-                )
-                return distance <= radius
+                );
+                if (distance > radius) return false;
             }
-            return false
-        })
-    }, [reports, userLocation, radius])
+    
+            // Check last 24 hours filter
+            if (filters.last24Hours) {
+                const reportDate = new Date(dateReported);
+                const now = new Date();
+                const timeDiff = now - reportDate;
+                if (timeDiff > 24 * 60 * 60 * 1000) return false; // Exclude reports older than 24 hours
+            }
+    
+            return true;
+        });
+    }, [reports, userLocation, radius, filters]);
+    
 
     const storyPath = useMemo(() => {
         if (!activeStory || !isLoaded) return []
