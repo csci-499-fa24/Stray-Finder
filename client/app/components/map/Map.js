@@ -221,7 +221,26 @@ const Map = () => {
                 if (distance > radius) return false;
             }
     
-            
+            // Check report time filter
+            if (filters.reportTime) {
+                const reportDate = new Date(dateReported);
+                if (isNaN(reportDate)) {
+                    console.error("Invalid dateReported format:", dateReported);
+                    return false;
+                }
+                const now = new Date();
+    
+                if (filters.reportTime === '24h') {
+                    const timeDiff = now - reportDate;
+                    if (timeDiff > 24 * 60 * 60 * 1000) return false;
+                } else if (filters.reportTime === '7d') {
+                    const timeDiff = now - reportDate;
+                    if (timeDiff > 7 * 24 * 60 * 60 * 1000) return false;
+                } else if (filters.reportTime === '30d') {
+                    const timeDiff = now - reportDate;
+                    if (timeDiff > 30 * 24 * 60 * 60 * 1000) return false;
+                }
+            }
     
             return true;
         });
