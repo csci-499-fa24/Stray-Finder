@@ -140,6 +140,80 @@ describe('Email Controller', () => {
         expect(reports.length).toBe(1);
         expect(reports[0].reportedBy._id.toString()).toBe(user1._id.toString());
       });
+      it('should filter reports by animal gender and species if provided', async () => {
+        // Create test data: animals with different genders and species
+        const dogMale = await Animal.create({ name: 'Rex', species: 'Dog', gender: 'Male' });
+        const dogFemale = await Animal.create({ name: 'Bella', species: 'Dog', gender: 'Female' });
+        const catMale = await Animal.create({ name: 'Whiskers', species: 'Cat', gender: 'Male' });
+      
+        const user = await User.create({
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'Password1!',
+        });
+      
+        // Create reports for each animal
+        await AnimalReport.create({
+          animal: dogMale._id,
+          reportedBy: user._id,
+          reportType: 'Found',
+          dateReported: new Date(),
+          collar: true,
+          fixed: 'Yes',
+          location: {
+            coordinates: {
+              type: 'Point',
+              coordinates: [-74.0060, 40.7128],
+            },
+          },
+          name: 'Found Dog',
+          description: 'A male dog with a red collar.',
+        });
+      
+        await AnimalReport.create({
+          animal: dogFemale._id,
+          reportedBy: user._id,
+          reportType: 'Lost',
+          dateReported: new Date(),
+          collar: false,
+          fixed: 'No',
+          location: {
+            coordinates: {
+              type: 'Point',
+              coordinates: [-118.2437, 34.0522],
+            },
+          },
+          name: 'Lost Bella',
+          description: 'A female dog, very friendly.',
+        });
+      
+        await AnimalReport.create({
+          animal: catMale._id,
+          reportedBy: user._id,
+          reportType: 'Found',
+          dateReported: new Date(),
+          collar: false,
+          fixed: 'No',
+          location: {
+            coordinates: {
+              type: 'Point',
+              coordinates: [-122.4194, 37.7749],
+            },
+          },
+          name: 'Lost Cat',
+          description: 'A male cat with white fur.',
+        });
+      
+        // Mock request with gender and species filters
+        const req = { query: { gender: 'Male', species: 'Dog' } };
+        const reports = await fetchAllRecentAnimals(req);
+      
+        // Verify that only the report for the male dog is returned
+        expect(reports.length).toBe(1);
+        expect(reports[0].animal.name).toBe('Rex');
+        expect(reports[0].animal.gender).toBe('Male');
+        expect(reports[0].animal.species).toBe('Dog');
+      });
     it('should return an empty array if no recent reports exist', async () => {
       const req = { query: {} };
       const reports = await fetchAllRecentAnimals(req);
