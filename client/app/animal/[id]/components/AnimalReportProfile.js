@@ -80,7 +80,7 @@ const AnimalReportProfile = ({ id }) => {
 
 
           {isAuthenticated && 
-           (user?._id === reportProfile?.reportedBy._id || user?._id === adminUserId) && (
+           (user?._id === reportProfile?.reportedBy?._id || user?._id === adminUserId) && (
             <button
               className={`${styles.btn} ${styles.editBtn}`}
               onClick={openModal}
