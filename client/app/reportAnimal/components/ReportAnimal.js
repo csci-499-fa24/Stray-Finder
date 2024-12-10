@@ -153,46 +153,47 @@ const ReportAnimal = () => {
 
 
    useEffect(() => {
-       if (isAuthenticated === false) {
-           router.push('/auth');
-       }
-  
-       const storedLocation = localStorage.getItem('userLocation');
-       if (storedLocation) {
-           const parsedLocation = JSON.parse(storedLocation);
-           setUserLocation(parsedLocation);
-           setFormData((prevData) => ({
-               ...prevData,
-               coordinates: parsedLocation,
-               location: `Lat: ${parsedLocation.lat}, Lng: ${parsedLocation.lng}`,
-           }));
-           return;
-       }
-  
-       if (isAuthenticated && navigator.geolocation && !locationAsked) {
-           const askForLocation = window.confirm('Would you like to share your location?');
-           if (askForLocation) {
-               navigator.geolocation.getCurrentPosition(
-                   (position) => {
-                       const { latitude, longitude } = position.coords;
-                       const locationData = { lat: latitude, lng: longitude };
-                       localStorage.setItem('userLocation', JSON.stringify(locationData));
-                       setUserLocation(locationData);
-                       setFormData((prevData) => ({
-                           ...prevData,
-                           coordinates: locationData,
-                           location: `Lat: ${latitude}, Lng: ${longitude}`,
-                       }));
-                   },
-                   (error) => {
-                       console.error('Error getting location:', error);
-                       alert('Unable to retrieve your location. Please enter it manually.');
-                   }
-               );
-           }
-           setLocationAsked(true);
-       }
-   }, [isAuthenticated, locationAsked, router]);
+    if (isAuthenticated === false) {
+        router.push('/auth');
+    }
+
+    const storedLocation = Cookies.get('userLocation'); // Use cookies instead of localStorage
+    if (storedLocation) {
+        const parsedLocation = JSON.parse(storedLocation);
+        setUserLocation(parsedLocation);
+        setFormData((prevData) => ({
+            ...prevData,
+            coordinates: parsedLocation,
+            location: `Lat: ${parsedLocation.lat}, Lng: ${parsedLocation.lng}`,
+        }));
+        return;
+    }
+
+    if (isAuthenticated && navigator.geolocation && !locationAsked) {
+        const askForLocation = window.confirm('Would you like to share your location?');
+        if (askForLocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    const locationData = { lat: latitude, lng: longitude };
+                    Cookies.set('userLocation', JSON.stringify(locationData)); // Set cookies
+                    setUserLocation(locationData);
+                    setFormData((prevData) => ({
+                        ...prevData,
+                        coordinates: locationData,
+                        location: `Lat: ${latitude}, Lng: ${longitude}`,
+                    }));
+                },
+                (error) => {
+                    console.error('Error getting location:', error);
+                    alert('Unable to retrieve your location. Please enter it manually.');
+                }
+            );
+        }
+        setLocationAsked(true);
+    }
+    }, [isAuthenticated, locationAsked, router]);
+
   
 
 
@@ -320,7 +321,6 @@ const ReportAnimal = () => {
 
        const filter = new Filter();
 
-
        // Validate `description` for profanity
        if (filter.isProfane(formData.description)) {
            setLoading(false);
@@ -330,10 +330,8 @@ const ReportAnimal = () => {
            return; // Stop submission if profanity is detected
        }
 
-
        // Sanitize the `description`
        const sanitizedDescription = filter.clean(formData.description);
-
 
        // Check if user location is available
        if (userLocation) {
@@ -344,9 +342,6 @@ const ReportAnimal = () => {
                formData.coordinates.lng
            );
 
-
-
-
            // Validate the distance is within 10 miles
            if (distance > 10) {
                setLoading(false);
@@ -354,7 +349,6 @@ const ReportAnimal = () => {
                return; // Stop submission if distance exceeds 10 miles
            }
        }
-
 
        const uploadData = new FormData()
        uploadData.append('reportType', formData.reportType)
@@ -428,7 +422,7 @@ const ReportAnimal = () => {
    }
 
 
-    /*const clearLocation = () => {
+    const clearLocation = () => {
     Cookies.remove('userLocation');
     localStorage.removeItem('userLocation'); // Clear from localStorage as well
     setUserLocation(null);
@@ -439,7 +433,7 @@ const ReportAnimal = () => {
     }));
     setIsInitialized(false); // Ensure reinitialization logic can run again
     toast.success('Location data cleared!');
-    };*/
+    };
 
   
 
@@ -686,14 +680,14 @@ const ReportAnimal = () => {
                                    </GoogleMap>
                                </LoadScriptNext>
                            </div>
-                           {/*<button
+                           {<button
                                type="button"
                                className="btn btn-danger"
                                onClick={clearLocation}
                                style={{ marginTop: '10px' }}
                            >
                                Clear Location
-                                   </button>*/}
+                                   </button>}
                            <button
                                type="submit"
                                className={styles.submitButton}
