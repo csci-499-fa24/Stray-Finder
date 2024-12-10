@@ -206,17 +206,30 @@ const Map = () => {
                 if (distance > radius) return false;
             }
     
-            // Check last 24 hours filter
-            if (filters.last24Hours) {
+            // Check report time filter
+            if (filters.reportTime) {
                 const reportDate = new Date(dateReported);
                 const now = new Date();
-                const timeDiff = now - reportDate;
-                if (timeDiff > 24 * 60 * 60 * 1000) return false; // Exclude reports older than 24 hours
+    
+                if (filters.reportTime === '24h') {
+                    // Last 24 hours
+                    const timeDiff = now - reportDate;
+                    if (timeDiff > 24 * 60 * 60 * 1000) return false;
+                } else if (filters.reportTime === '7d') {
+                    // Last week
+                    const timeDiff = now - reportDate;
+                    if (timeDiff > 7 * 24 * 60 * 60 * 1000) return false;
+                } else if (filters.reportTime === '30d') {
+                    // Last month
+                    const timeDiff = now - reportDate;
+                    if (timeDiff > 30 * 24 * 60 * 60 * 1000) return false;
+                }
             }
     
             return true;
         });
     }, [reports, userLocation, radius, filters]);
+    
     
 
     const storyPath = useMemo(() => {

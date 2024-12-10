@@ -140,8 +140,10 @@ const Filters = ({ filters, setFilters, setRadius, radius }) => {
                 className="filter-dropdown"
             >
                 <option value="">Reported Time</option>
-                <option value="true">Last 24 Hours</option>
-                <option value="false">Any Time</option>
+                <option value="24h">Last 24 Hours</option>
+                <option value="7d">Last Week</option>
+                <option value="30d">Last Month</option>
+                <option value="all">Any Time</option>
             </select>
 
 
