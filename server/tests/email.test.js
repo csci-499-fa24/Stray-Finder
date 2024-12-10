@@ -81,7 +81,65 @@ describe('Email Controller', () => {
       expect(reports.length).toBe(1);
       expect(reports[0].animal.name).toBe('Buddy');
     });
-
+    it('should filter reports by userId if provided', async () => {
+        // Create test data
+        const user1 = await User.create({
+          username: 'user1',
+          email: 'user1@example.com',
+          password: 'Password1!',
+        });
+      
+        const user2 = await User.create({
+          username: 'user2',
+          email: 'user2@example.com',
+          password: 'Password2!',
+        });
+      
+        const animal = await Animal.create({ name: 'Buddy', species: 'Dog', gender: 'Male' });
+      
+        // Create reports associated with different users
+        await AnimalReport.create({
+          animal: animal._id,
+          reportedBy: user1._id,
+          reportType: 'Lost',
+          dateReported: new Date(),
+          collar: true,
+          fixed: 'Yes',
+          location: {
+            coordinates: {
+              type: 'Point',
+              coordinates: [-74.0060, 40.7128], // Correct: [longitude, latitude]
+            },
+          },
+          name: 'Buddy',
+          description: 'Lost brown dog with a collar.',
+        });
+      
+        await AnimalReport.create({
+          animal: animal._id,
+          reportedBy: user2._id,
+          reportType: 'Found',
+          dateReported: new Date(),
+          collar: true,
+          fixed: 'No',
+          location: {
+            coordinates: {
+              type: 'Point',
+              coordinates: [-118.2437, 34.0522], // Correct: [longitude, latitude]
+            },
+          },
+          name: 'Lost Buddy',
+          description: 'Found a dog matching the description of Buddy.',
+        });
+      
+        // Mock request with userId filter
+        const req = { query: { userId: user1._id.toString() } };
+        const reports = await fetchAllRecentAnimals(req);
+      
+        // Verify that only the report from user1 is returned
+        expect(reports.length).toBe(1);
+        expect(reports[0].reportedBy._id.toString()).toBe(user1._id.toString());
+      });
     it('should return an empty array if no recent reports exist', async () => {
       const req = { query: {} };
       const reports = await fetchAllRecentAnimals(req);
