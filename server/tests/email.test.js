@@ -45,40 +45,43 @@ describe('Email Controller', () => {
   });
 
   describe('fetchAllRecentAnimals', () => {
-    describe('fetchAllRecentAnimals', () => {
-        it('should fetch recent animal reports within the last week', async () => {
-          const oneWeekAgo = new Date();
-          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    
-          const animal = await Animal.create({ name: 'Buddy', species: 'Dog', gender: 'Male' });
-          const user = await User.create({
-            username: 'testuser',
-            email: 'test@example.com',
-            password: 'Password1!', // Added password field
-          });
-    
-          await AnimalReport.create({
-            animal: animal._id,
-            reportedBy: user._id,
-            reportType: 'Found',
-            dateReported: new Date(),
-            collar: false, // Added required field
-            fixed: 'No', // Added required field
-            location: {
-                coordinates: {
-                    type: 'Point',
-                    coordinates: [40.7128, -74.0060],  // Coordinates as an array of [longitude, latitude]
-                },
-            },
-          });
-    
-          const req = { query: {} };
-          const reports = await fetchAllRecentAnimals(req);
-    
-          expect(reports.length).toBe(1);
-          expect(reports[0].animal.name).toBe('Buddy');
-        });
+    it('should fetch recent animal reports within the last week', async () => {
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      // Create test data
+      const animal = await Animal.create({ name: 'Buddy', species: 'Dog', gender: 'Male' });
+      const user = await User.create({
+        username: 'testuser',
+        email: 'test@example.com',
+        password: 'Password1!', // Added password field
       });
+
+      await AnimalReport.create({
+        animal: animal._id,
+        reportedBy: user._id,
+        reportType: 'Found',
+        dateReported: new Date(),
+        collar: false, // Added required field
+        fixed: 'No', // Added required field
+        location: {
+            coordinates: {
+                type: 'Point',
+                coordinates: [40.7128, -74.0060],  // Coordinates as an array of [longitude, latitude]
+              },
+            },
+        name: 'Lost pup',
+        description: 'A brown dog with a blue collar.',
+      });
+
+      // Mock request and call the function
+      const req = { query: {} };
+      const reports = await fetchAllRecentAnimals(req);
+
+      expect(reports.length).toBe(1);
+      expect(reports[0].animal.name).toBe('Buddy');
+    });
+
     it('should return an empty array if no recent reports exist', async () => {
       const req = { query: {} };
       const reports = await fetchAllRecentAnimals(req);
@@ -146,6 +149,8 @@ describe('Email Controller', () => {
                 coordinates: [40.7128, -74.0060],  // Coordinates as an array of [longitude, latitude]
             },
         },
+        name: 'Lost Dog',  
+        description: 'A brown dog with a red collar.',
       });
 
       const mockSendMail = jest.fn().mockResolvedValue('Email sent');
