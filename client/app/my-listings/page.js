@@ -61,7 +61,6 @@ const MyListings = () => {
                 <h1 className={`${styles.h1} ${styles.userName}`}>{user?.username}'s Listings</h1>
             </div>
             <div className={styles.dl}>
-                <h2 className={styles.userReportsTitle}>Your Reports</h2>
                 <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center p-2 text-start">
                     {userReports.map((report) => (
                         <AnimalCard

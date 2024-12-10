@@ -163,5 +163,159 @@
     color: inherit; 
     cursor: pointer; 
   }
+/* Adjust notifications container for medium screens (1400px to 769px) */
+@media (max-width: 1400px) and (min-width: 769px) {
+  .notifications-container {
+    max-width: 90%; /* Make the width responsive */
+    min-width: auto; /* Remove fixed width */
+    margin: 0 auto; /* Center the container */
+    padding: 30px; /* Add some padding for breathing room */
+    box-sizing: border-box;
+  }
 
-  
+  .notification-item {
+    max-width: 100%; /* Ensure items don't exceed the container's width */
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .notifications-container {
+    max-width: 100%;
+    min-width: auto;
+    padding: 20px;
+  }
+
+  .notifications-title {
+    font-size: 2rem; /* Adjust title size for smaller screens */
+    margin-bottom: 40px;
+  }
+
+  .time-group-title {
+    font-size: 1.5rem;
+  }
+
+  .notifications-list {
+    gap: 15px;
+  }
+
+  .notification-item {
+    flex-direction: row; /* Keep all elements aligned horizontally */
+    padding: 15px;
+  }
+
+  .notification-left {
+    flex: 3;
+    display: flex;
+    align-items: flex-start; /* Align to the top to allow manual centering */
+    position: relative; /* Required for absolute centering adjustment */
+  }
+
+  .profile-image {
+    width: 40px;
+    height: 40px; /* Reduced size */
+    margin-right: 10px;
+    margin-top: 5px; /* Move the image down slightly */
+    margin-bottom: auto; /* Push it up evenly */
+  }
+
+  .notification-content {
+    font-size: 0.8rem;
+  }
+
+  .notification-header {
+    font-size: 0.9rem;
+  }
+
+  .notification-body {
+    font-size: 0.75rem;
+  }
+
+  .notification-timestamp {
+    font-size: 0.7rem;
+  }
+
+  .notification-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start; /* Align to the top to allow manual centering */
+    position: relative; /* Required for absolute centering adjustment */
+  }
+
+  .post-image {
+    width: 50px;
+    height: 50px; /* Reduced size */
+    margin-top: auto; /* Push it down evenly */
+    margin-bottom: 5px; /* Fine-tune to center vertically */
+  }
+
+  .post-name {
+    font-size: 0.9rem; /* Adjusted size */
+    margin-left: 10px; /* Add spacing between image and name */
+  }
+
+  .pinned-icon {
+    font-size: 1.2rem; /* Adjust icon size */
+  }
+
+  .no-notifications-message {
+    font-size: 1.2rem;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notifications-title {
+    font-size: 1.8rem; /* Further reduce title size for very small screens */
+  }
+
+  .notification-item {
+    padding: 10px;
+  }
+
+  .profile-image {
+    width: 30px;
+    height: 30px; /* Further reduced size */
+    margin-right: 8px;
+    margin-top: 3px; /* Center manually */
+    margin-bottom: auto; /* Push up evenly */
+  }
+
+  .notification-header {
+    font-size: 0.8rem;
+  }
+
+  .notification-body {
+    font-size: 0.7rem;
+  }
+
+  .notification-timestamp {
+    font-size: 0.6rem;
+  }
+
+  .post-image {
+    width: 40px;
+    height: 40px; /* Further reduced size */
+    margin-top: auto; /* Push it down */
+    margin-bottom: 3px; /* Fine-tune centering */
+  }
+
+  .post-name {
+    font-size: 0.8rem;
+    margin-left: 8px; /* Add spacing */
+  }
+
+  .time-group-title {
+    font-size: 1.2rem;
+  }
+
+  .notifications-container {
+    padding: 15px;
+  }
+
+  .no-notifications-message {
+    font-size: 1rem;
+  }
+}
