@@ -3,6 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const auth = require('../controllers/auth'); // Import the auth routes
+const { login } = require('../controllers/auth'); // Import the login function
 const User = require('../models/user'); // Mock User model
 const Message = require('../models/message'); // Mock Message model
 const cookieParser = require('cookie-parser');
@@ -14,6 +15,7 @@ jest.mock('../models/user');
 jest.mock('../models/message');
 jest.mock('../controllers/email', () => ({
     sendEmail: jest.fn(), // Mock email sending function
+    
 }));
 
 // In-memory mock data
@@ -59,6 +61,8 @@ describe('Auth API', () => {
         users.length = 0; // Clear users array
         messages.length = 0; // Clear messages array
         jest.clearAllMocks(); // Reset mock implementations
+        jest.spyOn(console, 'error').mockImplementation(() => {}); // Mock console.error
+
     });
 
     // Register endpoint tests
@@ -76,7 +80,39 @@ describe('Auth API', () => {
         expect(users.length).toBe(1);
         expect(messages.length).toBe(1);
     });
+    test('should return 400 with validation errors when user input is invalid', async () => {
+        // Mock a validation error
+        const validationError = new Error('ValidationError');
+        validationError.name = 'ValidationError';
+        validationError.errors = {
+            username: { message: 'Username is required' },
+            email: { message: 'Email is not valid' },
+        };
 
+        User.prototype.save.mockRejectedValue(validationError);
+
+        const res = await request(app).post('/register').send({
+            username: '', // Invalid username
+            email: 'invalid-email', // Invalid email
+            password: 'password123',
+        });
+
+        expect(res.status).toBe(400);
+        expect(res.body.message).toBe('Username is required, Email is not valid');
+    });
+    test('should return 500 on server error during registration', async () => {
+        // Mock a general error
+        User.prototype.save.mockRejectedValue(new Error('Unexpected server error'));
+
+        const res = await request(app).post('/register').send({
+            username: 'testuser',
+            email: 'test@example.com',
+            password: 'password123',
+        });
+
+        expect(res.status).toBe(500);
+        expect(res.body.message).toBe('Server error during registration');
+    });
     test('should not allow duplicate username or email', async () => {
         const existingUser = {
             username: 'testuser',
@@ -121,7 +157,22 @@ describe('Auth API', () => {
         expect(response.status).toBe(404);
         expect(response.body.message).toBe('User not found');
     });
+    test('should call next middleware with error when an unexpected login error occurs', async () => {
+        // Mock User.findOne to throw an error
+        const mockError = new Error('Database error');
+        User.findOne.mockRejectedValue(mockError);
 
+        const nextMock = jest.fn();
+
+        await login(
+            { body: { username: 'testuser', password: 'password123' } },
+            { cookie: jest.fn(), status: jest.fn().mockReturnThis(), json: jest.fn() },
+            nextMock
+        );
+
+        expect(nextMock).toHaveBeenCalledWith(mockError);
+        expect(console.error).toHaveBeenCalledWith('Login error:', mockError); // Validate error logging
+    });
     test('should return error for incorrect credentials', async () => {
         const validUser = {
             username: 'testuser',
@@ -206,5 +257,47 @@ describe('Auth API', () => {
             expect(res.body.authenticated).toBe(false);
             expect(res.body.message).toBe('Invalid token');
         });
+        test('should return 404 if user is not found in the database', async () => {
+            // Generate a valid token
+            const token = jwt.sign(
+                { userId: 'nonexistentUserId' },
+                SECRET_KEY,
+                { expiresIn: '1h' }
+            );
+    
+            // Mock User.findById to return null (user not found)
+            User.findById.mockResolvedValue(null);
+    
+            const res = await request(server)
+                .get('/protected-route')
+                .set('Cookie', `token=${token}`);
+    
+            expect(res.status).toBe(404);
+            expect(res.body.authenticated).toBe(false);
+            expect(res.body.message).toBe('User not found');
+        });
+        test('should authenticate and attach the user to the request if user exists', async () => {
+            // Mock a user object
+            const mockUser = { _id: 'validUserId', username: 'testuser' };
+    
+            // Generate a valid token
+            const token = jwt.sign(
+                { userId: mockUser._id },
+                SECRET_KEY,
+                { expiresIn: '1h' }
+            );
+    
+            // Mock User.findById to return the mock user
+            User.findById.mockResolvedValue(mockUser);
+    
+            const res = await request(server)
+                .get('/protected-route')
+                .set('Cookie', `token=${token}`);
+    
+            expect(res.status).toBe(200);
+            expect(res.body.authenticated).toBe(true);
+            expect(res.body.user).toEqual(mockUser);
+        });
     });
+    
 });
