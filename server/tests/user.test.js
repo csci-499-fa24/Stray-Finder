@@ -75,8 +75,8 @@ app.put('/api/user', async (req, res) => {
         return res.status(404).json({ message: 'User not found' })
     }
 
-    // Simple password complexity check (just an example
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/
+    // Regex from user model
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/
     if (!passwordRegex.test(newPassword)) {
         return res.status(400).json({
             message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
