@@ -46,30 +46,33 @@ describe('Email Controller', () => {
 
   describe('fetchAllRecentAnimals', () => {
     it('should fetch recent animal reports within the last week', async () => {
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  
+        // Create test data
+        const animal = await Animal.create({ name: 'Buddy', species: 'Dog', gender: 'Male' });
+        const user = await User.create({
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'Password1!', // Added password field
+        });
+  
+        await AnimalReport.create({
+          animal: animal._id,
+          reportedBy: user._id,
+          reportType: 'Found',
+          dateReported: new Date(),
+          collar: false, // Added required field
+          fixed: 'No', // Added required field
+          location: {
+              coordinates: {
+                  type: 'Point',
+                  coordinates: [40.7128, -74.0060],  // Coordinates as an array of [longitude, latitude]
+                },
+            },
 
-      // Create test data
-      const animal = await Animal.create({ name: 'Buddy', species: 'Dog', gender: 'Male' });
-      const user = await User.create({
-        username: 'testuser',
-        email: 'test@example.com',
-        password: 'Password1!', // Added password field
-      });
-
-      await AnimalReport.create({
-        animal: animal._id,
-        reportedBy: user._id,
-        reportType: 'Found',
-        dateReported: new Date(),
-        collar: false, // Added required field
-        fixed: 'No', // Added required field
-        location: {
-          coordinates: {
-            type: 'Point',
-            coordinates: [40.7128, -74.0060], // Coordinates as an array of [longitude, latitude]
-          },
-        },
+        name: 'Lost pup',
+        description: 'A brown dog with a blue collar.',
       });
 
       // Mock request and call the function
@@ -90,13 +93,12 @@ describe('Email Controller', () => {
 
   describe('sendEmail', () => {
     beforeEach(() => {
-      jest.spyOn(console, 'error').mockImplementation(() => {}); // Suppress console.error
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks(); // Restore console.error after tests
-    });
-
+        jest.spyOn(console, 'error').mockImplementation(() => {}); // Suppress console.error
+      });
+    
+      afterEach(() => {
+        jest.restoreAllMocks(); // Restore console.error after tests
+      });
     it('should send an email successfully', async () => {
       const mockSendMail = jest.fn().mockResolvedValue('Email sent');
       nodemailer.createTransport = jest.fn().mockReturnValue({ sendMail: mockSendMail });
@@ -115,13 +117,13 @@ describe('Email Controller', () => {
       );
     });
 
-    it('should throw an error if sending email fails', async () => {
-      const mockSendMail = jest.fn().mockRejectedValue(new Error('Failed to send email'));
-      nodemailer.createTransport = jest.fn().mockReturnValue({ sendMail: mockSendMail });
+  it('should throw an error if sending email fails', async () => {
+    const mockSendMail = jest.fn().mockRejectedValue(new Error('Failed to send email'));
+    nodemailer.createTransport = jest.fn().mockReturnValue({ sendMail: mockSendMail });
 
-      await expect(
-        sendEmail({ to: 'test@example.com', subject: 'Test', text: 'Test' })
-      ).rejects.toThrow('Failed to send email');
+    await expect(sendEmail({ to: 'test@example.com', subject: 'Test', text: 'Test' })).rejects.toThrow(
+      'Failed to send email'
+    );
     });
   });
 
@@ -143,12 +145,12 @@ describe('Email Controller', () => {
         collar: true, // Added required field
         fixed: 'No', // Added required field
         location: {
-          coordinates: {
-            type: 'Point',
-            coordinates: [40.7128, -74.0060], // Coordinates as an array of [longitude, latitude]
-          },
+            coordinates: {
+                type: 'Point',
+                coordinates: [40.7128, -74.0060],  // Coordinates as an array of [longitude, latitude]
+            },
         },
-        name: 'Lost Dog',
+        name: 'Lost Dog',  
         description: 'A brown dog with a red collar.',
       });
 
@@ -170,16 +172,16 @@ describe('Email Controller', () => {
     });
 
     it('should return a message if no reports exist', async () => {
-      await User.create({
-        username: 'testuser',
-        email: 'test@example.com',
-        password: 'Password1!', // Added password field
+        await User.create({
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'Password1!', // Added password field
+        });
+  
+        const req = { query: {} };
+        const result = await sendReportsEmail(req);
+  
+        expect(result).toBe('No reports to send.');
       });
-
-      const req = { query: {} };
-      const result = await sendReportsEmail(req);
-
-      expect(result).toBe('No reports to send.');
-    });
   });
 });
