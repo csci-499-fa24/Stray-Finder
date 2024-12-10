@@ -129,12 +129,12 @@ const Filters = ({ filters, setFilters, setRadius, radius }) => {
 
             {/* Time Filter */}
             <select
-                name="last24Hours"
-                value={filters.last24Hours || ''}
+                name="reportTime"
+                value={filters.reportTime || ''}
                 onChange={(e) =>
                     setFilters((prevFilters) => ({
                         ...prevFilters,
-                        last24Hours: e.target.value === 'true', // Convert string to boolean
+                        reportTime: e.target.value, // Save the selected value directly
                     }))
                 }
                 className="filter-dropdown"

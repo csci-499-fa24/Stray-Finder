@@ -194,6 +194,9 @@ const Map = () => {
             const { location, dateReported } = report;
             const baseLocation = userLocation || center;
     
+            // Log report data for debugging
+            console.log("Processing report:", report);
+    
             // Check radius
             if (location && location.coordinates) {
                 const [lng, lat] = location.coordinates.coordinates;
@@ -209,18 +212,19 @@ const Map = () => {
             // Check report time filter
             if (filters.reportTime) {
                 const reportDate = new Date(dateReported);
+                if (isNaN(reportDate)) {
+                    console.error("Invalid dateReported format:", dateReported);
+                    return false;
+                }
                 const now = new Date();
     
                 if (filters.reportTime === '24h') {
-                    // Last 24 hours
                     const timeDiff = now - reportDate;
                     if (timeDiff > 24 * 60 * 60 * 1000) return false;
                 } else if (filters.reportTime === '7d') {
-                    // Last week
                     const timeDiff = now - reportDate;
                     if (timeDiff > 7 * 24 * 60 * 60 * 1000) return false;
                 } else if (filters.reportTime === '30d') {
-                    // Last month
                     const timeDiff = now - reportDate;
                     if (timeDiff > 30 * 24 * 60 * 60 * 1000) return false;
                 }
@@ -230,6 +234,7 @@ const Map = () => {
         });
     }, [reports, userLocation, radius, filters]);
     
+
     
 
     const storyPath = useMemo(() => {
