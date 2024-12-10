@@ -14,8 +14,7 @@ import { calculateBounds, calculateDistance } from './utils'
 import { createCircularIcon } from './CircularIcon'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Loader from '../loader/Loader'
-import Cookies from 'js-cookie';
-
+import Cookies from 'js-cookie'
 
 const containerStyle = {
     width: '100%',
@@ -32,7 +31,6 @@ const Map = () => {
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
         libraries: ['places', 'visualization'],
     })
-
 
     const mapRef = useRef(null)
     const polylineRef = useRef(null)
@@ -54,7 +52,6 @@ const Map = () => {
     const [isInitialized, setIsInitialized] = useState(false)
     const [activeStory, setActiveStory] = useState(null)
     const [zoomLevel, setZoomLevel] = useState(13)
-    
 
     const markersData = useMemo(() => {
         return reports.map((report) => ({
@@ -62,9 +59,8 @@ const Map = () => {
                 lat: report.location.coordinates.coordinates[1],
                 lng: report.location.coordinates.coordinates[0],
             },
-        }));
-    }, [reports]);
-    
+        }))
+    }, [reports])
 
     useEffect(() => {
         const fetchReports = async () => {
@@ -132,57 +128,64 @@ const Map = () => {
     useEffect(() => {
         if (typeof window !== 'undefined') {
             if (!isInitialized) {
-                const storedLocation = Cookies.get('userLocation'); // Use cookies instead of localStorage
-    
+                const storedLocation = Cookies.get('userLocation') // Use cookies instead of localStorage
+
                 if (storedLocation) {
-                    setUserLocation(JSON.parse(storedLocation));
-                    setRadius(10);
-                    setIsInitialized(true);
+                    setUserLocation(JSON.parse(storedLocation))
+                    setRadius(10)
+                    setIsInitialized(true)
                 } else if (navigator.geolocation) {
                     const requestLocationPermission = async () => {
                         const confirmPermission = window.confirm(
                             'This site would like to use your location. Would you like to allow it?'
-                        );
+                        )
                         if (confirmPermission) {
                             navigator.geolocation.getCurrentPosition(
                                 (position) => {
                                     const locationData = {
                                         lat: position.coords.latitude,
                                         lng: position.coords.longitude,
-                                    };
-                                    Cookies.set('userLocation', JSON.stringify(locationData)); // Set cookies
-                                    setUserLocation(locationData);
-                                    setRadius(10);
-                                    setIsInitialized(true);
+                                    }
+                                    Cookies.set(
+                                        'userLocation',
+                                        JSON.stringify(locationData)
+                                    ) // Set cookies
+                                    setUserLocation(locationData)
+                                    setRadius(10)
+                                    setIsInitialized(true)
                                 },
                                 (error) => {
-                                    console.error('Geolocation error:', error);
-                                    alert('Unable to fetch your location. Defaulting to default location.');
-                                    setUserLocation(center);
-                                    setRadius(10);
-                                    setIsInitialized(true);
+                                    console.error('Geolocation error:', error)
+                                    alert(
+                                        'Unable to fetch your location. Defaulting to default location.'
+                                    )
+                                    setUserLocation(center)
+                                    setRadius(10)
+                                    setIsInitialized(true)
                                 }
-                            );
+                            )
                         } else {
-                            alert('Location access denied. Using default location.');
-                            setUserLocation(center);
-                            setRadius(10);
-                            setIsInitialized(true);
+                            alert(
+                                'Location access denied. Using default location.'
+                            )
+                            setUserLocation(center)
+                            setRadius(10)
+                            setIsInitialized(true)
                         }
-                    };
-    
-                    requestLocationPermission();
+                    }
+
+                    requestLocationPermission()
                 } else {
-                    alert('Geolocation is not supported by your browser. Using default location.');
-                    setUserLocation(center);
-                    setRadius(10);
-                    setIsInitialized(true);
+                    alert(
+                        'Geolocation is not supported by your browser. Using default location.'
+                    )
+                    setUserLocation(center)
+                    setRadius(10)
+                    setIsInitialized(true)
                 }
             }
         }
-    }, [isInitialized]);
-    
-    
+    }, [isInitialized])
 
     const handleMapLoad = (map) => {
         mapRef.current = map
@@ -203,51 +206,48 @@ const Map = () => {
 
     const filteredReports = useMemo(() => {
         return reports.filter((report) => {
-            const { location, dateReported } = report;
-            const baseLocation = userLocation || center;
-    
+            const { location, dateReported } = report
+            const baseLocation = userLocation || center
+
             // Log report data for debugging
-            console.log("Processing report:", report);
-    
+            console.log('Processing report:', report)
+
             // Check radius
             if (location && location.coordinates) {
-                const [lng, lat] = location.coordinates.coordinates;
+                const [lng, lat] = location.coordinates.coordinates
                 const distance = calculateDistance(
                     baseLocation.lat,
                     baseLocation.lng,
                     lat,
                     lng
-                );
-                if (distance > radius) return false;
+                )
+                if (distance > radius) return false
             }
-    
+
             // Check report time filter
             if (filters.reportTime) {
-                const reportDate = new Date(dateReported);
+                const reportDate = new Date(dateReported)
                 if (isNaN(reportDate)) {
-                    console.error("Invalid dateReported format:", dateReported);
-                    return false;
+                    console.error('Invalid dateReported format:', dateReported)
+                    return false
                 }
-                const now = new Date();
-    
+                const now = new Date()
+
                 if (filters.reportTime === '24h') {
-                    const timeDiff = now - reportDate;
-                    if (timeDiff > 24 * 60 * 60 * 1000) return false;
+                    const timeDiff = now - reportDate
+                    if (timeDiff > 24 * 60 * 60 * 1000) return false
                 } else if (filters.reportTime === '7d') {
-                    const timeDiff = now - reportDate;
-                    if (timeDiff > 7 * 24 * 60 * 60 * 1000) return false;
+                    const timeDiff = now - reportDate
+                    if (timeDiff > 7 * 24 * 60 * 60 * 1000) return false
                 } else if (filters.reportTime === '30d') {
-                    const timeDiff = now - reportDate;
-                    if (timeDiff > 30 * 24 * 60 * 60 * 1000) return false;
+                    const timeDiff = now - reportDate
+                    if (timeDiff > 30 * 24 * 60 * 60 * 1000) return false
                 }
             }
-    
-            return true;
-        });
-    }, [reports, userLocation, radius, filters]);
-    
 
-    
+            return true
+        })
+    }, [reports, userLocation, radius, filters])
 
     const storyPath = useMemo(() => {
         if (!activeStory || !isLoaded) return []
@@ -264,7 +264,7 @@ const Map = () => {
         }))
     }, [stories, activeStory, isLoaded])
 
-    const arrowSymbol = {
+    const dash = {
         path: 'M 0,-1 0,1',
         strokeColor: '#0000FF',
         strokeOpacity: 1,
@@ -272,7 +272,8 @@ const Map = () => {
     }
 
     useEffect(() => {
-        let animationInterval
+        let animationFrame
+        let startTimestamp = performance.now()
 
         if (polylineRef.current) {
             polylineRef.current.setMap(null)
@@ -280,6 +281,13 @@ const Map = () => {
         }
 
         if (activeStory && storyPath.length > 1 && radius >= 5) {
+            const dashPattern = {
+                path: 'M 0,-1 0,1',
+                strokeColor: '#0000FF',
+                strokeOpacity: 1,
+                scale: 4,
+            }
+
             const newPolyline = new window.google.maps.Polyline({
                 path: storyPath,
                 geodesic: true,
@@ -288,7 +296,7 @@ const Map = () => {
                 strokeWeight: 2,
                 icons: [
                     {
-                        icon: arrowSymbol,
+                        icon: dashPattern,
                         offset: '0%',
                         repeat: '20px',
                     },
@@ -298,29 +306,32 @@ const Map = () => {
             newPolyline.setMap(mapRef.current)
             polylineRef.current = newPolyline
 
-            let offset = 0
-            animationInterval = setInterval(() => {
-                offset = (offset + 2) % 100
-                polylineRef.current.set('icons', [
+            const animate = (timestamp) => {
+                const elapsed = timestamp - startTimestamp
+                const speed = 0.004
+                const offset = (elapsed * speed) % 100
+                newPolyline.set('icons', [
                     {
-                        icon: arrowSymbol,
+                        icon: dashPattern,
                         offset: `${offset}%`,
                         repeat: '20px',
                     },
                 ])
-            }, 100)
+                animationFrame = requestAnimationFrame(animate)
+            }
+
+            animationFrame = requestAnimationFrame(animate)
         }
 
         return () => {
-            if (animationInterval) {
-                clearInterval(animationInterval)
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame)
             }
         }
     }, [activeStory, storyPath, radius])
 
     if (loadError) return <div>Error loading maps</div>
     if (!isLoaded) return <Loader />
-    
 
     /*const clearLocation = () => {
         Cookies.remove('userLocation');
@@ -333,7 +344,6 @@ const Map = () => {
         setIsInitialized(false); // Ensure reinitialization logic can run again
         toast.success('Location data cleared!');
     };*/
-    
 
     return (
         <>
@@ -350,7 +360,6 @@ const Map = () => {
                 onLoad={handleMapLoad}
                 onZoomChanged={handleZoomChanged}
             >
-
                 <CircleOverlay
                     center={userLocation || center}
                     radius={radius}
