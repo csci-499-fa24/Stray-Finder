@@ -221,26 +221,7 @@ const Map = () => {
                 if (distance > radius) return false;
             }
     
-            // Check report time filter
-            if (filters.reportTime) {
-                const reportDate = new Date(dateReported);
-                if (isNaN(reportDate)) {
-                    console.error("Invalid dateReported format:", dateReported);
-                    return false;
-                }
-                const now = new Date();
-    
-                if (filters.reportTime === '24h') {
-                    const timeDiff = now - reportDate;
-                    if (timeDiff > 24 * 60 * 60 * 1000) return false;
-                } else if (filters.reportTime === '7d') {
-                    const timeDiff = now - reportDate;
-                    if (timeDiff > 7 * 24 * 60 * 60 * 1000) return false;
-                } else if (filters.reportTime === '30d') {
-                    const timeDiff = now - reportDate;
-                    if (timeDiff > 30 * 24 * 60 * 60 * 1000) return false;
-                }
-            }
+            
     
             return true;
         });
@@ -322,7 +303,7 @@ const Map = () => {
     if (!isLoaded) return <Loader />
     
 
-    const clearLocation = () => {
+    /*const clearLocation = () => {
         Cookies.remove('userLocation');
         setUserLocation(null);
         setFormData((prevData) => ({
@@ -332,7 +313,7 @@ const Map = () => {
         }));
         setIsInitialized(false); // Ensure reinitialization logic can run again
         toast.success('Location data cleared!');
-    };
+    };*/
     
 
     return (
@@ -394,14 +375,14 @@ const Map = () => {
                     />
                 )}
             </GoogleMap>
-            {<button
+            {/*<button
             type="button"
             className="btn btn-danger"
             onClick={clearLocation}
             style={{ marginTop: '10px' }}
             >
             Clear Location
-                </button>}
+                </button>*/}
         </>
     )
 }
