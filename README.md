@@ -1,6 +1,6 @@
 Fall 2024
 
-This is RRAAND project
+This is RRAAND project- StrayFinder
 
 cd server
 npm install
@@ -10,3 +10,4 @@ npm run dev
 cd client
 npm install
 npm run dev
+
