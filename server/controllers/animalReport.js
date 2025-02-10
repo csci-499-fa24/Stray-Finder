@@ -1,7 +1,8 @@
 const AnimalReport = require('../models/animalReport')
 const Animal = require('../models/animal')
-const uploadImage = require('../cloudinary/upload')
-const upload = require('../middleware/uploadMiddleware')
+const { uploadImage } = require('../cloudinary/utils')
+const { extractPublicId } = require('../cloudinary/utils')
+const cloudinary = require('cloudinary').v2
 // const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
 
 // GET: Retrieve list of animal reports
@@ -182,21 +183,20 @@ const createAnimalReport = async (req, res) => {
     }
 }
 
-
 // PUT: Updates an animal report by ID
 const updateAnimalReport = async (req, res) => {
     try {
-        const { id } = req.params; // Get the report ID from params
-        const { location, reportType, description } = req.body; // Destructure body fields
-        let imageUrl = null;
+        const { id } = req.params // Get the report ID from params
+        const { location, reportType, description } = req.body // Destructure body fields
+        let imageUrl = null
 
         if (req.file) {
-            imageUrl = await uploadImage(req.file); // Handle image upload if a file is provided
+            imageUrl = await uploadImage(req.file) // Handle image upload if a file is provided
         }
 
-        const report = await AnimalReport.findById(id).populate('animal'); // Find the report and populate animal data
+        const report = await AnimalReport.findById(id).populate('animal') // Find the report and populate animal data
         if (!report) {
-            return res.status(404).json({ message: 'Animal report not found' });
+            return res.status(404).json({ message: 'Animal report not found' })
         }
 
         // Dynamically construct fields to update
@@ -204,43 +204,68 @@ const updateAnimalReport = async (req, res) => {
             ...(location && { location: JSON.parse(location) }), // Update location only if provided
             ...(reportType && { reportType }), // Update reportType if provided
             ...(description && { description }), // Only update description if provided
-        };
+        }
 
         // Update the report with the new fields
         const updatedReport = await AnimalReport.findByIdAndUpdate(
             id,
             updateFields,
             { new: true } // Return the updated document
-        );
+        )
 
-        res.status(200).json({ report: updatedReport });
+        res.status(200).json({ report: updatedReport })
     } catch (error) {
-        console.error('Error updating animal report:', error.message);
+        console.error('Error updating animal report:', error.message)
         res.status(500).json({
             message: 'Failed to update animal report',
             error: error.message,
-        });
+        })
     }
 }
 
-// DELETE: Deletes an animal report by ID
+// DELETE: Deletes an animal report by ID and, if needed, the associated Cloudinary image.
 const deleteAnimalReport = async (req, res) => {
     try {
         const { id } = req.params
 
+        // Delete the animal report
         const deletedReport = await AnimalReport.findByIdAndDelete(id)
-
         if (!deletedReport) {
             return res.status(404).json({ message: 'Animal report not found' })
         }
 
+        // Get the associated animal's ID from the deleted report
         const animalId = deletedReport.animal
 
+        // Check if there are any other reports referencing this animal
         const otherReports = await AnimalReport.find({ animal: animalId })
 
+        // If no other reports reference the animal, delete the Animal and its image from Cloudinary
         if (otherReports.length === 0) {
-            await Animal.findByIdAndDelete(animalId)
-            // await FeatureVector.findOneAndDelete({ animalId });
+            // Fetch the Animal record to access the imageUrl
+            const animalRecord = await Animal.findById(animalId)
+            if (animalRecord) {
+                // If an imageUrl exists, extract the public_id and delete from Cloudinary
+                if (animalRecord.imageUrl) {
+                    const publicId = extractPublicId(animalRecord.imageUrl)
+                    if (publicId) {
+                        const deletionResult =
+                            await cloudinary.uploader.destroy(publicId)
+                        console.log(
+                            `Deleted Cloudinary asset ${publicId}:`,
+                            deletionResult
+                        )
+                    } else {
+                        console.warn(
+                            'Could not extract public_id from imageUrl:',
+                            animalRecord.imageUrl
+                        )
+                    }
+                }
+                // Delete the Animal record
+                await Animal.findByIdAndDelete(animalId)
+                // Optionally: delete any related feature vectors, etc.
+            }
         }
 
         res.status(200).json({

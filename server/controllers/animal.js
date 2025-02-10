@@ -1,7 +1,8 @@
 const Animal = require('../models/animal')
-const uploadImage = require('../cloudinary/upload')
-const upload = require('../middleware/uploadMiddleware')
-// const {createOrUpdateFeatureVector} = require('../utils/FeatureVectorUtils')
+const { uploadImage } = require('../cloudinary/utils')
+const { extractPublicId } = require('../cloudinary/utils')
+const cloudinary = require('cloudinary').v2
+require('dotenv').config()
 
 // GET: Retrieve all animals based on query parameters
 const getAnimals = async (req, res) => {
@@ -67,7 +68,7 @@ const updateAnimal = async (req, res) => {
 
         if (newImageUrl) {
             animal.imageUrl = newImageUrl
-            // await createOrUpdateFeatureVector(animal._id, newImageUrl);
+            // Optionally, update associated feature vectors here.
         }
 
         const updatedAnimal = await animal.save()
@@ -78,7 +79,7 @@ const updateAnimal = async (req, res) => {
     }
 }
 
-// DELETE: Delete an animal by ID
+// DELETE: Delete an animal by ID and remove its Cloudinary image
 const deleteAnimal = async (req, res) => {
     try {
         const { id } = req.params
@@ -87,14 +88,37 @@ const deleteAnimal = async (req, res) => {
         if (!deletedAnimal)
             return res.status(404).json({ message: 'Animal not found' })
 
-        // await FeatureVector.findOneAndDelete({ animalId: id });
+        // If the deleted animal has an imageUrl, attempt to delete the Cloudinary asset.
+        if (deletedAnimal.imageUrl) {
+            const publicId = extractPublicId(deletedAnimal.imageUrl)
+            if (publicId) {
+                const deletionResult = await cloudinary.uploader.destroy(
+                    publicId
+                )
+                console.log(
+                    `Deleted Cloudinary asset ${publicId}:`,
+                    deletionResult
+                )
+            } else {
+                console.warn(
+                    'Could not extract publicId from imageUrl:',
+                    deletedAnimal.imageUrl
+                )
+            }
+        }
+
+        // Optionally: delete any related feature vectors or other associated data.
+
         res.status(200).json({
             message: 'Animal deleted successfully',
             animal: deletedAnimal,
         })
     } catch (error) {
         console.error('Error deleting animal:', error.message)
-        res.status(500).json({ message: 'Failed to delete animal' })
+        res.status(500).json({
+            message: 'Failed to delete animal',
+            error: error.message,
+        })
     }
 }
 
