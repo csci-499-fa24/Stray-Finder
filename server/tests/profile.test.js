@@ -1,10 +1,10 @@
 // tests/controllers/profile.test.js
 const { uploadProfileImage } = require('../../server/controllers/profile');
 const User = require('../../server/models/user');
-const uploadImage = require('../../server/cloudinary/upload');
+const {uploadImage} = require('../../server/cloudinary/utils');
 
 jest.mock('../../server/models/user');
-jest.mock('../../server/cloudinary/upload');
+jest.mock('../../server/cloudinary/utils');
 
 describe('uploadProfileImage', () => {
     let req, res;
